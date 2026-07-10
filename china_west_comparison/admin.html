@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>FiveTone 管理后台</title>
+<style>
+body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:#f7f3ed;color:#5c5344;padding:20px;max-width:600px;margin:0 auto}
+h1{font-size:1.4em;margin-bottom:16px}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+.stat-card{padding:16px;border-radius:12px;background:#fffdf9;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.stat-card .num{font-size:2em;font-weight:700;color:#c4a35a}
+.stat-card .lbl{font-size:.8em;color:#9b8c78;margin-top:4px}
+table{width:100%;border-collapse:collapse;margin:16px 0;background:#fffdf9;border-radius:12px;overflow:hidden}
+th,td{padding:10px 12px;text-align:left;font-size:.85em;border-bottom:1px solid #e2dbcf}
+th{background:#faf3e0;font-weight:600}
+.btn{display:block;width:100%;padding:14px;border-radius:12px;border:none;font-size:1em;font-weight:600;cursor:pointer;background:#c4a35a;color:#fff;margin-top:16px}
+.loading{text-align:center;padding:40px;color:#9b8c78}
+</style>
+</head>
+<body>
+<h1>FiveTone 管理后台</h1>
+<div id="msg" class="loading">加载中...<br><small style="color:#9b8c78">如长时间无反应，刷新页面</small></div>
+<div id="content" style="display:none">
+  <div class="stat-grid" id="stats"></div>
+  <h3 style="margin-top:20px">最近 15 条记录</h3>
+  <table><thead><tr><th>时间</th><th>年龄</th><th>中式情绪</th><th>西式情绪</th><th>唤醒</th></tr></thead><tbody id="records"></tbody></table>
+  <button class="btn" onclick="location.reload()">刷新</button>
+</div>
+<script>
+const EMO={anding:'平静踏实',neixing:'沉思收拢',shuchang:'放松舒展',zhenfen:'兴奋昂扬',ningjing:'安静清冷'};
+const LAB={gong:'宫',shang:'商',jue:'角',zhi:'徵',yu:'羽',west_01:'西①',west_02:'西②',west_03:'西③',west_04:'西④',west_05:'西⑤'};
+
+function showLocal(){
+  const raw=localStorage.getItem('5tone_v5');
+  if(!raw)return null;
+  try{return JSON.parse(raw);}catch(e){return null;}
+}
+
+function render(rows){
+  document.getElementById('msg').style.display='none';
+  document.getElementById('content').style.display='block';
+  const total=rows.length;
+  const withWest=rows.filter(r=>r.summary&&r.summary.some(s=>s.mode&&s.mode.startsWith('west_'))).length;
+  const avgA=total>0?(rows.reduce((s,r)=>{
+    const sm=r.summary||[];return s+(sm.length>0?sm.reduce((ss,x)=>ss+(x.arousal||0),0)/sm.length:0);
+  },0)/total).toFixed(1):0;
+  document.getElementById('stats').innerHTML=
+    `<div class="stat-card"><div class="num">${total}</div><div class="lbl">总记录</div></div>
+     <div class="stat-card"><div class="num">${withWest}</div><div class="lbl">含西式数据</div></div>
+     <div class="stat-card"><div class="num">${rows.filter(r=>r.motionPerRound&&r.motionPerRound.length>0).length}</div><div class="lbl">含传感器</div></div>
+     <div class="stat-card"><div class="num">${avgA}</div><div class="lbl">平均唤醒 /5</div></div>`;
+  document.getElementById('records').innerHTML=rows.slice(0,15).map(r=>{
+    const cn=(r.summary||[]).filter(s=>['gong','shang','jue','zhi','yu'].includes(s.mode))
+      .map(s=>`<span style="background:#faf3e0;padding:1px 6px;border-radius:4px;margin:0 2px;font-size:.75em">${LAB[s.mode]} ${EMO[s.emotion]||s.emotion}</span>`).join('');
+    const wn=(r.summary||[]).filter(s=>s.mode&&s.mode.startsWith('west_'))
+      .map(s=>`<span style="background:#eef2ff;padding:1px 6px;border-radius:4px;margin:0 2px;font-size:.75em">${LAB[s.mode]} ${EMO[s.emotion]||s.emotion}</span>`).join('');
+    const a=(r.summary||[]).length>0?(r.summary.reduce((s,x)=>s+(x.arousal||0),0)/r.summary.length).toFixed(1):'-';
+    return`<tr><td>${(r.ts||'').slice(11,16)||'?'}</td><td>${r.participant?.age||'?'}</td><td>${cn||'—'}</td><td>${wn||'—'}</td><td>${a}</td></tr>`;
+  }).join('');
+}
+
+// Try CloudBase first, fallback to localStorage
+(async function(){
+  // Show local data immediately
+  const local=showLocal();
+  if(local&&local.length>0){render(local);document.getElementById('msg').style.display='none';}
+  // Then try CloudBase
+  const s=document.createElement('script');
+  s.src='https://imgcache.qq.com/qcloud/cloudbase-js-sdk/2.1.0/cloudbase.full.js';
+  s.onload=async()=>{
+    try{
+      const t=cloudbase.init({env:'five-tone-cathykang-d4b0676685c9'});
+      await t.auth().anonymousAuthProvider().signIn();
+      const r=await t.database().collection('experiments').orderBy('ts','desc').limit(50).get();
+      if(r.data&&r.data.length>0)render(r.data);
+    }catch(e){if(!local||local.length===0)document.getElementById('msg').innerHTML='暂无数据<br><small>先去测试链接完成一次实验</small>';}
+  };
+  s.onerror=()=>{if(!local||local.length===0)document.getElementById('msg').innerHTML='暂无数据<br><small>先去测试链接完成一次实验</small>';};
+  document.head.appendChild(s);
+  // Timeout fallback
+  setTimeout(()=>{if(document.getElementById('content').style.display==='none'&&(!local||local.length===0))document.getElementById('msg').innerHTML='暂无数据<br><small>先去测试链接完成一次实验</small>';},8000);
+})();
+</script>
+</body>
+</html>

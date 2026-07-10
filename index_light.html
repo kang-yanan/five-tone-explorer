@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>五音情绪感知 · 音乐感受小实验</title>
+<style>
+  :root { --bg: #f7f3ed; --card: #fffdf9; --border: #e2dbcf; --text: #5c5344; --text2: #9b8c78;
+    --gong: #c4a35a; --shang: #b0aca4; --jue: #8ba684; --zhi: #c48173; --yu: #7d8fa8;
+    --gong-bg: #faf3e0; --shang-bg: #f3f1ee; --jue-bg: #e9f1e6; --zhi-bg: #faebe7; --yu-bg: #e6ecf4; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: var(--bg); color: var(--text); min-height: 100vh;
+    display: flex; justify-content: center; align-items: center; padding: 16px; }
+  .phone { max-width: 420px; width: 100%; }
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  .welcome { text-align: center; padding: 40px 20px; }
+  .welcome .icon { font-size: 3em; margin-bottom: 16px; }
+  .welcome h1 { font-size: 1.5em; margin-bottom: 8px; color: var(--text); font-weight: 700; }
+  .welcome p { color: var(--text2); font-size: 0.92em; line-height: 1.7; margin-bottom: 28px; }
+  .welcome .note { font-size: 0.78em; color: #b8a894; margin-top: 16px; }
+
+  .listening { text-align: center; padding: 40px 20px; }
+  .listening .now { font-size: 0.85em; color: var(--text2); margin-bottom: 8px; }
+  .listening .mood { font-size: 2.4em; font-weight: 700; margin-bottom: 4px; transition: color 0.5s; }
+  .listening .hint { font-size: 0.9em; color: var(--text2); margin-bottom: 24px; }
+  .listening .visualizer { display:flex; justify-content:center; align-items:flex-end; gap:4px; height:90px; margin-bottom: 24px; }
+  .listening .bar { width:8px; border-radius:4px; transition:height 0.2s, background 0.5s; min-height:6px; }
+
+  .rating { padding: 24px 20px; }
+  .rating .q { font-size: 1.05em; font-weight: 600; color: var(--text); margin: 18px 0 10px; text-align: center; }
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .opt { padding: 14px 18px; border-radius: 12px; border: 2px solid var(--border); background: var(--card);
+    color: var(--text); font-size: 1em; cursor: pointer; transition: all 0.2s; text-align: center;
+    -webkit-tap-highlight-color: transparent; user-select: none; }
+  .opt:active { transform: scale(0.98); }
+  .opt:hover { border-color: var(--gong); }
+  .opt.picked { border-color: var(--gong); background: var(--gong-bg); font-weight: 600; }
+
+  .result { text-align: center; padding: 30px 20px; }
+  .result h2 { font-size: 1.4em; margin-bottom: 20px; }
+  .result .match-card { padding: 16px; border-radius: 12px; margin-bottom: 10px; text-align: left; display: flex; align-items: center; gap: 12px; }
+  .result .match-card .tone-tag { font-size: 1.2em; font-weight: 700; min-width: 50px; }
+  .result .match-card .tone-dot { width:14px; height:14px; border-radius:50%; flex-shrink:0; }
+  .result .match-card .match-info { flex:1; font-size: 0.85em; color: var(--text2); }
+  .result .match-card .match-info strong { color: var(--text); }
+
+  .btn { display: block; width: 100%; padding: 14px; border-radius: 12px; border: none;
+    font-size: 1.05em; font-weight: 600; cursor: pointer; transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent; text-align: center; }
+  .btn-primary { background: var(--gong); color: #fffdf7; margin-top: 24px; }
+  .btn-primary:active { background: #b39248; transform: scale(0.98); }
+  .btn-secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); margin-top: 8px; }
+
+  .progress { display:flex; gap:8px; justify-content:center; margin-bottom:24px; }
+  .progress .step { width:32px; height:4px; border-radius:2px; background:var(--border); transition:all 0.3s; }
+  .progress .step.filled { background:var(--gong); }
+
+  #audioDiag { display:none; background:#fff3cd; border:1px solid #ffc107; border-radius:8px;
+    padding:10px 14px; margin-bottom:16px; font-size:0.82em; color:#856404; text-align:center; }
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <div class="screen active" id="welcome">
+    <div class="welcome">
+      <div class="icon">🎵</div>
+      <h1>音乐感受小实验</h1>
+      <p>这是一个关于<b>音乐与情绪</b>的小调查。<br>
+      不限年龄，任何人都可以参与。<br>
+      你会听到 <b>6段</b> 内容（其中一段安静），<br>每段结束后花 <b>10秒</b> 标注感受。
+      <br>全程 <b>5分钟</b>，匿名，没有正确答案。</p>
+      <div class="note">🎧 建议戴上耳机<br>📱 微信内直接打开即可<br>⚠️ 聆听时请勿锁屏，闭眼即可<br>🔊 如无声音请<b>关闭静音开关</b></div>
+      <button class="btn btn-primary" onclick="go()">开始聆听 🎧</button>
+    </div>
+  </div>
+
+  <div class="screen" id="info">
+    <div class="rating">
+      <h2 style="text-align:center;margin-bottom:24px;">📋 关于你</h2>
+      <div class="q">年龄</div>
+      <div class="options"><input type="number" id="age" placeholder="输入年龄" min="8" max="99" style="width:100%;padding:14px;border-radius:12px;border:2px solid var(--border);background:var(--card);font-size:1em;text-align:center;color:var(--text);"></div>
+      <div class="q">性别</div>
+      <div class="options" id="genderOpts">
+        <button class="opt" data-v="male">👦 男</button><button class="opt" data-v="female">👧 女</button>
+      </div>
+      <div class="q">是否学过乐器/音乐？</div>
+      <div class="options" id="musicOpts">
+        <button class="opt" data-v="no">🎵 没学过</button><button class="opt" data-v="amateur">🎸 业余学过</button><button class="opt" data-v="trained">🎹 系统训练过</button>
+      </div>
+      <div class="q">对中国传统音乐的熟悉程度</div>
+      <div class="options" id="familiarOpts">
+        <button class="opt" data-v="1">1 — 完全不熟</button><button class="opt" data-v="2">2 — 听过一点</button><button class="opt" data-v="3">3 — 一般</button><button class="opt" data-v="4">4 — 比较熟悉</button><button class="opt" data-v="5">5 — 非常熟悉</button>
+      </div>
+      <button class="btn btn-primary" id="infoNext" disabled onclick="confirmInfo()">继续 →</button>
+    </div>
+  </div>
+
+  <div class="screen" id="listen">
+    <div class="listening">
+      <div class="progress" id="prog"></div>
+      <div class="now">第 <span id="n">1</span> / 6 段</div>
+      <div id="audioDiag"></div>
+      <div class="mood" id="mood">🎶</div>
+      <div class="hint" id="hint">闭上眼睛，放松聆听</div>
+      <div class="visualizer" id="viz"></div>
+      <div id="loadStatus" style="color:var(--text2);font-size:0.85em;min-height:1.3em;"></div>
+    </div>
+  </div>
+
+  <div class="screen" id="rate">
+    <div class="rating">
+      <div class="progress" id="rprog"></div>
+      <div class="q" id="q1text">听完这段音乐，你感觉怎样？</div>
+      <div class="options" id="q1">
+        <button class="opt" data-v="1">😴 很平静</button><button class="opt" data-v="2">🙂 有点平静</button>
+        <button class="opt" data-v="3">😐 没感觉</button><button class="opt" data-v="4">😊 有点兴奋</button>
+        <button class="opt" data-v="5">🤩 很兴奋</button>
+      </div>
+      <div class="q" id="q2text">这段音乐给你的情绪"色调"是？</div>
+      <div class="options" id="q2">
+        <button class="opt" data-v="anding">🏠 安定沉稳的</button><button class="opt" data-v="neixing">🌙 内省收敛的</button>
+        <button class="opt" data-v="shuchang">🌿 舒畅条达的</button><button class="opt" data-v="zhenfen">🔥 开心振奋的</button>
+        <button class="opt" data-v="ningjing">💧 宁静沉静的</button>
+      </div>
+      <button class="btn btn-primary" id="next" disabled onclick="confirmRating()">下一段 →</button>
+    </div>
+  </div>
+
+  <div class="screen" id="done">
+    <div class="result">
+      <h2 id="doneTitle">✅ 完成！谢谢你～</h2>
+      <p style="color:var(--text2);margin-bottom:20px;">你听到的5段音乐分别是：</p>
+      <div id="cards"></div>
+      <p style="color:var(--text2);font-size:0.85em;margin-top:16px;">
+      传统五音：宫→安定 · 商→内省 · 角→舒畅 · 徵→振奋 · 羽→宁静<br>
+      <span style="color:var(--gong);">👆 你的感受和传统理论对上了多少？</span></p>
+      <button class="btn btn-secondary" onclick="location.reload()">🔄 再来一次</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const ENV = 'five-tone-cathykang-d4b0676685c9';
+const BASE = 'https://' + ENV + '-1409437628.tcloudbaseapp.com/audio/';
+const TRACK_POOLS = {
+  gong:  BASE+'gong_01.mp3,'+BASE+'gong_02.mp3,'+BASE+'gong_03.mp3,'+BASE+'gong_04.mp3,'+BASE+'gong_05.mp3',
+  shang: BASE+'shang_01.mp3,'+BASE+'shang_02.mp3,'+BASE+'shang_03.mp3,'+BASE+'shang_05.mp3',
+  jue:   BASE+'jue_01.mp3,'+BASE+'jue_02.mp3,'+BASE+'jue_03.mp3,'+BASE+'jue_04.mp3,'+BASE+'jue_05.mp3',
+  zhi:   BASE+'zhi_01.mp3,'+BASE+'zhi_02.mp3,'+BASE+'zhi_03.mp3,'+BASE+'zhi_04.mp3,'+BASE+'zhi_05.mp3',
+  yu:    BASE+'yu_01.mp3,'+BASE+'yu_02.mp3,'+BASE+'yu_03.mp3,'+BASE+'yu_04.mp3,'+BASE+'yu_05.mp3'
+};
+const TRACK_NAMES = {
+  'gong_01':'平湖秋月','gong_02':'浏阳河','gong_03':'紫竹调','gong_04':'花三六','gong_05':'踏雪寻梅',
+  'shang_01':'十面埋伏','shang_02':'广陵散','shang_03':'拔根芦柴花','shang_05':'阳关三叠',
+  'jue_01':'列子御风','jue_02':'姑苏行','jue_03':'胡笳十八拍','jue_04':'花好月圆','jue_05':'霓裳曲',
+  'zhi_01':'喜洋洋','zhi_02':'新春乐','zhi_03':'春节序曲','zhi_04':'步步高','zhi_05':'解放军进行曲',
+  'yu_01':'乌夜啼','yu_02':'二泉映月','yu_03':'寒鸦戏水','yu_04':'梁祝','yu_05':'江河水'
+};
+const MODES = {
+  gong:  { label:'宫 Gōng', emo:'安定沉稳', color:'#c4a35a', bg:'#faf3e0', key:'anding' },
+  shang: { label:'商 Shāng', emo:'内省收敛', color:'#b0aca4', bg:'#f3f1ee', key:'neixing' },
+  jue:   { label:'角 Jué', emo:'舒畅条达', color:'#8ba684', bg:'#e9f1e6', key:'shuchang' },
+  zhi:   { label:'徵 Zhǐ', emo:'开心振奋', color:'#c48173', bg:'#faebe7', key:'zhenfen' },
+  yu:    { label:'羽 Yǔ', emo:'宁静沉静', color:'#7d8fa8', bg:'#e6ecf4', key:'ningjing' },
+  _rest: { label:'静息基线', emo:'—', color:'#c0b8a8', bg:'#f5f2ec', key:'_rest' }
+};
+const FIVE_TONES = ['gong','shang','jue','zhi','yu'];
+const ALL_CONDITIONS = ['gong','shang','jue','zhi','yu','_rest'];
+const BAR_COUNT = 10;
+
+let ctx, order=[], round=0, ratings=[], a1=null, a2=null, src=null, ana=null, rid=null;
+let participantInfo={}, genderPicked=null, musicPicked=null, familiarPicked=null;
+let selectedTracks={}, loadedBuffers={};
+
+// ===== Audio Engine: Web Audio API + <audio> fallback =====
+let audioFallback = null;
+let audioFallbackActive = false;
+let loadingRetries = {};
+let fakeVizId = null;
+
+// Polyfill: older browsers may not have promise-based decodeAudioData
+function decodeAudioDataCompat(ctx, buf) {
+  return new Promise(function(resolve, reject) {
+    try {
+      if (typeof ctx.decodeAudioData !== 'function') {
+        reject(new Error('No decodeAudioData'));
+        return;
+      }
+      var p = ctx.decodeAudioData(buf);
+      if (p && typeof p.then === 'function') {
+        p.then(resolve).catch(reject);
+      } else {
+        reject(new Error('decodeAudioData returned non-Promise'));
+      }
+    } catch(e) { reject(e); }
+  });
+}
+
+async function ensureCtx() {
+  if (!ctx || ctx.state === 'closed') {
+    ctx = new (window.AudioContext||window.webkitAudioContext)();
+  }
+  if (ctx.state === 'suspended') {
+    try { await ctx.resume(); } catch(e) {}
+  }
+}
+
+function getAudioFallback() {
+  if (!audioFallback) {
+    audioFallback = document.createElement('audio');
+    audioFallback.preload = 'auto';
+    audioFallback.style.display = 'none';
+    document.body.appendChild(audioFallback);
+  }
+  return audioFallback;
+}
+
+async function loadTrack(mode) {
+  var pool = TRACK_POOLS[mode].split(',');
+  var url = pool[Math.floor(Math.random() * pool.length)];
+  var key = url.split('/').pop().replace('.mp3','');
+
+  if (audioFallbackActive) return { key: key, url: url, fallback: true };
+
+  if (!loadedBuffers[key]) {
+    try {
+      var resp = await fetch(url);
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      var buf = await resp.arrayBuffer();
+      await ensureCtx();
+      loadedBuffers[key] = await decodeAudioDataCompat(ctx, buf);
+      loadingRetries = {};
+    } catch(e) {
+      if (!loadingRetries[key]) { loadingRetries[key] = 1; return loadTrack(mode); }
+      console.warn('Web Audio failed, switching to HTML5 audio fallback:', e.message);
+      audioFallbackActive = true;
+      document.getElementById('audioDiag').style.display = 'block';
+      document.getElementById('audioDiag').textContent = '已切换到备用播放模式，如仍无声音请检查手机音量';
+      return { key: key, url: url, fallback: true };
+    }
+  }
+  var keys = Object.keys(loadedBuffers);
+  if (keys.length > 3) { delete loadedBuffers[keys[0]]; }
+  return { key: key, buffer: loadedBuffers[key] };
+}
+
+function playTrack(mode) {
+  stopAudio();
+  document.getElementById('mood').textContent = '⏳';
+  document.getElementById('loadStatus').textContent = '加载中...';
+  loadTrack(mode).then(function(result) {
+    if (result.fallback) {
+      // HTML5 <audio> fallback
+      selectedTracks[mode] = result.key;
+      document.getElementById('loadStatus').textContent = '';
+      document.getElementById('mood').textContent = '🎶';
+      startFakeViz(mode);
+      var audio = getAudioFallback();
+      audio.src = result.url;
+      audio.onended = function() { stopViz(); showRate(); };
+      audio.play().catch(function() {
+        stopFakeViz();
+        document.getElementById('audioDiag').style.display = 'block';
+        document.getElementById('audioDiag').textContent = '⚠️ 播放失败，请检查：① 手机是否静音 ② 媒体音量是否开启';
+        document.getElementById('loadStatus').textContent = '播放失败，请检查音量';
+        setTimeout(function() { document.getElementById('loadStatus').textContent = ''; showRate(); }, 2500);
+      });
+    } else {
+      // Web Audio API
+      selectedTracks[mode] = result.key;
+      document.getElementById('loadStatus').textContent = '';
+      document.getElementById('mood').textContent = '🎶';
+      ensureCtx().then(function() {
+        var source = ctx.createBufferSource();
+        source.buffer = result.buffer;
+        var analyser = ctx.createAnalyser();
+        analyser.fftSize = 256; analyser.smoothingTimeConstant = 0.5;
+        source.connect(analyser); analyser.connect(ctx.destination);
+        source.start(0); src = source; ana = analyser;
+        animateBars(mode);
+        source.onended = function() { stopViz(); showRate(); };
+      });
+    }
+  }).catch(function() {
+    document.getElementById('loadStatus').textContent = '加载失败，跳过此段';
+    setTimeout(function() { document.getElementById('loadStatus').textContent = ''; showRate(); }, 1500);
+  });
+}
+
+function startFakeViz(mode) {
+  var bars = document.querySelectorAll('#viz .bar');
+  function pulse() {
+    for (var i = 0; i < bars.length; i++) {
+      bars[i].style.height = (8 + Math.random() * 60) + 'px';
+      bars[i].style.background = MODES[mode].color;
+    }
+    fakeVizId = requestAnimationFrame(pulse);
+  }
+  pulse();
+}
+
+function animateBars(mode) {
+  if (!ana || !src) return;
+  var fd = new Uint8Array(ana.frequencyBinCount);
+  ana.getByteFrequencyData(fd);
+  document.querySelectorAll('#viz .bar').forEach(function(b, i) {
+    var idx = Math.floor(i * fd.length / BAR_COUNT);
+    b.style.height = (8 + (fd[idx] / 255) * 78) + 'px';
+    b.style.background = MODES[mode].color;
+  });
+  rid = requestAnimationFrame(function() { animateBars(mode); });
+}
+
+function stopViz() { if (rid) { cancelAnimationFrame(rid); rid = null; } if (fakeVizId) { cancelAnimationFrame(fakeVizId); fakeVizId = null; } }
+function stopAudio() {
+  stopViz();
+  if (src) { try { src.stop(); } catch(e){} src = null; ana = null; }
+  if (audioFallback) { try { audioFallback.pause(); audioFallback.src = ''; } catch(e){} }
+}
+
+// ===== Sensor: DeviceMotion =====
+var sensorData = { still: true, motionSamples: 0, totalSamples: 0, lastX:0, lastY:0, lastZ:0 };
+var sensorActive = false;
+function startSensor() {
+  if (sensorActive) return;
+  if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+    DeviceMotionEvent.requestPermission().then(function(r) { if (r === 'granted') enableSensor(); }).catch(function(){});
+  } else if ('ondevicemotion' in window) {
+    enableSensor();
+  }
+}
+function enableSensor() {
+  sensorActive = true;
+  sensorData = { still: true, motionSamples: 0, totalSamples: 0, lastX:0, lastY:0, lastZ:0 };
+  window.addEventListener('devicemotion', function(e) {
+    var acc = e.accelerationIncludingGravity;
+    if (!acc) return;
+    sensorData.totalSamples++;
+    var delta = Math.abs(acc.x - sensorData.lastX) + Math.abs(acc.y - sensorData.lastY) + Math.abs(acc.z - sensorData.lastZ);
+    if (delta > 0.5) sensorData.motionSamples++;
+    sensorData.lastX = acc.x; sensorData.lastY = acc.y; sensorData.lastZ = acc.z;
+  });
+}
+function getSensorReport() {
+  if (!sensorActive) return null;
+  var ratio = sensorData.totalSamples > 0 ? sensorData.motionSamples / sensorData.totalSamples : 0;
+  return { still: ratio < 0.1, motionRatio: ratio, totalSamples: sensorData.totalSamples };
+}
+
+// UI
+function show(id) { document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); }); document.getElementById(id).classList.add('active'); }
+function progBars(cid) {
+  document.getElementById(cid).innerHTML = [0,1,2,3,4,5].map(function(i) { return '<div class="step' + (i < round ? ' filled' : '') + '"></div>'; }).join('');
+}
+
+(function(){
+  var v = document.getElementById('viz');
+  v.innerHTML = Array.from({length: BAR_COUNT}, function() { return '<div class="bar" style="height:12px;background:var(--border)"></div>'; }).join('');
+})();
+
+// Info screen
+(function(){
+  document.querySelectorAll('#genderOpts .opt').forEach(function(b){ b.onclick = function(){
+    document.querySelectorAll('#genderOpts .opt').forEach(function(x){ x.classList.remove('picked'); });
+    this.classList.add('picked'); genderPicked = this.dataset.v; checkInfoReady();
+  };});
+  document.querySelectorAll('#musicOpts .opt').forEach(function(b){ b.onclick = function(){
+    document.querySelectorAll('#musicOpts .opt').forEach(function(x){ x.classList.remove('picked'); });
+    this.classList.add('picked'); musicPicked = this.dataset.v; checkInfoReady();
+  };});
+  document.querySelectorAll('#familiarOpts .opt').forEach(function(b){ b.onclick = function(){
+    document.querySelectorAll('#familiarOpts .opt').forEach(function(x){ x.classList.remove('picked'); });
+    this.classList.add('picked'); familiarPicked = parseInt(this.dataset.v); checkInfoReady();
+  };});
+})();
+function checkInfoReady() {
+  var age = document.getElementById('age').value;
+  document.getElementById('infoNext').disabled = !(age && genderPicked && musicPicked && familiarPicked);
+}
+function confirmInfo() {
+  participantInfo = { age: parseInt(document.getElementById('age').value), gender: genderPicked, musicTraining: musicPicked, familiarity: familiarPicked };
+  show('listen'); progBars('prog'); playRound();
+}
+
+async function go() {
+  ctx = new (window.AudioContext||window.webkitAudioContext)();
+  if (ctx.state === 'suspended') { try { await ctx.resume(); } catch(e){} }
+  order = ALL_CONDITIONS.slice().sort(function() { return Math.random() - 0.5; });
+  round = 0; ratings = []; a1 = null; a2 = null; loadedBuffers = {}; audioFallbackActive = false;
+  startSensor();
+  if (navigator.wakeLock) { navigator.wakeLock.request('screen').catch(function(){}); }
+  show('info');
+}
+
+function playRound() {
+  if (round >= 6) { finish(); return; }
+  stopAudio();
+  document.getElementById('n').textContent = round + 1;
+  document.getElementById('audioDiag').style.display = 'none';
+  var mode = order[round];
+  document.getElementById('mood').style.color = MODES[mode].color;
+  document.getElementById('mood').style.fontSize = mode === '_rest' ? '4em' : '2.4em';
+  progBars('prog');
+  if (mode === '_rest') {
+    document.getElementById('mood').textContent = '🤫';
+    document.getElementById('hint').textContent = '这段是安静对照，没有音乐，请闭眼放松';
+    document.querySelectorAll('#viz .bar').forEach(function(b) { b.style.height = '10px'; b.style.background = '#d5cfc4'; });
+    setTimeout(function() { document.getElementById('hint').textContent = '闭上眼睛，放松聆听'; showRate(); }, 30000);
+  } else {
+    document.getElementById('hint').textContent = '闭上眼睛，放松聆听';
+    playTrack(mode);
+  }
+}
+
+function showRate() {
+  show('rate'); progBars('rprog');
+  var isRest = order[round] === '_rest';
+  document.getElementById('q1text').textContent = isRest ? '安静了一会儿，你现在感觉怎样？' : '听完这段音乐，你感觉怎样？';
+  document.getElementById('q2text').textContent = isRest ? '你当前的情绪状态是？' : '这段音乐给你的情绪"色调"是？';
+  a1 = null; a2 = null;
+  document.getElementById('next').disabled = true;
+  document.getElementById('next').textContent = '选好后点这里 →';
+  document.querySelectorAll('#q1 .opt,#q2 .opt').forEach(function(b){ b.classList.remove('picked'); });
+  document.querySelectorAll('#q1 .opt').forEach(function(b){ b.onclick = function(){
+    document.querySelectorAll('#q1 .opt').forEach(function(x){ x.classList.remove('picked'); });
+    this.classList.add('picked'); a1 = parseInt(this.dataset.v); chk();
+  };});
+  document.querySelectorAll('#q2 .opt').forEach(function(b){ b.onclick = function(){
+    document.querySelectorAll('#q2 .opt').forEach(function(x){ x.classList.remove('picked'); });
+    this.classList.add('picked'); a2 = this.dataset.v; chk();
+  };});
+}
+
+function chk() {
+  if (a1 !== null && a2 !== null) { document.getElementById('next').disabled = false; document.getElementById('next').textContent = '下一段 →'; }
+}
+
+function confirmRating() {
+  var mode = order[round];
+  ratings.push({ round: round + 1, mode: mode, track: mode === '_rest' ? '_rest' : selectedTracks[mode], arousal: a1, emotion: a2 });
+  round++; a1 = null; a2 = null;
+  show('listen'); progBars('prog');
+  setTimeout(playRound, 400);
+}
+
+function finish() {
+  show('done');
+  var toneRatings = ratings.filter(function(r) { return r.mode !== '_rest'; });
+  var matchedCount = toneRatings.filter(function(r) { return r.emotion === MODES[r.mode].key; }).length;
+
+  document.getElementById('cards').innerHTML = toneRatings.map(function(r) {
+    var info = MODES[r.mode];
+    var trackName = TRACK_NAMES[r.track] || r.track;
+    return '<div class="match-card" style="background:' + info.bg + ';border-left:3px solid ' + info.color + '">' +
+      '<div class="tone-dot" style="background:' + info.color + '"></div>' +
+      '<div class="tone-tag" style="color:' + info.color + '">' + info.label + '</div>' +
+      '<div class="match-info">曲目：<strong>' + trackName + '</strong><br>' +
+      '你感觉：<strong>' + ['','很平静','有点平静','没感觉','有点兴奋','很兴奋'][r.arousal] + '</strong>，' +
+      '<strong>' + ({anding:'安定沉稳',neixing:'内省收敛',shuchang:'舒畅条达',zhenfen:'开心振奋',ningjing:'宁静沉静'})[r.emotion] + '</strong><br>' +
+      '传统认为：' + info.emo + (r.emotion === info.key ? ' ✅ 对上了！' : '') +
+      '</div></div>';
+  }).join('');
+
+  var rec = {
+    ts: new Date().toISOString(), participant: participantInfo, order: order, ratings: ratings,
+    sensor: getSensorReport(),
+    selectedTracks: FIVE_TONES.map(function(m) { return selectedTracks[m]; }).filter(Boolean), matchedCount: matchedCount,
+    summary: FIVE_TONES.map(function(m) {
+      var r = ratings.find(function(x) { return x.mode === m; });
+      return r ? { mode: m, label: MODES[m].label, track: r.track, trackName: TRACK_NAMES[r.track], arousal: r.arousal, emotion: r.emotion } : null;
+    }).filter(Boolean)
+  };
+
+  // Local save
+  var all = JSON.parse(localStorage.getItem('5tone_v5') || '[]');
+  all.push(rec); localStorage.setItem('5tone_v5', JSON.stringify(all));
+
+  // Auto-submit to cloud
+  fetch('https://five-tone-cathykang-d4b0676685c9-1409437628.ap-shanghai.app.tcloudbase.com/submit', {
+    method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(rec)
+  }).then(function(r) { return r.json(); }).then(function(d) {
+    console.log('cloud response:', d);
+    document.getElementById('doneTitle').textContent = d.ok ? '✅ 完成！数据已提交' : '⚠️ 提交失败，数据在本地';
+  }).catch(function(e) {
+    console.error('cloud error:', e);
+    document.getElementById('doneTitle').textContent = '⚠️ 网络不通，数据在本地';
+  });
+
+  console.log(JSON.stringify(rec, null, 2));
+}
+
+// Admin: view data via ?data in URL
+if (location.search.indexOf('data') !== -1) {
+  document.body.innerHTML = '<div style="max-width:700px;margin:20px auto;padding:16px;font-family:monospace;">' +
+    '<h2>📊 所有实验数据</h2><p style="color:#888;">共 ' + (JSON.parse(localStorage.getItem('5tone_v5') || '[]')).length + ' 条记录</p>' +
+    '<button onclick="navigator.clipboard.writeText(localStorage.getItem(\'5tone_v5\')||\'[]\');alert(\'已复制!\')" style="padding:12px 24px;background:#c4a35a;color:white;border:none;border-radius:8px;font-size:1em;cursor:pointer;">📋 一键复制全部数据</button>' +
+    '<pre style="background:#f5f0e8;padding:16px;border-radius:8px;overflow-x:auto;margin-top:12px;font-size:11px;max-height:80vh;overflow-y:auto;">' +
+    JSON.stringify(JSON.parse(localStorage.getItem('5tone_v5') || '[]'), null, 2) +
+    '</pre></div>';
+}
+</script>
+</body>
+</html>

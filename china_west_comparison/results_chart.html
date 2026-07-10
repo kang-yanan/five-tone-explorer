@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>FiveTone Explorer — Results Figure</title>
+<style>
+  body { margin:0; display:flex; justify-content:center; align-items:center; min-height:100vh; background:#fff; }
+  canvas { max-width:800px; width:100%; }
+</style>
+</head>
+<body>
+<canvas id="c" width="800" height="500"></canvas>
+<script>
+const ctx = document.getElementById('c').getContext('2d');
+const W=800, H=500;
+
+// Data — update these when N changes
+const modes = ['宫 Gōng\n安定/Calm','商 Shāng\n内省/Introsp.','角 Jué\n舒畅/Flow','徵 Zhǐ\n振奋/Excited','羽 Yǔ\n宁静/Quiet'];
+const hitRates = [25, 12.5, 16.7, 75, 20.8]; // percentages
+const colors = ['#c4a35a','#b0aca4','#8ba684','#c48173','#7d8fa8'];
+const counts = ['6/24','3/24','4/24','18/24','5/24'];
+
+// Background
+ctx.fillStyle = '#ffffff';
+ctx.fillRect(0,0,W,H);
+
+// Margins
+const M = {top:60, right:40, bottom:120, left:60};
+const cw = W-M.left-M.right;
+const ch = H-M.top-M.bottom;
+
+// Title
+ctx.fillStyle = '#333';
+ctx.font = 'bold 18px -apple-system, "Microsoft YaHei", sans-serif';
+ctx.textAlign = 'center';
+ctx.fillText('Mode-Emotion Match Rate by Pentatonic Mode', W/2, 30);
+ctx.font = '13px -apple-system, "Microsoft YaHei", sans-serif';
+ctx.fillStyle = '#888';
+ctx.fillText('Pilot deployment, N=24 participants | Dashed line = random chance (20%)', W/2, 50);
+
+// Y axis
+ctx.strokeStyle = '#ccc';
+ctx.lineWidth = 1;
+for (let pct=0; pct<=100; pct+=25) {
+  const y = M.top + ch - (pct/100)*ch;
+  ctx.beginPath();
+  ctx.moveTo(M.left, y);
+  ctx.lineTo(W-M.right, y);
+  ctx.stroke();
+  ctx.fillStyle = '#888';
+  ctx.font = '12px sans-serif';
+  ctx.textAlign = 'right';
+  ctx.fillText(pct+'%', M.left-8, y+4);
+}
+
+// Chance line
+const chanceY = M.top + ch - (20/100)*ch;
+ctx.strokeStyle = '#e03131';
+ctx.lineWidth = 1.5;
+ctx.setLineDash([6,4]);
+ctx.beginPath();
+ctx.moveTo(M.left, chanceY);
+ctx.lineTo(W-M.right, chanceY);
+ctx.stroke();
+ctx.setLineDash([]);
+ctx.fillStyle = '#e03131';
+ctx.font = '11px sans-serif';
+ctx.textAlign = 'left';
+ctx.fillText('random 20%', W-M.right-70, chanceY-6);
+
+// X axis
+ctx.strokeStyle = '#333';
+ctx.lineWidth = 1;
+ctx.beginPath();
+ctx.moveTo(M.left, M.top+ch);
+ctx.lineTo(W-M.right, M.top+ch);
+ctx.stroke();
+
+// Bars
+const barW = cw / modes.length * 0.5;
+modes.forEach((mode, i) => {
+  const x = M.left + (i+0.5)*(cw/modes.length) - barW/2;
+  const h = (hitRates[i]/100)*ch;
+  const y = M.top + ch - h;
+
+  // Bar
+  ctx.fillStyle = colors[i];
+  ctx.fillRect(x, y, barW, h);
+
+  // Count label on top of bar
+  ctx.fillStyle = '#333';
+  ctx.font = 'bold 13px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(counts[i], x+barW/2, y-8);
+
+  // Percentage
+  ctx.fillText(hitRates[i]+'%', x+barW/2, y-24);
+
+  // Mode label below
+  ctx.fillStyle = '#333';
+  ctx.font = '12px sans-serif';
+  const lines = mode.split('\n');
+  ctx.fillText(lines[0], x+barW/2, M.top+ch+20);
+  ctx.fillStyle = '#888';
+  ctx.font = '11px sans-serif';
+  ctx.fillText(lines[1], x+barW/2, M.top+ch+38);
+});
+
+// Legend
+ctx.fillStyle = '#888';
+ctx.font = '11px sans-serif';
+ctx.textAlign = 'center';
+ctx.fillText('Match = participant-selected emotion label equals traditional theory prediction', W/2, H-15);
+</script>
+</body>
+</html>

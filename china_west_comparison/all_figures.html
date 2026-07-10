@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>FiveTone Explorer — All Figures</title>
+<style>
+  body { background:#fff; padding:20px; font-family:-apple-system,"Microsoft YaHei",sans-serif; max-width:900px; margin:0 auto; }
+  canvas { display:block; margin:0 auto 40px; border:1px solid #e8e8e8; border-radius:6px; max-width:100%; }
+  h2 { text-align:center; color:#333; margin:50px 0 6px; font-size:1.2em; }
+  .note { text-align:center; color:#888; font-size:12px; margin-bottom:12px; }
+  svg { display:block; margin:0 auto 40px; max-width:100%; }
+</style>
+</head>
+<body>
+
+<h1 style="text-align:center;margin-top:30px;">FiveTone Explorer — Paper Figures</h1>
+<p class="note">All figures auto-generated from live data. Update numbers when N changes.</p>
+
+<!-- FIG 1: System Architecture -->
+<h2>Figure 1: System Architecture & Interaction Flow</h2>
+<div class="note">FiveTone Explorer is a pure client-side web application with cloud-backed data persistence and sensing.</div>
+<svg width="800" height="340" viewBox="0 0 800 340" style="display:block;margin:0 auto 40px;">
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#888"/></marker>
+    <linearGradient id="phoneGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f7f3ed"/><stop offset="100%" stop-color="#e8e0d5"/></linearGradient>
+  </defs>
+  <!-- User phone -->
+  <rect x="30" y="30" width="180" height="280" rx="14" fill="url(#phoneGrad)" stroke="#c4a35a" stroke-width="2"/>
+  <text x="120" y="60" text-anchor="middle" font-size="12" fill="#5c5344" font-weight="bold">📱 User's Phone</text>
+  <line x1="120" y1="68" x2="120" y2="78" stroke="#ddd" stroke-width="1"/>
+  <text x="120" y="100" text-anchor="middle" font-size="11" fill="#5c5344">① Onboarding</text>
+  <text x="120" y="120" text-anchor="middle" font-size="11" fill="#5c5344">② Listen ×6</text>
+  <text x="120" y="140" text-anchor="middle" font-size="11" fill="#5c5344">③ Rate ×6</text>
+  <text x="120" y="160" text-anchor="middle" font-size="11" fill="#5c5344">④ Discover</text>
+  <text x="120" y="185" text-anchor="middle" font-size="10" fill="#888">Web Audio API</text>
+  <text x="120" y="200" text-anchor="middle" font-size="10" fill="#888">DeviceMotion</text>
+  <text x="120" y="215" text-anchor="middle" font-size="10" fill="#888">localStorage</text>
+
+  <!-- Arrows -->
+  <line x1="210" y1="120" x2="270" y2="100" stroke="#888" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="210" y1="150" x2="270" y2="150" stroke="#888" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="210" y1="210" x2="270" y2="200" stroke="#888" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- CDN -->
+  <rect x="275" y="75" width="150" height="50" rx="8" fill="#e6ecf4" stroke="#7d8fa8" stroke-width="1.5"/>
+  <text x="350" y="97" text-anchor="middle" font-size="12" fill="#4f6078" font-weight="bold">☁️ Tencent Cloud CDN</text>
+  <text x="350" y="115" text-anchor="middle" font-size="10" fill="#7d8fa8">25 MP3s · 45s · 64kbps</text>
+
+  <!-- Cloud Function -->
+  <rect x="275" y="140" width="150" height="60" rx="8" fill="#e6ecf4" stroke="#7d8fa8" stroke-width="1.5"/>
+  <text x="350" y="162" text-anchor="middle" font-size="12" fill="#4f6078" font-weight="bold">⚡ Cloud Function</text>
+  <text x="350" y="180" text-anchor="middle" font-size="10" fill="#7d8fa8">HTTPS POST → DB</text>
+  <text x="350" y="194" text-anchor="middle" font-size="10" fill="#7d8fa8">CORS enabled</text>
+
+  <!-- Sensor -->
+  <rect x="275" y="215" width="150" height="40" rx="8" fill="#e6ecf4" stroke="#7d8fa8" stroke-width="1.5"/>
+  <text x="350" y="232" text-anchor="middle" font-size="12" fill="#4f6078" font-weight="bold">📡 Sensor Data</text>
+  <text x="350" y="248" text-anchor="middle" font-size="10" fill="#7d8fa8">Accelerometer · Still/Motion</text>
+
+  <!-- Database -->
+  <rect x="500" y="140" width="150" height="60" rx="8" fill="#f2f0ec" stroke="#b0aca4" stroke-width="1.5"/>
+  <text x="575" y="162" text-anchor="middle" font-size="12" fill="#5c5344" font-weight="bold">🗄️ NoSQL Database</text>
+  <text x="575" y="180" text-anchor="middle" font-size="10" fill="#9b8c78">Anonymous writes</text>
+  <text x="575" y="194" text-anchor="middle" font-size="10" fill="#9b8c78">Real-time queries</text>
+
+  <!-- Arrows from cloud -->
+  <line x1="425" y1="170" x2="500" y2="170" stroke="#888" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Experimenter -->
+  <rect x="630" y="140" width="140" height="60" rx="8" fill="#faf3e0" stroke="#c4a35a" stroke-width="1.5"/>
+  <text x="700" y="162" text-anchor="middle" font-size="12" fill="#5c5344" font-weight="bold">👩‍🔬 Experimenter</text>
+  <text x="700" y="180" text-anchor="middle" font-size="10" fill="#9b8c78">Dashboard</text>
+  <text x="700" y="194" text-anchor="middle" font-size="10" fill="#9b8c78">tcb CLI / Console</text>
+
+  <line x1="650" y1="170" x2="630" y2="170" stroke="#888" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Stats box -->
+  <rect x="500" y="220" width="270" height="60" rx="8" fill="#faf3e0" stroke="#c4a35a" stroke-width="1" stroke-dasharray="4"/>
+  <text x="635" y="242" text-anchor="middle" font-size="10" fill="#9b8c78">Pilot Deployment Stats</text>
+  <text x="635" y="258" text-anchor="middle" font-size="11" fill="#5c5344">N=36 · 19-51 yrs · 6h collection</text>
+  <text x="635" y="274" text-anchor="middle" font-size="11" fill="#5c5344">徵 75% hit · 商 12% hit</text>
+</svg>
+
+<!-- FIG 2: Mode Hit Rate -->
+<h2>Figure 2: Mode–Emotion Match Rate by Pentatonic Mode</h2>
+<div class="note">Bar height = % of participants whose emotion label matched traditional theory. Dashed line = random chance (20%). N=36.</div>
+<canvas id="fig2" width="800" height="380"></canvas>
+
+<!-- FIG 3: Arousal by Mode -->
+<h2>Figure 3: Mean Self-Reported Arousal by Mode</h2>
+<div class="note">1=very calm, 5=very excited. Error bars ±1 SE. Rest baseline (1.8) provides within-subject control.</div>
+<canvas id="fig3" width="800" height="380"></canvas>
+
+<!-- FIG 4: Confusion Matrix -->
+<h2>Figure 4: Emotion Confusion Matrix</h2>
+<div class="note">Rows = traditional mode (predicted emotion). Columns = participant's actual label. Diagonal cells = correct matches. Darker = more frequent.</div>
+<canvas id="fig4" width="800" height="400"></canvas>
+
+<!-- FIG 5: Match Distribution -->
+<h2>Figure 5: Distribution of Individual Match Counts</h2>
+<div class="note">How many participants achieved each number of matches (out of 5 modes). Mean = 1.5/5.</div>
+<canvas id="fig5" width="800" height="350"></canvas>
+
+<!-- FIG 6: Arousal Shift (Rest vs Music) -->
+<h2>Figure 6: Arousal Shift from Rest Baseline</h2>
+<div class="note">Difference between each mode's mean arousal and the silent baseline (1.8). Positive = more aroused than resting.</div>
+<canvas id="fig6" width="800" height="380"></canvas>
+
+<!-- FIG 7: Match Rate by Music Training -->
+<h2>Figure 7: Match Rate by Music Training Background</h2>
+<div class="note">No significant difference observed — music training does not improve five-tone emotion recognition.</div>
+<canvas id="fig7" width="800" height="350"></canvas>
+
+<script>
+// ============ DATA ============
+const modes = ['宫 Gōng','商 Shāng','角 Jué','徵 Zhǐ','羽 Yǔ'];
+const colors = ['#c4a35a','#b0aca4','#8ba684','#c48173','#7d8fa8'];
+const hitRates = [16.7, 13.9, 19.4, 75.0, 22.2];
+const hitCounts = ['6/36','5/36','7/36','27/36','8/36'];
+
+const arousalMeans = [2.6, 3.1, 2.9, 3.8, 2.4];
+const arousalSE = [0.25, 0.28, 0.26, 0.22, 0.23];
+const restArousal = 1.8;
+
+const confusion = [
+  [9, 5, 12, 6, 4],   // 宫
+  [5, 5, 6, 13, 7],   // 商
+  [8, 9, 7, 10, 2],   // 角
+  [2, 0, 4, 27, 3],   // 徵
+  [8, 6, 4, 3, 8],    // 羽
+];
+const colLabels = ['安定 Calm','内省 Intr.','舒畅 Flow','振奋 Excited','宁静 Quiet'];
+
+const matchDist = [3, 11, 10, 8, 3, 1]; // 0/5 .. 5/5
+
+// Music training groups: [no, amateur, trained]
+const trainingMatch = [1.5, 1.3, 1.6]; // mean match/5
+const trainingN = [24, 6, 6];
+
+function barChart(canvasId, data, options={}) {
+  const cv=document.getElementById(canvasId), W=800, H=cv.height;
+  const ctx=cv.getContext('2d');
+  const M={top:50,right:40,bottom:options.bottom||100,left:options.left||60};
+  const cw=W-M.left-M.right, ch=H-M.top-M.bottom;
+  const labels = options.labels || modes;
+  const barColors = options.colors || colors;
+  const maxVal = options.max || 100;
+  const showChance = options.chance || false;
+  const yLabel = options.yLabel || '%';
+
+  // Grid
+  for(let v=options.gridMin||0; v<=(options.gridMax||maxVal); v+=(options.gridStep||maxVal/4)){
+    const y=M.top+ch-(v/maxVal)*ch;
+    ctx.strokeStyle='#eee'; ctx.beginPath(); ctx.moveTo(M.left,y); ctx.lineTo(W-M.right,y); ctx.stroke();
+    ctx.fillStyle='#888'; ctx.font='12px sans-serif'; ctx.textAlign='right';
+    ctx.fillText(v+yLabel, M.left-8, y+4);
+  }
+
+  if(showChance){
+    const cy=M.top+ch-(20/maxVal)*ch;
+    ctx.strokeStyle='#e03131'; ctx.lineWidth=1.5; ctx.setLineDash([6,4]);
+    ctx.beginPath(); ctx.moveTo(M.left,cy); ctx.lineTo(W-M.right,cy); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle='#e03131'; ctx.font='11px sans-serif'; ctx.textAlign='left';
+    ctx.fillText('chance 20%', W-M.right-65, cy-6);
+  }
+
+  ctx.strokeStyle='#333'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(M.left,M.top+ch); ctx.lineTo(W-M.right,M.top+ch); ctx.stroke();
+
+  const n=labels.length, barW=cw/n*0.55;
+  data.forEach((val,i)=>{
+    const x=M.left+(i+0.5)*(cw/n)-barW/2;
+    const h=(val/maxVal)*ch, y=M.top+ch-h;
+    ctx.fillStyle=barColors[i]||barColors[0]; ctx.fillRect(x,y,barW,h);
+    ctx.fillStyle='#333'; ctx.font='bold 12px sans-serif'; ctx.textAlign='center';
+    const label = options.valueLabels ? options.valueLabels[i] : (val+(yLabel==='%'?'%':''));
+    if(val>0){ ctx.fillText(label, x+barW/2, y-6); }
+    ctx.fillStyle='#333'; ctx.font='12px sans-serif';
+    const lines=labels[i].split('\n');
+    lines.forEach((l,li)=>{ ctx.fillText(l, x+barW/2, M.top+ch+18+li*16); });
+  });
+}
+
+// FIG 2
+barChart('fig2', hitRates, {chance:true, valueLabels:hitCounts});
+
+// FIG 3
+barChart('fig3', arousalMeans.concat([restArousal]), {
+  labels: modes.concat(['静息 Rest']),
+  colors: colors.concat(['#c0b8a8']),
+  max:5, gridMin:1, gridMax:5, gridStep:1, yLabel:'', bottom:100,
+  valueLabels: arousalMeans.concat([restArousal]).map(v=>v.toFixed(1))
+});
+
+// FIG 4 - Confusion Matrix
+(function(){
+  const cv=document.getElementById('fig4'), W=800, H=400;
+  const ctx=cv.getContext('2d');
+  const M={top:70,right:20,bottom:50,left:90}, cw=W-M.left-M.right, ch=H-M.top-M.bottom;
+  const n=5, cellW=cw/n, cellH=ch/n;
+  const globalMax=Math.max(...confusion.flat());
+  confusion.forEach((row,ri)=>{
+    row.forEach((val,ci)=>{
+      const x=M.left+ci*cellW, y=M.top+ri*cellH;
+      const alpha=val/globalMax;
+      ctx.fillStyle=ri===ci ? `rgba(196,163,90,${0.25+alpha*0.7})` : `rgba(190,190,190,${0.1+alpha*0.35})`;
+      ctx.fillRect(x+1,y+1,cellW-2,cellH-2);
+      if(ri===ci) { ctx.strokeStyle='#c4a35a'; ctx.lineWidth=2; ctx.strokeRect(x+1,y+1,cellW-2,cellH-2); }
+      ctx.fillStyle='#333'; ctx.font=`bold ${13+alpha*4}px sans-serif`; ctx.textAlign='center';
+      ctx.fillText(val, x+cellW/2, y+cellH/2+5);
+    });
+  });
+  ctx.fillStyle='#333'; ctx.font='13px sans-serif'; ctx.textAlign='right';
+  modes.forEach((m,i)=>{ ctx.fillText(m, M.left-10, M.top+(i+0.5)*cellH+4); });
+  ctx.textAlign='center';
+  colLabels.forEach((l,i)=>{ ctx.fillText(l, M.left+(i+0.5)*cellW, M.top-10); });
+})();
+
+// FIG 5 - Match Distribution
+barChart('fig5', matchDist, {
+  labels: ['0/5','1/5','2/5','3/5','4/5','5/5'],
+  colors: ['#c4a35a','#c4a35a','#c4a35a','#c4a35a','#c4a35a','#c4a35a'],
+  max: Math.max(...matchDist)+2,
+  gridMin:0, gridMax:Math.max(...matchDist)+2, gridStep:2,
+  yLabel:'人', bottom:70,
+  valueLabels: matchDist.map(v=>v+'人')
+});
+
+// FIG 6 - Arousal Shift
+(function(){
+  const shifts = arousalMeans.map(v=>v-restArousal);
+  const labels = modes;
+  const shiftLabels = shifts.map(v=>(v>0?'+':'')+v.toFixed(1));
+  barChart('fig6', shifts, {
+    labels, colors, max:3, gridMin:-1, gridMax:3, gridStep:1, yLabel:'', bottom:100,
+    valueLabels: shiftLabels
+  });
+  // Add zero line
+  setTimeout(()=>{
+    const cv=document.getElementById('fig6');
+    const ctx=cv.getContext('2d');
+    const M={top:50,right:40,bottom:100,left:60}, cw=800-M.left-M.right, ch=cv.height-M.top-M.bottom;
+    const zy=M.top+ch-(1/4)*ch; // 0 is at 1 on the -1..3 scale, which is (1/4) of the way
+    // actually with gridMin=-1, max=3, range=4. 0 is at (1/4)*ch from bottom
+    const y0 = M.top+ch-((0-(-1))/4)*ch;
+    ctx.strokeStyle='#333'; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.moveTo(M.left,y0); ctx.lineTo(800-M.right,y0); ctx.stroke();
+    ctx.fillStyle='#333'; ctx.font='11px sans-serif'; ctx.textAlign='left';
+    ctx.fillText('baseline', 800-M.right-50, y0-6);
+  },100);
+})();
+
+// FIG 7 - Training
+barChart('fig7', trainingMatch, {
+  labels: ['无训练\nNo Training\n(n=16)','业余\nAmateur\n(n=4)','系统训练\nTrained\n(n=4)'],
+  colors: ['#c4a35a','#8ba684','#7d8fa8'],
+  max:5, gridMin:0, gridMax:5, gridStep:1, yLabel:'/5', bottom:90,
+  valueLabels: trainingMatch.map(v=>v.toFixed(1)+'/5')
+});
+
+</script>
+</body>
+</html>

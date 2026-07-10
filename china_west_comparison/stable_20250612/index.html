@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>FiveTone Explorer</title>
+<style>
+  :root { --bg: #f7f3ed; --card: #fffdf9; --border: #e2dbcf; --text: #5c5344; --text2: #9b8c78;
+    --gong: #c4a35a; --shang: #b0aca4; --jue: #8ba684; --zhi: #c48173; --yu: #7d8fa8;
+    --gong-bg: #faf3e0; --shang-bg: #f3f1ee; --jue-bg: #e9f1e6; --zhi-bg: #faebe7; --yu-bg: #e6ecf4; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: var(--bg); color: var(--text); min-height: 100vh;
+    display: flex; justify-content: center; align-items: center; padding: 16px; }
+  .phone { max-width: 420px; width: 100%; }
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  .welcome { text-align: center; padding: 40px 20px; }
+  .welcome .icon { font-size: 3em; margin-bottom: 16px; }
+  .welcome h1 { font-size: 1.5em; margin-bottom: 8px; color: var(--text); font-weight: 700; }
+  .welcome p { color: var(--text2); font-size: 0.92em; line-height: 1.7; margin-bottom: 28px; }
+  .welcome .note { font-size: 0.78em; color: #b8a894; margin-top: 16px; }
+
+  .listening { text-align: center; padding: 40px 20px; }
+  .listening .now { font-size: 0.85em; color: var(--text2); margin-bottom: 8px; }
+  .listening .mood { font-size: 2.4em; font-weight: 700; margin-bottom: 4px; transition: color 0.5s; }
+  .listening .hint { font-size: 0.9em; color: var(--text2); margin-bottom: 24px; }
+  .listening .visualizer { display:flex; justify-content:center; align-items:flex-end; gap:3px; height:44px; margin-bottom:20px; opacity:0.5; }
+  .listening .bar { width:5px; border-radius:0; transition:height 0.8s ease; min-height:3px; background:#a8b8c8; }
+  .listening .emotion-labels { font-size:0.72em; color:#9b8c78; line-height:1.6; text-align:center; margin-bottom:16px; }
+
+  .rating { padding: 24px 20px; }
+  .rating .q { font-size: 1.05em; font-weight: 600; color: var(--text); margin: 18px 0 10px; text-align: center; }
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .opt { padding: 14px 18px; border-radius: 12px; border: 2px solid var(--border); background: var(--card);
+    color: var(--text); font-size: 1em; cursor: pointer; transition: all 0.2s; text-align: center;
+    -webkit-tap-highlight-color: transparent; user-select: none; }
+  .opt:active { transform: scale(0.98); }
+  .opt:hover { border-color: var(--gong); }
+  .opt.picked { border-color: var(--gong); background: var(--gong-bg); font-weight: 600; }
+
+  .result { text-align: center; padding: 30px 20px; }
+  .result h2 { font-size: 1.4em; margin-bottom: 16px; }
+  .match-card { padding: 16px; border-radius: 12px; margin-bottom: 10px; text-align: left; display: flex; align-items: center; gap: 12px; }
+  .match-card .tone-tag { font-size: 1.2em; font-weight: 700; min-width: 50px; }
+  .match-card .tone-dot { width:14px; height:14px; border-radius:50%; flex-shrink:0; }
+  .match-card .match-info { flex:1; font-size: 0.85em; color: var(--text2); }
+  .match-card .match-info strong { color: var(--text); }
+
+  .btn { display: block; width: 100%; padding: 14px; border-radius: 12px; border: none;
+    font-size: 1.05em; font-weight: 600; cursor: pointer; transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent; text-align: center; font-family: inherit; }
+  .btn-primary { background: var(--gong); color: #fffdf7; margin-top: 24px; }
+  .btn-primary:active { background: #b39248; transform: scale(0.98); }
+  .btn-secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); margin-top: 8px; }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .progress { display:flex; gap:8px; justify-content:center; margin-bottom:24px; }
+  .progress .step { width:32px; height:4px; border-radius:2px; background:var(--border); transition:all 0.3s; }
+  .progress .step.filled { background:var(--gong); }
+
+  .motion-indicator { display:flex; align-items:center; justify-content:center; gap:6px; margin-top:8px; font-size:0.78em; color:var(--text2); }
+  .motion-dot { width:8px; height:8px; border-radius:50%; transition: background 0.5s; }
+  .motion-dot.still { background:#8ba684; }
+  .motion-dot.moving { background:#e0a060; }
+
+  .dash-tabs { display:flex; gap:0; margin-bottom:16px; border-radius:12px; overflow:hidden; border:1px solid var(--border); }
+  .dash-tab { flex:1; padding:10px 8px; text-align:center; font-size:0.85em; cursor:pointer; background:var(--card); color:var(--text2); transition:all 0.2s; border:none; font-family:inherit; }
+  .dash-tab.active { background:var(--gong); color:#fff; font-weight:600; }
+  .dash-panel { display:none; }
+  .dash-panel.active { display:block; }
+
+  .stat-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+  .stat-card { padding:14px; border-radius:10px; text-align:center; }
+  .stat-card .num { font-size:1.6em; font-weight:700; }
+  .stat-card .lbl { font-size:0.75em; color:var(--text2); margin-top:2px; }
+
+  .bar-row { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
+  .bar-row .bar-label { font-size:0.82em; min-width:44px; text-align:right; font-weight:600; }
+  .bar-row .bar-track { flex:1; height:22px; background:#eee; border-radius:11px; overflow:hidden; }
+  .bar-row .bar-fill { height:100%; border-radius:11px; transition:width 0.6s; display:flex; align-items:center; padding-left:8px; font-size:0.72em; color:#fff; font-weight:600; }
+  .bar-row .bar-pct { font-size:0.78em; color:var(--text2); min-width:36px; }
+
+  .compare-row { display:flex; align-items:center; gap:8px; padding:10px 12px; border-radius:8px; margin-bottom:6px; font-size:0.82em; }
+  .compare-row .t-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+  .compare-row .t-info { flex:1; }
+  .compare-row .t-match { font-weight:600; }
+  .t-match.hit { color:#8ba684; }
+  .t-match.miss { color:#c48173; }
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <div class="screen active" id="welcome">
+    <div class="welcome">
+      <div class="icon">🎵</div>
+      <h1>FiveTone Explorer</h1>
+      <p>本体验采集你对不同音乐的情绪反馈。<br>
+      聆听<b>8段</b>：静息10秒 → 中式3首 → 静默20秒 → 西式3首。<br>
+      标记真实感受，全程 ~8分钟，匿名参与，无标准答案。</p>
+      <p style="text-align:left;font-size:0.82em;line-height:1.7;color:var(--text2);">
+        <b>听后你会从以下五种情绪中选择：</b><br>
+        &nbsp;&nbsp;🏠 <b>安定沉稳</b> — 平静、踏实、内心安稳<br>
+        &nbsp;&nbsp;🌙 <b>内省收敛</b> — 沉思、向内、情绪收拢<br>
+        &nbsp;&nbsp;🌿 <b>舒畅条达</b> — 放松、通畅、身心舒展<br>
+        &nbsp;&nbsp;🔥 <b>开心振奋</b> — 兴奋、昂扬、充满能量<br>
+        &nbsp;&nbsp;💧 <b>宁静沉静</b> — 安静、清冷、深度沉静
+      </p>
+      <div class="note">🎧 建议佩戴耳机 · 保持环境放松<br>📱 支持手机/电脑浏览器 · 感谢参与</div>
+      <button class="btn btn-primary" onclick="go()">开始体验</button>
+    </div>
+  </div>
+
+  <div class="screen" id="info">
+    <div class="rating">
+      <h2 style="text-align:center;margin-bottom:24px;">📋 关于你</h2>
+      <div class="q">年龄</div>
+      <div class="options"><input type="number" id="age" placeholder="输入年龄" min="10" max="99" style="width:100%;padding:14px;border-radius:12px;border:2px solid var(--border);background:var(--card);font-size:1em;text-align:center;color:var(--text);" oninput="checkInfoReady()"></div>
+      <div class="q">性别</div>
+      <div class="options" id="genderOpts">
+        <button class="opt" data-v="male" onclick="pick(this,'gender')">👦 男</button>
+        <button class="opt" data-v="female" onclick="pick(this,'gender')">👧 女</button>
+      </div>
+      <div class="q">是否学过乐器/音乐？</div>
+      <div class="options" id="musicOpts">
+        <button class="opt" data-v="no" onclick="pick(this,'music')">🎵 没学过</button>
+        <button class="opt" data-v="amateur" onclick="pick(this,'music')">🎸 业余学过</button>
+        <button class="opt" data-v="trained" onclick="pick(this,'music')">🎹 系统训练过</button>
+      </div>
+      <div class="q">对中国传统音乐的熟悉程度</div>
+      <div class="options" id="familiarOpts">
+        <button class="opt" data-v="1" onclick="pick(this,'familiar')">1 — 完全不熟</button>
+        <button class="opt" data-v="2" onclick="pick(this,'familiar')">2 — 听过一点</button>
+        <button class="opt" data-v="3" onclick="pick(this,'familiar')">3 — 一般</button>
+        <button class="opt" data-v="4" onclick="pick(this,'familiar')">4 — 比较熟悉</button>
+        <button class="opt" data-v="5" onclick="pick(this,'familiar')">5 — 非常熟悉</button>
+      </div>
+      <button class="btn btn-primary" id="infoNext" disabled onclick="confirmInfo()">继续 →</button>
+    </div>
+  </div>
+
+  <div class="screen" id="listen">
+    <div class="listening">
+      <div class="progress" id="prog"></div>
+      <div class="now">第 <span id="n">1</span> / <span id="totalSegs">8</span> 段</div>
+      <div class="mood" id="mood">🎶</div>
+      <div class="hint" id="hint">闭上眼睛，放松聆听</div>
+      <div class="visualizer" id="viz"></div>
+      <div class="emotion-labels" id="emotionHint">
+        🏠 安定沉稳 · 平静踏实 &nbsp; 🌙 内省收敛 · 沉思收拢 &nbsp; 🌿 舒畅条达 · 放松舒展<br>
+        🔥 开心振奋 · 兴奋昂扬 &nbsp; 💧 宁静沉静 · 安静清冷
+      </div>
+      <div id="restCountdown" style="display:none;font-size:1.5em;font-weight:bold;color:var(--gong);margin:12px 0;">⏱ <span id="restTimer">30</span> 秒</div>
+      <button id="restSkip" onclick="skipRest()" style="display:none;margin:8px auto;padding:10px 28px;border-radius:12px;border:none;background:var(--gong);color:#fff;font-size:0.9em;cursor:pointer;">跳过静息 ▶</button>
+      <div class="motion-indicator">
+        <div class="motion-dot still" id="motionDot"></div>
+        <span id="motionLabel">检测手机姿态中...</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen" id="rate">
+    <div class="rating">
+      <div class="progress" id="rprog"></div>
+      <div class="q" id="q1text">听完这段音乐，你感觉怎样？</div>
+      <div class="options" id="q1">
+        <button class="opt" data-v="1">😴 很平静</button>
+        <button class="opt" data-v="2">🙂 有点平静</button>
+        <button class="opt" data-v="3">😐 没感觉</button>
+        <button class="opt" data-v="4">😊 有点兴奋</button>
+        <button class="opt" data-v="5">🤩 很兴奋</button>
+      </div>
+      <div class="q" id="q2text">听听看，哪种描述最贴近你此刻的感受？</div>
+      <div class="options" id="q2">
+        <button class="opt" data-v="anding">🏠 平静踏实</button>
+        <button class="opt" data-v="neixing">🌙 沉思收拢</button>
+        <button class="opt" data-v="shuchang">🌿 放松舒展</button>
+        <button class="opt" data-v="zhenfen">🔥 兴奋昂扬</button>
+        <button class="opt" data-v="ningjing">💧 安静清冷</button>
+      </div>
+      <button class="btn btn-primary" id="next" disabled onclick="confirmRating()">选好后点这里 →</button>
+    </div>
+  </div>
+
+  <div class="screen" id="done">
+    <div class="result">
+      <h2>✅ 探索完成！</h2>
+      <div class="dash-tabs">
+        <button class="dash-tab active" onclick="switchTab('personal')">🎯 我的情绪指纹</button>
+        <button class="dash-tab" onclick="switchTab('group')">📊 群体概览</button>
+      </div>
+      <div class="dash-panel active" id="panelPersonal">
+        <p style="color:var(--text2);margin-bottom:14px;font-size:0.85em;">你听到的音乐与你的情绪感受：</p>
+        <div id="cards"></div>
+        <button class="btn btn-primary" onclick="copyData()" style="background:var(--jue);margin:10px 0;">📋 复制我的数据</button>
+        <p style="color:var(--text2);font-size:0.72em;">点击复制 → 回微信群 → 长按粘贴发送</p>
+      </div>
+      <div class="dash-panel" id="panelGroup">
+        <div class="stat-grid" id="statGrid"></div>
+        <div id="matchChart"></div>
+        <p style="font-size:0.76em;color:var(--text2);margin:4px 0 14px;">⬆ 各类型情绪匹配率</p>
+        <div id="arousalChart"></div>
+        <p style="font-size:0.76em;color:var(--text2);margin:4px 0 14px;">⬆ 各类型平均唤醒度（1平静→5兴奋）</p>
+        <div id="personalVsGroup"></div>
+      </div>
+      <button class="btn btn-secondary" onclick="location.reload()" style="margin-top:8px;">🔄 再来一次</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const MODES = {
+  gong:  { label:'宫 Gōng', emo:'安定沉稳', color:'#c4a35a', bg:'#faf3e0', key:'anding', track:'平湖秋月' },
+  shang: { label:'商 Shāng', emo:'内省收敛', color:'#b0aca4', bg:'#f3f1ee', key:'neixing', track:'阳关三叠' },
+  jue:   { label:'角 Jué',   emo:'舒畅条达', color:'#8ba684', bg:'#e9f1e6', key:'shuchang', track:'姑苏行' },
+  zhi:   { label:'徵 Zhǐ',  emo:'开心振奋', color:'#c48173', bg:'#faebe7', key:'zhenfen',  track:'春节序曲' },
+  yu:    { label:'羽 Yǔ',    emo:'宁静沉静', color:'#7d8fa8', bg:'#e6ecf4', key:'ningjing', track:'二泉映月' },
+  west_01: { label:'西式 ①', emo:'—', color:'#6366f1', bg:'#eef2ff', key:'none', track:'欢乐颂' },
+  west_02: { label:'西式 ②', emo:'—', color:'#818cf8', bg:'#eef2ff', key:'none', track:'小夜曲' },
+  west_03: { label:'西式 ③', emo:'—', color:'#a78bfa', bg:'#f5f3ff', key:'none', track:'月光奏鸣曲' },
+  west_04: { label:'西式 ④', emo:'—', color:'#c4b5fd', bg:'#f5f3ff', key:'none', track:'花之圆舞曲' },
+  west_05: { label:'西式 ⑤', emo:'—', color:'#ddd6fe', bg:'#f8f7ff', key:'none', track:'吉姆诺佩蒂' },
+  _rest: { label:'静息基线', emo:'—', color:'#c0b8a8', bg:'#f5f2ec', key:'_rest', track:'安静基线' }
+};
+const FIVE_TONES = ['gong','shang','jue','zhi','yu'];
+const WESTERN_MODES = ['west_01','west_02','west_03','west_04','west_05'];
+const ALL_MUSIC = [...FIVE_TONES, ...WESTERN_MODES];
+const BAR_COUNT = 24;
+
+const TRACK_POOL = {};
+FIVE_TONES.forEach(m => { TRACK_POOL[m] = [1,2,3,4,5].map(i => `audio/embed25/${m}_0${i}.mp3`); });
+WESTERN_MODES.forEach(m => { TRACK_POOL[m] = [`audio/embed25/${m}.mp3`]; });
+
+let ctx, order=[], round=0, ratings=[], a1=null, a2=null, src=null, ana=null, rid=null;
+let participantInfo={}, genderPicked=null, musicPicked=null, familiarPicked=null;
+let selectedTracks={}, motionSamples=[], motionPerRound=[], motionWatchId=null, wakeLock=null;
+
+// CloudBase (async load, non-blocking)
+let db=null;
+(function(){
+  const s=document.createElement('script');
+  s.src='https://imgcache.qq.com/qcloud/cloudbase-js-sdk/2.1.0/cloudbase.full.js';
+  s.onload=()=>{ try{const t=cloudbase.init({env:'five-tone-cathykang-d4b0676685c9'});t.auth().anonymousAuthProvider().signIn().catch(()=>{});db=t.database();}catch(e){} };
+  s.onerror=()=>{};
+  document.head.appendChild(s);
+})();
+async function submitToCloud(rec) { if(db){try{await db.collection('experiments').add(rec);}catch(e){}} }
+
+// Session
+const SAVE_KEY = '5tone_v7';
+function saveSession() { localStorage.setItem(SAVE_KEY, JSON.stringify({order,round,ratings,selectedTracks,participantInfo,motionPerRound,ts:Date.now()})); }
+function clearSession() { localStorage.removeItem(SAVE_KEY); }
+
+// Wake lock
+async function acquireWakeLock() { try { if ('WakeLock' in window) wakeLock = await window.WakeLock.request('screen'); } catch(e) {} }
+function releaseWakeLock() { if (wakeLock) { wakeLock.release().catch(()=>{}); wakeLock=null; } }
+document.addEventListener('visibilitychange',()=>{ if (document.visibilityState==='visible'&&order.length>0&&round<order.length) acquireWakeLock(); });
+
+// Info page
+function pick(el,type) {
+  el.parentElement.querySelectorAll('.opt').forEach(o=>o.classList.remove('picked'));
+  el.classList.add('picked');
+  if (type==='gender') genderPicked=el.dataset.v;
+  if (type==='music') musicPicked=el.dataset.v;
+  if (type==='familiar') familiarPicked=el.dataset.v;
+  checkInfoReady();
+}
+function checkInfoReady() { document.getElementById('infoNext').disabled = !(document.getElementById('age').value&&genderPicked&&musicPicked&&familiarPicked); }
+function confirmInfo() {
+  participantInfo={age:parseInt(document.getElementById('age').value),gender:genderPicked,musicTraining:musicPicked,familiarity:familiarPicked,userAgent:navigator.userAgent,screenW:screen.width,screenH:screen.height,ts:new Date().toISOString(),geo:null};
+  try { const c=new AbortController(); setTimeout(()=>c.abort(),2000); fetch('https://ipapi.co/json/',{signal:c.signal}).then(r=>r.json()).then(d=>{participantInfo.geo={city:d.city,region:d.region,country:d.country_name,timezone:d.timezone}}).catch(()=>{}); } catch(e) {}
+  clearSession(); resetMotionTracking(); acquireWakeLock();
+  ctx = new (window.AudioContext||window.webkitAudioContext)();
+  if (ctx.state==='suspended') ctx.resume();
+  // Unlock audio: play silent buffer
+  try { const s=ctx.createBufferSource(); s.buffer=ctx.createBuffer(1,1,44100); s.connect(ctx.destination); s.start(); s.stop(); } catch(e) {}
+  show('listen'); playRound();
+}
+
+// UI
+function show(id) { document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+function progBars(cid) { document.getElementById(cid).innerHTML = order.map((_,i)=>`<div class="step${i<round?' filled':''}"></div>`).join(''); }
+
+// Audio
+async function go() {
+  clearSession(); localStorage.removeItem('5tone_v5');
+  const pickN=(arr,n)=>{const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a.slice(0,n);};
+  const cn=pickN(FIVE_TONES,3), wn=pickN(WESTERN_MODES,3);
+  cn.forEach(m=>{selectedTracks[m]=TRACK_POOL[m][Math.floor(Math.random()*TRACK_POOL[m].length)];});
+  wn.forEach(m=>{selectedTracks[m]=TRACK_POOL[m][0];});
+  // Fixed: 10s rest → Chinese (3) → 20s silent → Western (3) = 8 segments
+  order=['_rest',...cn.sort(()=>Math.random()-0.5),'_rest',...wn.sort(()=>Math.random()-0.5)];
+  round=0; ratings=[]; a1=null; a2=null; show('info');
+}
+
+function loadAndPlay(url) {
+  if (!ctx) { ctx = new (window.AudioContext||window.webkitAudioContext)(); }
+  ctx.resume();
+  const a = new Audio(url);
+  a.preload = 'auto';
+  a.onended = () => { stopViz(); stopMotionTracking(); showRate(); };
+  a.onerror = () => { stopViz(); stopMotionTracking(); showRate(); };
+  // Play first (unlocks audio), then connect visualizer
+  a.play().catch(() => {});
+  try {
+    const sn = ctx.createMediaElementSource(a);
+    const an = ctx.createAnalyser(); an.fftSize=256; an.smoothingTimeConstant=0.5;
+    sn.connect(an); an.connect(ctx.destination); ana=an;
+  } catch(e) {}
+  src = { stop: () => { a.pause(); a.removeAttribute('src'); } };
+  setTimeout(()=>animateBars(),100);
+}
+
+function animateBars() {
+  const bars=document.querySelectorAll('#viz .bar');
+  const t=Date.now()/800;
+  bars.forEach((b,i)=>{
+    // Left-high right-low decreasing baseline
+    const basePct=0.82-(i/(bars.length-1))*0.68;
+    // Subtle breathing wave
+    const wave=Math.sin(t+i*0.25)*0.04;
+    b.style.height=(4+(basePct+wave)*40)+'px';
+  });
+  rid=requestAnimationFrame(animateBars);
+}
+function stopViz() { if(rid){cancelAnimationFrame(rid);rid=null;} }
+function stopAudio() { stopViz(); if(src){try{src.stop();}catch(e){}src=null;} ana=null; }
+
+// Playback
+function playRound() {
+  if (round>=order.length) { finish(); return; }
+  stopAudio(); startMotionTracking();
+  document.getElementById('totalSegs').textContent = order.length;
+  document.getElementById('n').textContent = round+1;
+  document.getElementById('restCountdown').style.display='none';
+  document.getElementById('restSkip').style.display='none';
+  const mode=order[round], info=MODES[mode];
+  const isRest=mode==='_rest';
+  document.getElementById('viz').style.display=isRest?'none':'flex';
+  document.getElementById('emotionHint').style.display=isRest?'none':'block';
+  document.getElementById('mood').textContent=isRest?'🤫':'🎶';
+  document.getElementById('mood').style.color=info.color;
+  document.getElementById('hint').textContent=isRest?'静息 '+((round===0)?'10':'20')+' 秒，保持不动':'闭上眼睛，放松聆听';
+  progBars('prog');
+  document.querySelectorAll('#viz .bar').forEach(b=>{b.style.height='6px';});
+  if (isRest) {
+    document.getElementById('viz').style.display='none';
+    document.getElementById('restCountdown').style.display='block';
+    document.getElementById('restSkip').style.display='block';
+    // 10s for opening rest (round 0), 20s for mid silent baseline
+    const secs = (round===0)?10:20;
+    let rem=secs; const el=document.getElementById('restTimer'); el.textContent=rem;
+    document.getElementById('hint').textContent='静息 '+secs+' 秒，保持不动';
+    window._ri=setInterval(()=>{rem--;el.textContent=rem;if(rem<=0){clearInterval(window._ri);stopMotionTracking();showRate();}},1000);
+    window._rt=setTimeout(()=>{clearInterval(window._ri);stopMotionTracking();showRate();},secs*1000);
+  } else { loadAndPlay(selectedTracks[mode]); }
+}
+function skipRest() { clearInterval(window._ri); clearTimeout(window._rt); stopMotionTracking(); showRate(); }
+
+function showRate() {
+  show('rate'); progBars('rprog'); a1=null; a2=null;
+  const isRest=order[round]==='_rest';
+  document.getElementById('q1text').textContent=isRest?'静息了 30 秒，你现在的感觉如何？':'听完这段音乐，你感觉怎样？';
+  document.getElementById('q2text').textContent=isRest?'此刻你的情绪状态更接近？':'这段音乐给你的情绪"色调"是？';
+  document.getElementById('next').disabled=true;
+  document.querySelectorAll('#q1 .opt,#q2 .opt').forEach(b=>b.classList.remove('picked'));
+  document.querySelectorAll('#q1 .opt').forEach(b=>b.onclick=function(){document.querySelectorAll('#q1 .opt').forEach(x=>x.classList.remove('picked'));this.classList.add('picked');a1=parseInt(this.dataset.v);if(a1!==null&&a2!==null)document.getElementById('next').disabled=false;});
+  document.querySelectorAll('#q2 .opt').forEach(b=>b.onclick=function(){document.querySelectorAll('#q2 .opt').forEach(x=>x.classList.remove('picked'));this.classList.add('picked');a2=this.dataset.v;if(a1!==null&&a2!==null)document.getElementById('next').disabled=false;});
+}
+function confirmRating() {
+  clearInterval(window._ri); clearTimeout(window._rt);
+  ratings.push({round:round+1,mode:order[round],arousal:a1,emotion:a2});
+  round++; a1=null; a2=null; saveSession();
+  show('listen'); playRound();
+}
+
+// Motion
+function resetMotionTracking() { stopMotionTracking(); motionSamples=[]; motionPerRound=[]; }
+function startMotionTracking() {
+  try { motionSamples=[]; if(typeof DeviceMotionEvent==='undefined')return;
+    const h=e=>{const a=e.accelerationIncludingGravity;if(!a||a.x===null)return;motionSamples.push({t:Date.now(),mag:Math.sqrt((a.x||0)**2+(a.y||0)**2+(a.z||0)**2)});};
+    window.addEventListener('devicemotion',h); motionWatchId={handler:h};
+  } catch(e) {}
+}
+function stopMotionTracking() {
+  try { if(!motionWatchId)return; window.removeEventListener('devicemotion',motionWatchId.handler); motionWatchId=null;
+    if(motionSamples.length===0){motionPerRound.push(null);return;}
+    const mags=motionSamples.map(s=>s.mag), mean=mags.reduce((a,b)=>a+b,0)/mags.length, variance=mags.reduce((s,v)=>s+(v-mean)**2,0)/mags.length;
+    let q,eng; if(variance<1.0){q='very_still';eng='high';}else if(variance<2.0){q='still';eng='medium';}else if(variance<5.0){q='moving';eng='low';}else{q='active';eng='distracted';}
+    motionPerRound.push({mean,variance,n:mags.length,quality:q,engagement:eng,motionRatio:mags.filter(m=>m>11).length/mags.length});
+  } catch(e) {}
+}
+
+// Results
+function finish() {
+  releaseWakeLock(); clearSession(); show('done');
+  const toneRatings=ratings.filter(r=>r.mode!=='_rest'), restRating=ratings.find(r=>r.mode==='_rest');
+  const matchedCount=toneRatings.filter(r=>r.emotion===MODES[r.mode].key).length;
+  const rec={ts:new Date().toISOString(),participant:participantInfo,order,ratings,selectedTracks:{...selectedTracks},restBaseline:restRating?{arousal:restRating.arousal,emotion:restRating.emotion}:null,motionPerRound:motionPerRound.filter(Boolean),matchedCount,summary:ALL_MUSIC.map(m=>{const r=ratings.find(x=>x.mode===m);return r?{mode:m,label:MODES[m].label,track:MODES[m].track,arousal:r.arousal,emotion:r.emotion}:null;}).filter(Boolean)};
+  const all=JSON.parse(localStorage.getItem('5tone_v5')||'[]'); all.push(rec); localStorage.setItem('5tone_v5',JSON.stringify(all));
+  submitToCloud(rec);
+  document.getElementById('cards').innerHTML=toneRatings.map(r=>{const info=MODES[r.mode];return`<div class="match-card" style="background:${info.bg};border-left:3px solid ${info.color}"><div class="tone-dot" style="background:${info.color}"></div><div class="tone-tag" style="color:${info.color}">${info.label}</div><div class="match-info">曲目：<strong>${info.track}</strong><br>你感觉：<strong>${['','很平静','有点平静','没感觉','有点兴奋','很兴奋'][r.arousal]}</strong>，<strong>${{anding:'安定沉稳',neixing:'内省收敛',shuchang:'舒畅条达',zhenfen:'开心振奋',ningjing:'宁静沉静'}[r.emotion]}</strong></div></div>`;}).join('');
+}
+function copyData() {
+  const all=JSON.parse(localStorage.getItem('5tone_v5')||'[]'), last=all[all.length-1];
+  if(!last){alert('没有数据');return;}
+  const out={participant:participantInfo,experiment:{ratings:last.ratings,order:last.order,selectedTracks:last.selectedTracks,summary:last.summary,motionPerRound:last.motionPerRound}};
+  if(navigator.clipboard){navigator.clipboard.writeText(JSON.stringify(out)).then(()=>alert('已复制！'));}else{const ta=document.createElement('textarea');ta.value=JSON.stringify(out);ta.style.position='fixed';ta.style.left='-9999px';document.body.appendChild(ta);ta.select();document.execCommand('copy');alert('已复制！');document.body.removeChild(ta);}
+}
+function switchTab(tab) { document.querySelectorAll('.dash-tab').forEach(t=>t.classList.remove('active')); document.querySelectorAll('.dash-panel').forEach(p=>p.classList.remove('active')); if(tab==='personal'){document.querySelector('.dash-tab:first-child').classList.add('active');document.getElementById('panelPersonal').classList.add('active');}else{document.querySelector('.dash-tab:last-child').classList.add('active');document.getElementById('panelGroup').classList.add('active');renderGroupDashboard();} }
+function renderGroupDashboard() {
+  const all=JSON.parse(localStorage.getItem('5tone_v5')||'[]'), nTotal=all.length;
+  document.getElementById('statGrid').innerHTML=`<div class="stat-card" style="background:var(--gong-bg)"><div class="num">${nTotal}</div><div class="lbl">总参与人次</div></div><div class="stat-card" style="background:var(--jue-bg)"><div class="num">${nTotal>0?Math.round(all.filter(r=>r.summary&&r.summary.length>=5).length/nTotal*100):0}%</div><div class="lbl">完成率</div></div>`;
+  if(nTotal===0){document.getElementById('matchChart').innerHTML='<p style="color:var(--text2);font-size:0.85em;text-align:center;padding:20px;">还没有数据，成为第一个探索者吧！</p>';return;}
+  const mc={}, mm={}, ma={};
+  ALL_MUSIC.forEach(m=>{mc[m]=0;mm[m]=0;ma[m]=0;});
+  all.forEach(rec=>{if(!rec.summary)return;rec.summary.forEach(s=>{mc[s.mode]=(mc[s.mode]||0)+1;if(s.emotion===MODES[s.mode].key)mm[s.mode]=(mm[s.mode]||0)+1;ma[s.mode]=(ma[s.mode]||0)+(s.arousal||0);});});
+  const labels={gong:'宫',shang:'商',jue:'角',zhi:'徵',yu:'羽',west_01:'西A',west_02:'西B',west_03:'西C',west_04:'西D',west_05:'西E'};
+  document.getElementById('matchChart').innerHTML=ALL_MUSIC.map(m=>{const pct=mc[m]>0?Math.round(mm[m]/mc[m]*100):0;return`<div class="bar-row"><span class="bar-label" style="color:${MODES[m].color}">${labels[m]}</span><div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${MODES[m].color}">${pct>10?pct+'%':''}</div></div><span class="bar-pct">${pct}%</span></div>`;}).join('');
+  document.getElementById('arousalChart').innerHTML=ALL_MUSIC.map(m=>{const avg=mc[m]>0?(ma[m]/mc[m]).toFixed(1):0;return`<div class="bar-row"><span class="bar-label" style="color:${MODES[m].color}">${labels[m]}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.round(avg/5*100)}%;background:${MODES[m].color}">${avg}</div></div><span class="bar-pct">/5</span></div>`;}).join('');
+  const lastRec=all[all.length-1];
+  if(lastRec&&lastRec.summary){document.getElementById('personalVsGroup').innerHTML='<p style="font-size:0.82em;color:var(--text2);margin-bottom:6px;">🎯 你 vs 群体：</p>'+ALL_MUSIC.map(m=>{const my=lastRec.summary.find(x=>x.mode===m),gpPct=mc[m]>0?Math.round(mm[m]/mc[m]*100):0,myMatch=my&&my.emotion===MODES[m].key;return`<div class="compare-row" style="background:${MODES[m].bg}"><div class="t-dot" style="background:${MODES[m].color}"></div><div class="t-info">${labels[m]} ${my?{anding:'安定',neixing:'内省',shuchang:'舒畅',zhenfen:'振奋',ningjing:'宁静'}[my.emotion]:''}</div><div class="t-match ${myMatch?'hit':'miss'}">${myMatch?'✅':'🔀'}</div><div style="font-size:0.72em;color:var(--text2)">群体${gpPct}%</div></div>`;}).join('');}
+}
+(function(){ document.getElementById('viz').innerHTML = Array.from({length:BAR_COUNT},()=>'<div class="bar"></div>').join(''); })();
+</script>
+</body>
+</html>

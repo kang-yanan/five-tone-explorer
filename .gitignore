@@ -1,0 +1,31 @@
+# Audio files — hosted on CDN (38MB)
+audio/
+
+# Paper drafts — not public
+*.docx
+*.pdf
+*.tex
+paper_*
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Binary archives
+*.npz
+
+# Cloud credentials
+cloudbaserc.json
+
+# Temporary / working files
+_session_context/
+_review_temp_*
+*.cut
+comment.cut
+
+# Diagrams
+*.vsdx
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>FiveTone Explorer · 个人化五音情绪交互探索系统</title>
+<style>
+  :root { --bg: #f7f3ed; --card: #fffdf9; --border: #e2dbcf; --text: #5c5344; --text2: #9b8c78;
+    --gong: #c4a35a; --shang: #b0aca4; --jue: #8ba684; --zhi: #c48173; --yu: #7d8fa8;
+    --gong-bg: #faf3e0; --shang-bg: #f3f1ee; --jue-bg: #e9f1e6; --zhi-bg: #faebe7; --yu-bg: #e6ecf4; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: var(--bg); color: var(--text); min-height: 100vh;
+    display: flex; justify-content: center; align-items: center; padding: 16px; }
+  .phone { max-width: 420px; width: 100%; }
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  .welcome { text-align: center; padding: 40px 20px; }
+  .welcome .icon { font-size: 3em; margin-bottom: 16px; }
+  .welcome h1 { font-size: 1.5em; margin-bottom: 8px; color: var(--text); font-weight: 700; }
+  .welcome p { color: var(--text2); font-size: 0.92em; line-height: 1.7; margin-bottom: 28px; }
+  .welcome .note { font-size: 0.78em; color: #b8a894; margin-top: 16px; }
+
+  .listening { text-align: center; padding: 40px 20px; }
+  .listening .now { font-size: 0.85em; color: var(--text2); margin-bottom: 8px; }
+  .listening .mood { font-size: 2.4em; font-weight: 700; margin-bottom: 4px; transition: color 0.5s; }
+  .listening .hint { font-size: 0.9em; color: var(--text2); margin-bottom: 24px; }
+  .listening .visualizer { display:flex; justify-content:center; align-items:flex-end; gap:4px; height:90px; margin-bottom: 24px; }
+  .listening .bar { width:8px; border-radius:4px; transition:height 0.15s, background 0.5s; min-height:6px; background:var(--border); }
+
+  .rating { padding: 24px 20px; }
+  .rating .q { font-size: 1.05em; font-weight: 600; color: var(--text); margin: 18px 0 10px; text-align: center; }
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .opt { padding: 14px 18px; border-radius: 12px; border: 2px solid var(--border); background: var(--card);
+    color: var(--text); font-size: 1em; cursor: pointer; transition: all 0.2s; text-align: center;
+    -webkit-tap-highlight-color: transparent; user-select: none; }
+  .opt:active { transform: scale(0.98); }
+  .opt:hover { border-color: var(--gong); }
+  .opt.picked { border-color: var(--gong); background: var(--gong-bg); font-weight: 600; }
+
+  .result { text-align: center; padding: 30px 20px; }
+  .result h2 { font-size: 1.4em; margin-bottom: 16px; }
+  .match-card { padding: 16px; border-radius: 12px; margin-bottom: 10px; text-align: left; display: flex; align-items: center; gap: 12px; }
+  .match-card .tone-tag { font-size: 1.2em; font-weight: 700; min-width: 50px; }
+  .match-card .tone-dot { width:14px; height:14px; border-radius:50%; flex-shrink:0; }
+  .match-card .match-info { flex:1; font-size: 0.85em; color: var(--text2); }
+  .match-card .match-info strong { color: var(--text); }
+
+  .btn { display: block; width: 100%; padding: 14px; border-radius: 12px; border: none;
+    font-size: 1.05em; font-weight: 600; cursor: pointer; transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent; text-align: center; font-family: inherit; }
+  .btn-primary { background: var(--gong); color: #fffdf7; margin-top: 24px; }
+  .btn-primary:active { background: #b39248; transform: scale(0.98); }
+  .btn-secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); margin-top: 8px; }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .progress { display:flex; gap:8px; justify-content:center; margin-bottom:24px; }
+  .progress .step { width:32px; height:4px; border-radius:2px; background:var(--border); transition:all 0.3s; }
+  .progress .step.filled { background:var(--gong); }
+
+  /* 加速度计指示器 */
+  .motion-indicator { display:flex; align-items:center; justify-content:center; gap:6px; margin-top:8px; font-size:0.78em; color:var(--text2); }
+  .motion-dot { width:8px; height:8px; border-radius:50%; transition: background 0.5s; }
+  .motion-dot.still { background:#8ba684; }
+  .motion-dot.moving { background:#e0a060; }
+
+  /* Dashboard */
+  .dash-tabs { display:flex; gap:0; margin-bottom:16px; border-radius:12px; overflow:hidden; border:1px solid var(--border); }
+  .dash-tab { flex:1; padding:10px 8px; text-align:center; font-size:0.85em; cursor:pointer; background:var(--card); color:var(--text2); transition:all 0.2s; border:none; font-family:inherit; }
+  .dash-tab.active { background:var(--gong); color:#fff; font-weight:600; }
+  .dash-panel { display:none; }
+  .dash-panel.active { display:block; }
+
+  .stat-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+  .stat-card { padding:14px; border-radius:10px; text-align:center; }
+  .stat-card .num { font-size:1.6em; font-weight:700; }
+  .stat-card .lbl { font-size:0.75em; color:var(--text2); margin-top:2px; }
+
+  .bar-row { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
+  .bar-row .bar-label { font-size:0.82em; min-width:44px; text-align:right; font-weight:600; }
+  .bar-row .bar-track { flex:1; height:22px; background:#eee; border-radius:11px; overflow:hidden; }
+  .bar-row .bar-fill { height:100%; border-radius:11px; transition:width 0.6s; display:flex; align-items:center; padding-left:8px; font-size:0.72em; color:#fff; font-weight:600; }
+  .bar-row .bar-pct { font-size:0.78em; color:var(--text2); min-width:36px; }
+
+  .compare-row { display:flex; align-items:center; gap:8px; padding:10px 12px; border-radius:8px; margin-bottom:6px; font-size:0.82em; }
+  .compare-row .t-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+  .compare-row .t-info { flex:1; }
+  .compare-row .t-match { font-weight:600; }
+  .t-match.hit { color:#8ba684; }
+  .t-match.miss { color:#c48173; }
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <!-- 欢迎页 -->
+  <div class="screen active" id="welcome">
+    <div class="welcome">
+      <div class="icon">🎵</div>
+      <h1>FiveTone Explorer</h1>
+      <p>中国传统五音（宫商角徵羽）认为每种调式对应一种情绪。<br>
+      但<b>对你个人</b>来说，这个理论成立吗？<br><br>
+      戴上耳机，听<b>6段</b>音乐（含1段静息基线），<br>
+      标记你的真实感受，<b>发现你自己的音乐情绪指纹</b>。<br>
+      全程 ~5分钟，匿名，没有标准答案。</p>
+      <div class="note">🎧 建议戴上耳机 · 保持放松<br>📱 手机/电脑浏览器均可</div>
+      <button class="btn btn-primary" onclick="go()">开始探索 🎧</button>
+    </div>
+  </div>
+
+  <!-- 信息页 -->
+  <div class="screen" id="info">
+    <div class="rating">
+      <h2 style="text-align:center;margin-bottom:24px;">📋 关于你</h2>
+      <div class="q">年龄</div>
+      <div class="options"><input type="number" id="age" placeholder="输入年龄" min="10" max="99" style="width:100%;padding:14px;border-radius:12px;border:2px solid var(--border);background:var(--card);font-size:1em;text-align:center;color:var(--text);" oninput="checkInfoReady()"></div>
+      <div class="q">性别</div>
+      <div class="options" id="genderOpts">
+        <button class="opt" data-v="male" onclick="pick(this,'gender')">👦 男</button>
+        <button class="opt" data-v="female" onclick="pick(this,'gender')">👧 女</button>
+      </div>
+      <div class="q">是否学过乐器/音乐？</div>
+      <div class="options" id="musicOpts">
+        <button class="opt" data-v="no" onclick="pick(this,'music')">🎵 没学过</button>
+        <button class="opt" data-v="amateur" onclick="pick(this,'music')">🎸 业余学过</button>
+        <button class="opt" data-v="trained" onclick="pick(this,'music')">🎹 系统训练过</button>
+      </div>
+      <div class="q">对中国传统音乐的熟悉程度</div>
+      <div class="options" id="familiarOpts">
+        <button class="opt" data-v="1" onclick="pick(this,'familiar')">1 — 完全不熟</button>
+        <button class="opt" data-v="2" onclick="pick(this,'familiar')">2 — 听过一点</button>
+        <button class="opt" data-v="3" onclick="pick(this,'familiar')">3 — 一般</button>
+        <button class="opt" data-v="4" onclick="pick(this,'familiar')">4 — 比较熟悉</button>
+        <button class="opt" data-v="5" onclick="pick(this,'familiar')">5 — 非常熟悉</button>
+      </div>
+      <button class="btn btn-primary" id="infoNext" disabled onclick="confirmInfo()">继续 →</button>
+    </div>
+  </div>
+
+  <!-- 聆听页 -->
+  <div class="screen" id="listen">
+    <div class="listening">
+      <div class="progress" id="prog"></div>
+      <div class="now">第 <span id="n">1</span> / 6 段</div>
+      <div class="mood" id="mood">🎶</div>
+      <div class="hint" id="hint">闭上眼睛，放松聆听</div>
+      <div class="visualizer" id="viz"></div>
+      <div class="motion-indicator">
+        <div class="motion-dot still" id="motionDot"></div>
+        <span id="motionLabel">检测手机姿态中...</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 评分页 -->
+  <div class="screen" id="rate">
+    <div class="rating">
+      <div class="progress" id="rprog"></div>
+      <div class="q">听完这段音乐，你感觉怎样？</div>
+      <div class="options" id="q1">
+        <button class="opt" data-v="1">😴 很平静</button>
+        <button class="opt" data-v="2">🙂 有点平静</button>
+        <button class="opt" data-v="3">😐 没感觉</button>
+        <button class="opt" data-v="4">😊 有点兴奋</button>
+        <button class="opt" data-v="5">🤩 很兴奋</button>
+      </div>
+      <div class="q">这段音乐给你的情绪"色调"是？</div>
+      <div class="options" id="q2">
+        <button class="opt" data-v="anding">🏠 安定沉稳的</button>
+        <button class="opt" data-v="neixing">🌙 内省收敛的</button>
+        <button class="opt" data-v="shuchang">🌿 舒畅条达的</button>
+        <button class="opt" data-v="zhenfen">🔥 开心振奋的</button>
+        <button class="opt" data-v="ningjing">💧 宁静沉静的</button>
+      </div>
+      <button class="btn btn-primary" id="next" disabled onclick="confirmRating()">选好后点这里 →</button>
+    </div>
+  </div>
+
+  <!-- 结果页 -->
+  <div class="screen" id="done">
+    <div class="result">
+      <h2>✅ 探索完成！</h2>
+      <div class="dash-tabs">
+        <button class="dash-tab active" onclick="switchTab('personal')">🎯 我的情绪指纹</button>
+        <button class="dash-tab" onclick="switchTab('group')">📊 群体概览</button>
+      </div>
+
+      <div class="dash-panel active" id="panelPersonal">
+        <p style="color:var(--text2);margin-bottom:14px;font-size:0.85em;">你听到的5段音乐与你的情绪感受：</p>
+        <div id="cards"></div>
+        <p style="color:var(--text2);font-size:0.8em;margin-top:12px;">
+        传统五音：宫→安定 · 商→内省 · 角→舒畅 · 徵→振奋 · 羽→宁静</p>
+        <button class="btn btn-primary" onclick="copyData()" style="background:var(--jue);margin:10px 0;">📋 复制我的数据</button>
+        <p style="color:var(--text2);font-size:0.72em;">点击复制 → 回微信群 → 长按粘贴发送</p>
+      </div>
+
+      <div class="dash-panel" id="panelGroup">
+        <div class="stat-grid" id="statGrid"></div>
+        <div class="bar-row" id="matchChart"></div>
+        <p style="font-size:0.76em;color:var(--text2);margin:4px 0 14px;">⬆ 各调式情绪匹配率</p>
+        <div class="bar-row" id="arousalChart"></div>
+        <p style="font-size:0.76em;color:var(--text2);margin:4px 0 14px;">⬆ 各调式平均唤醒度（1平静→5兴奋）</p>
+        <div id="personalVsGroup"></div>
+      </div>
+
+      <button class="btn btn-secondary" onclick="location.reload()" style="margin-top:8px;">🔄 再来一次</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ========== 数据定义 ==========
+const MODES = {
+  gong:  { label:'宫 Gōng', emo:'安定沉稳', color:'#c4a35a', bg:'#faf3e0', key:'anding', track:'平胡秋月' },
+  shang: { label:'商 Shāng', emo:'内省收敛', color:'#b0aca4', bg:'#f3f1ee', key:'neixing', track:'阳关三叠' },
+  jue:   { label:'角 Jué',   emo:'舒畅条达', color:'#8ba684', bg:'#e9f1e6', key:'shuchang', track:'姑苏行' },
+  zhi:   { label:'徵 Zhǐ',  emo:'开心振奋', color:'#c48173', bg:'#faebe7', key:'zhenfen',  track:'春节序曲' },
+  yu:    { label:'羽 Yǔ',    emo:'宁静沉静', color:'#7d8fa8', bg:'#e6ecf4', key:'ningjing', track:'二泉映月' },
+  _rest: { label:'静息基线', emo:'—', color:'#c0b8a8', bg:'#f5f2ec', key:'_rest', track:'安静基线' }
+};
+const FIVE_TONES = ['gong','shang','jue','zhi','yu'];
+const ALL_CONDITIONS = ['gong','shang','jue','zhi','yu','_rest'];
+const BAR_COUNT = 10;
+
+// 每个调式有5个候选曲目（从 audio/embed25/ 加载）
+const TRACK_POOL = {};
+FIVE_TONES.forEach(m => {
+  TRACK_POOL[m] = [1,2,3,4,5].map(i => `audio/embed25/${m}_0${i}.mp3`);
+});
+
+// ========== 全局状态 ==========
+let ctx, order=[], round=0, ratings=[], a1=null, a2=null, src=null, ana=null, rid=null;
+let participantInfo = {}, genderPicked=null, musicPicked=null, familiarPicked=null;
+let selectedTracks = {}; // {gong: 'audio/embed25/gong_03.mp3', ...}
+let motionSamples=[], motionPerRound=[], motionWatchId=null;
+
+// ========== 信息页 ==========
+function pick(el, type) {
+  el.parentElement.querySelectorAll('.opt').forEach(o=>o.classList.remove('picked'));
+  el.classList.add('picked');
+  if (type==='gender') genderPicked=el.dataset.v;
+  if (type==='music') musicPicked=el.dataset.v;
+  if (type==='familiar') familiarPicked=el.dataset.v;
+  checkInfoReady();
+}
+function checkInfoReady() {
+  document.getElementById('infoNext').disabled = !(document.getElementById('age').value && genderPicked && musicPicked && familiarPicked);
+}
+function confirmInfo() {
+  participantInfo = {
+    age: parseInt(document.getElementById('age').value),
+    gender: genderPicked, musicTraining: musicPicked, familiarity: familiarPicked
+  };
+  resetMotionTracking();
+  show('listen'); progBars('prog'); playRound();
+}
+
+// ========== UI工具 ==========
+function show(id) { document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+function progBars(cid) {
+  document.getElementById(cid).innerHTML = [0,1,2,3,4,5].map(i => `<div class="step${i<round?' filled':''}"></div>`).join('');
+}
+
+// ========== 音频播放 ==========
+async function go() {
+  // 每人随机选曲：每个调式从5首中任选1首
+  FIVE_TONES.forEach(m => {
+    const pool = TRACK_POOL[m];
+    selectedTracks[m] = pool[Math.floor(Math.random()*pool.length)];
+  });
+  console.log('🎵 Selected:', selectedTracks);
+  order = [...ALL_CONDITIONS].sort(()=>Math.random()-0.5);
+  round=0; ratings=[]; a1=null; a2=null;
+  show('info');
+}
+
+async function loadAndPlay(url) {
+  if (!ctx) { ctx = new (window.AudioContext||window.webkitAudioContext)(); }
+  if (ctx.state==='suspended') await ctx.resume();
+  const resp = await fetch(url);
+  const buf = await resp.arrayBuffer();
+  const audioBuf = await ctx.decodeAudioData(buf);
+  const source = ctx.createBufferSource();
+  source.buffer = audioBuf;
+  const analyser = ctx.createAnalyser();
+  analyser.fftSize = 256;
+  analyser.smoothingTimeConstant = 0.5;
+  source.connect(analyser);
+  analyser.connect(ctx.destination);
+  src = source; ana = analyser;
+  source.onended = () => { stopViz(); stopMotionTracking(); showRate(); };
+  source.start(0);
+  animateBars();
+}
+
+function animateBars() {
+  if (!ana || !src) return;
+  const fd = new Uint8Array(ana.frequencyBinCount);
+  ana.getByteFrequencyData(fd);
+  const bars = document.querySelectorAll('#viz .bar');
+  const mode = order[round];
+  const color = MODES[mode] ? MODES[mode].color : '#c4a35a';
+  bars.forEach((b,i)=>{
+    const idx = Math.floor(i*fd.length/bars.length);
+    b.style.height = (8+(fd[idx]/255)*78)+'px';
+    b.style.background = color;
+  });
+  rid = requestAnimationFrame(animateBars);
+}
+function stopViz() { if(rid){cancelAnimationFrame(rid);rid=null;} }
+function stopAudio() {
+  stopViz();
+  if(src){try{src.stop();}catch(e){}src=null;ana=null;}
+}
+
+// ========== 播放流程 ==========
+function playRound() {
+  if (round>=6) { finish(); return; }
+  stopAudio();
+  startMotionTracking();
+  document.getElementById('n').textContent = round+1;
+  const mode = order[round];
+  const info = MODES[mode];
+  document.getElementById('mood').textContent = mode==='_rest'?'🤫':'🎶';
+  document.getElementById('mood').style.color = info.color;
+  document.getElementById('mood').style.fontSize = mode==='_rest'?'4em':'2.4em';
+  document.getElementById('hint').textContent = mode==='_rest'?'保持安静，放松30秒':'闭上眼睛，放松聆听';
+  progBars('prog');
+  // 重置可视化条
+  document.querySelectorAll('#viz .bar').forEach(b=>{b.style.height='10px';b.style.background='#d5cfc4';});
+  if (mode==='_rest') {
+    setTimeout(()=>{stopMotionTracking();showRate();},30000);
+  } else {
+    loadAndPlay(selectedTracks[mode]);
+  }
+}
+
+function showRate() {
+  show('rate'); progBars('rprog');
+  a1=null; a2=null;
+  document.getElementById('next').disabled = true;
+  document.querySelectorAll('#q1 .opt,#q2 .opt').forEach(b=>b.classList.remove('picked'));
+  document.querySelectorAll('#q1 .opt').forEach(b=>b.onclick=function(){
+    document.querySelectorAll('#q1 .opt').forEach(x=>x.classList.remove('picked'));
+    this.classList.add('picked'); a1=parseInt(this.dataset.v);
+    if(a1!==null&&a2!==null) document.getElementById('next').disabled=false;
+  });
+  document.querySelectorAll('#q2 .opt').forEach(b=>b.onclick=function(){
+    document.querySelectorAll('#q2 .opt').forEach(x=>x.classList.remove('picked'));
+    this.classList.add('picked'); a2=this.dataset.v;
+    if(a1!==null&&a2!==null) document.getElementById('next').disabled=false;
+  });
+}
+
+function confirmRating() {
+  ratings.push({ round:round+1, mode:order[round], arousal:a1, emotion:a2 });
+  round++; a1=null; a2=null;
+  show('listen'); progBars('prog');
+  setTimeout(playRound, 400);
+}
+
+// ========== 加速度计 ==========
+function resetMotionTracking() { stopMotionTracking(); motionSamples=[]; motionPerRound=[]; }
+function startMotionTracking() {
+  try {
+    motionSamples=[];
+    if (typeof DeviceMotionEvent === 'undefined') return;
+    const handler = e => {
+      const a = e.accelerationIncludingGravity;
+      if (!a||a.x===null) return;
+      motionSamples.push({t:Date.now(), mag:Math.sqrt((a.x||0)**2+(a.y||0)**2+(a.z||0)**2)});
+    };
+    window.addEventListener('devicemotion', handler);
+    motionWatchId = {handler};
+  } catch(e) { console.warn('Motion:',e); }
+}
+function stopMotionTracking() {
+  try {
+    if (!motionWatchId) return;
+    window.removeEventListener('devicemotion', motionWatchId.handler);
+    motionWatchId=null;
+    if (motionSamples.length===0){motionPerRound.push(null);return;}
+    const mags=motionSamples.map(s=>s.mag);
+    const mean=mags.reduce((a,b)=>a+b,0)/mags.length;
+    const variance=mags.reduce((s,v)=>s+(v-mean)**2,0)/mags.length;
+    motionPerRound.push({mean,variance,n:mags.length,quality:variance<2?'still':'moving'});
+    updateMotionUI(motionPerRound[motionPerRound.length-1]);
+  } catch(e) { console.warn('Motion stop:',e); motionWatchId=null; }
+}
+function updateMotionUI(info) {
+  const dot=document.getElementById('motionDot'), label=document.getElementById('motionLabel');
+  if(!dot||!label||!info) return;
+  if(info.quality==='still'){dot.className='motion-dot still';label.textContent='📱 手机平稳 · 沉浸聆听 ✓';}
+  else{dot.className='motion-dot moving';label.textContent='📱 检测到移动 · 建议放下手机闭眼聆听';}
+}
+
+// ========== 结果 ==========
+function finish() {
+  show('done');
+  const toneRatings = ratings.filter(r=>r.mode!=='_rest');
+  const restRating = ratings.find(r=>r.mode==='_rest');
+  const matchedCount = toneRatings.filter(r=>r.emotion===MODES[r.mode].key).length;
+
+  const rec = {
+    ts: new Date().toISOString(), participant: participantInfo,
+    order, ratings, selectedTracks: {...selectedTracks},
+    restBaseline: restRating?{arousal:restRating.arousal,emotion:restRating.emotion}:null,
+    motionPerRound: motionPerRound.filter(Boolean), matchedCount,
+    summary: FIVE_TONES.map(m=>{
+      const r=ratings.find(x=>x.mode===m);
+      return r?{mode:m,label:MODES[m].label,track:MODES[m].track,arousal:r.arousal,emotion:r.emotion}:null;
+    }).filter(Boolean)
+  };
+
+  // 保存本地
+  const all = JSON.parse(localStorage.getItem('5tone_v5')||'[]');
+  all.push(rec); localStorage.setItem('5tone_v5',JSON.stringify(all));
+  console.log('📊 saved',all.length,'records');
+
+  // 渲染个人结果卡片
+  document.getElementById('cards').innerHTML = toneRatings.map(r=>{
+    const info = MODES[r.mode];
+    return `<div class="match-card" style="background:${info.bg};border-left:3px solid ${info.color}">
+      <div class="tone-dot" style="background:${info.color}"></div>
+      <div class="tone-tag" style="color:${info.color}">${info.label}</div>
+      <div class="match-info">
+        曲目：<strong>${info.track}</strong><br>
+        你感觉：<strong>${['','很平静','有点平静','没感觉','有点兴奋','很兴奋'][r.arousal]}</strong>，
+        <strong>${{anding:'安定沉稳',neixing:'内省收敛',shuchang:'舒畅条达',zhenfen:'开心振奋',ningjing:'宁静沉静'}[r.emotion]}</strong><br>
+        传统认为：${info.emo} ${r.emotion===info.key?' ✅ 对上了！':''}
+      </div></div>`;
+  }).join('');
+}
+
+function copyData() {
+  const all = JSON.parse(localStorage.getItem('5tone_v5')||'[]');
+  const last = all[all.length-1];
+  if (!last) { alert('没有数据'); return; }
+  const out = { participant: participantInfo, experiment: { ratings: last.ratings, order: last.order, selectedTracks: last.selectedTracks, summary: last.summary, motionPerRound: last.motionPerRound } };
+  const txt = JSON.stringify(out);
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(txt).then(()=>alert('已复制！回微信群长按粘贴发送。'));
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value=txt; ta.style.position='fixed'; ta.style.left='-9999px';
+    document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); alert('已复制！');
+    document.body.removeChild(ta);
+  }
+}
+
+// ========== Dashboard ==========
+function switchTab(tab) {
+  document.querySelectorAll('.dash-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.dash-panel').forEach(p=>p.classList.remove('active'));
+  if (tab==='personal') {
+    document.querySelector('.dash-tab:first-child').classList.add('active');
+    document.getElementById('panelPersonal').classList.add('active');
+  } else {
+    document.querySelector('.dash-tab:last-child').classList.add('active');
+    document.getElementById('panelGroup').classList.add('active');
+    renderGroupDashboard();
+  }
+}
+
+function renderGroupDashboard() {
+  const all = JSON.parse(localStorage.getItem('5tone_v5')||'[]');
+  const nTotal = all.length;
+  document.getElementById('statGrid').innerHTML =
+    `<div class="stat-card" style="background:var(--gong-bg)"><div class="num">${nTotal}</div><div class="lbl">总参与人次</div></div>
+     <div class="stat-card" style="background:var(--jue-bg)"><div class="num">${nTotal>0?Math.round(all.filter(r=>r.summary&&r.summary.length===5).length/nTotal*100):0}%</div><div class="lbl">完成率</div></div>`;
+
+  if (nTotal===0) {
+    document.getElementById('matchChart').innerHTML='<p style="color:var(--text2);font-size:0.85em;text-align:center;padding:20px;">还没有数据，成为第一个探索者吧！</p>';
+    return;
+  }
+
+  const modeCounts={gong:0,shang:0,jue:0,zhi:0,yu:0}, modeMatch={gong:0,shang:0,jue:0,zhi:0,yu:0}, modeArousalSum={gong:0,shang:0,jue:0,zhi:0,yu:0};
+  all.forEach(rec=>{
+    if(!rec.summary)return;
+    rec.summary.forEach(s=>{
+      modeCounts[s.mode]=(modeCounts[s.mode]||0)+1;
+      if(s.emotion===MODES[s.mode].key) modeMatch[s.mode]=(modeMatch[s.mode]||0)+1;
+      modeArousalSum[s.mode]=(modeArousalSum[s.mode]||0)+(s.arousal||0);
+    });
+  });
+
+  document.getElementById('matchChart').innerHTML = FIVE_TONES.map(m=>{
+    const pct=modeCounts[m]>0?Math.round(modeMatch[m]/modeCounts[m]*100):0;
+    return `<div class="bar-row">
+      <span class="bar-label" style="color:${MODES[m].color}">${['宫','商','角','徵','羽'][FIVE_TONES.indexOf(m)]}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${MODES[m].color}">${pct>10?pct+'%':''}</div></div>
+      <span class="bar-pct">${pct}%</span></div>`;
+  }).join('');
+
+  document.getElementById('arousalChart').innerHTML = FIVE_TONES.map(m=>{
+    const avg=modeCounts[m]>0?(modeArousalSum[m]/modeCounts[m]).toFixed(1):0;
+    return `<div class="bar-row">
+      <span class="bar-label" style="color:${MODES[m].color}">${['宫','商','角','徵','羽'][FIVE_TONES.indexOf(m)]}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${Math.round(avg/5*100)}%;background:${MODES[m].color}">${avg}</div></div>
+      <span class="bar-pct">/5</span></div>`;
+  }).join('');
+
+  const lastRec=all[all.length-1];
+  if(lastRec&&lastRec.summary){
+    document.getElementById('personalVsGroup').innerHTML =
+      '<p style="font-size:0.82em;color:var(--text2);margin-bottom:6px;">🎯 你 vs 群体：</p>'+
+      FIVE_TONES.map(m=>{
+        const my=lastRec.summary.find(x=>x.mode===m);
+        const gpPct=modeCounts[m]>0?Math.round(modeMatch[m]/modeCounts[m]*100):0;
+        const myMatch=my&&my.emotion===MODES[m].key;
+        return `<div class="compare-row" style="background:${MODES[m].bg}">
+          <div class="t-dot" style="background:${MODES[m].color}"></div>
+          <div class="t-info">${['宫','商','角','徵','羽'][FIVE_TONES.indexOf(m)]} ${my?{anding:'安定',neixing:'内省',shuchang:'舒畅',zhenfen:'振奋',ningjing:'宁静'}[my.emotion]:''}</div>
+          <div class="t-match ${myMatch?'hit':'miss'}">${myMatch?'✅ 匹配':'🔀 不同'}</div>
+          <div style="font-size:0.72em;color:var(--text2)">群体${gpPct}%匹配</div></div>`;
+      }).join('');
+  }
+}
+
+// ========== 初始化可视化条 ==========
+(function(){
+  document.getElementById('viz').innerHTML = Array.from({length:BAR_COUNT},()=>'<div class="bar"></div>').join('');
+})();
+</script>
+</body>
+</html>

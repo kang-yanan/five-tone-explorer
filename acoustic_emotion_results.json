@@ -1,0 +1,486 @@
+{
+  "correlations": [
+    {
+      "feature": "过零率 (噪音感)",
+      "emotion": "安定",
+      "r": -0.624,
+      "n": 25
+    },
+    {
+      "feature": "频谱质心 (亮度)",
+      "emotion": "安定",
+      "r": -0.613,
+      "n": 25
+    },
+    {
+      "feature": "速度 BPM",
+      "emotion": "内省",
+      "r": -0.56,
+      "n": 25
+    },
+    {
+      "feature": "音符密度",
+      "emotion": "宁静",
+      "r": -0.51,
+      "n": 25
+    },
+    {
+      "feature": "频谱宽度",
+      "emotion": "安定",
+      "r": -0.507,
+      "n": 25
+    },
+    {
+      "feature": "响度 RMS",
+      "emotion": "内省",
+      "r": -0.486,
+      "n": 25
+    },
+    {
+      "feature": "过零率 (噪音感)",
+      "emotion": "振奋",
+      "r": 0.467,
+      "n": 25
+    },
+    {
+      "feature": "速度 BPM",
+      "emotion": "舒畅",
+      "r": 0.424,
+      "n": 25
+    },
+    {
+      "feature": "过零率 (噪音感)",
+      "emotion": "宁静",
+      "r": -0.424,
+      "n": 25
+    },
+    {
+      "feature": "频谱宽度",
+      "emotion": "宁静",
+      "r": -0.405,
+      "n": 25
+    },
+    {
+      "feature": "主音占优度",
+      "emotion": "舒畅",
+      "r": 0.392,
+      "n": 25
+    },
+    {
+      "feature": "频谱质心 (亮度)",
+      "emotion": "振奋",
+      "r": 0.382,
+      "n": 25
+    },
+    {
+      "feature": "和谐比",
+      "emotion": "舒畅",
+      "r": 0.381,
+      "n": 25
+    },
+    {
+      "feature": "动态范围",
+      "emotion": "内省",
+      "r": -0.377,
+      "n": 25
+    },
+    {
+      "feature": "响度 RMS",
+      "emotion": "宁静",
+      "r": -0.361,
+      "n": 25
+    },
+    {
+      "feature": "频谱质心 (亮度)",
+      "emotion": "宁静",
+      "r": -0.36,
+      "n": 25
+    },
+    {
+      "feature": "音符密度",
+      "emotion": "舒畅",
+      "r": 0.349,
+      "n": 25
+    },
+    {
+      "feature": "频谱宽度",
+      "emotion": "振奋",
+      "r": 0.33,
+      "n": 25
+    },
+    {
+      "feature": "动态范围",
+      "emotion": "舒畅",
+      "r": 0.327,
+      "n": 25
+    },
+    {
+      "feature": "频谱平坦度",
+      "emotion": "舒畅",
+      "r": -0.308,
+      "n": 25
+    },
+    {
+      "feature": "音高多样性",
+      "emotion": "宁静",
+      "r": -0.291,
+      "n": 25
+    },
+    {
+      "feature": "主音占优度",
+      "emotion": "安定",
+      "r": 0.29,
+      "n": 25
+    },
+    {
+      "feature": "过零率 (噪音感)",
+      "emotion": "内省",
+      "r": -0.285,
+      "n": 25
+    },
+    {
+      "feature": "频谱平坦度",
+      "emotion": "宁静",
+      "r": 0.278,
+      "n": 25
+    },
+    {
+      "feature": "音高多样性",
+      "emotion": "舒畅",
+      "r": 0.273,
+      "n": 25
+    },
+    {
+      "feature": "速度 BPM",
+      "emotion": "宁静",
+      "r": -0.245,
+      "n": 25
+    },
+    {
+      "feature": "主音占优度",
+      "emotion": "振奋",
+      "r": -0.241,
+      "n": 25
+    },
+    {
+      "feature": "响度 RMS",
+      "emotion": "振奋",
+      "r": 0.233,
+      "n": 25
+    },
+    {
+      "feature": "音高多样性",
+      "emotion": "内省",
+      "r": -0.219,
+      "n": 25
+    },
+    {
+      "feature": "频谱平坦度",
+      "emotion": "内省",
+      "r": 0.208,
+      "n": 25
+    }
+  ],
+  "track_summary": [
+    {
+      "track": "gong_03",
+      "name": "紫竹调",
+      "tempo": 135.99917763157896,
+      "brightness": 2235.4288639267916,
+      "loudness": 0.037978142499923706,
+      "zhenfen": 23.1,
+      "ningjing": 7.7,
+      "anding": 0.0,
+      "neixing": 15.4,
+      "shuchang": 53.8
+    },
+    {
+      "track": "shang_01",
+      "name": "十面埋伏",
+      "tempo": 135.99917763157896,
+      "brightness": 2422.44525058643,
+      "loudness": 0.02127567119896412,
+      "zhenfen": 36.4,
+      "ningjing": 0.0,
+      "anding": 0.0,
+      "neixing": 27.3,
+      "shuchang": 36.4
+    },
+    {
+      "track": "jue_01",
+      "name": "列子御风",
+      "tempo": 103.359375,
+      "brightness": 771.0664190383696,
+      "loudness": 0.03905394300818443,
+      "zhenfen": 0.0,
+      "ningjing": 15.8,
+      "anding": 47.4,
+      "neixing": 21.1,
+      "shuchang": 15.8
+    },
+    {
+      "track": "zhi_02",
+      "name": "新春乐",
+      "tempo": 129.19921875,
+      "brightness": 1713.699245043444,
+      "loudness": 0.03704209625720978,
+      "zhenfen": 91.7,
+      "ningjing": 0.0,
+      "anding": 0.0,
+      "neixing": 0.0,
+      "shuchang": 8.3
+    },
+    {
+      "track": "yu_05",
+      "name": "江河水",
+      "tempo": 117.45383522727273,
+      "brightness": 2216.4566454695077,
+      "loudness": 0.023370560258626938,
+      "zhenfen": 0.0,
+      "ningjing": 54.5,
+      "anding": 18.2,
+      "neixing": 9.1,
+      "shuchang": 18.2
+    },
+    {
+      "track": "shang_02",
+      "name": "广陵散",
+      "tempo": 95.703125,
+      "brightness": 1029.0089507665725,
+      "loudness": 0.16099873185157776,
+      "zhenfen": 6.7,
+      "ningjing": 6.7,
+      "anding": 40.0,
+      "neixing": 0.0,
+      "shuchang": 46.7
+    },
+    {
+      "track": "jue_05",
+      "name": "霓裳曲",
+      "tempo": 80.74951171875,
+      "brightness": 1703.4555702758664,
+      "loudness": 0.022301413118839264,
+      "zhenfen": 9.1,
+      "ningjing": 0.0,
+      "anding": 27.3,
+      "neixing": 54.5,
+      "shuchang": 9.1
+    },
+    {
+      "track": "zhi_03",
+      "name": "春节序曲",
+      "tempo": 143.5546875,
+      "brightness": 1528.6452351702778,
+      "loudness": 0.04508285969495773,
+      "zhenfen": 87.5,
+      "ningjing": 12.5,
+      "anding": 0.0,
+      "neixing": 0.0,
+      "shuchang": 0.0
+    },
+    {
+      "track": "yu_04",
+      "name": "梁祝",
+      "tempo": 172.265625,
+      "brightness": 1427.6236812192665,
+      "loudness": 0.04764794558286667,
+      "zhenfen": 7.1,
+      "ningjing": 14.3,
+      "anding": 42.9,
+      "neixing": 7.1,
+      "shuchang": 28.6
+    },
+    {
+      "track": "gong_04",
+      "name": "花三六",
+      "tempo": 161.4990234375,
+      "brightness": 1909.7147994403892,
+      "loudness": 0.06404290348291397,
+      "zhenfen": 11.1,
+      "ningjing": 11.1,
+      "anding": 11.1,
+      "neixing": 11.1,
+      "shuchang": 55.6
+    },
+    {
+      "track": "zhi_01",
+      "name": "喜洋洋",
+      "tempo": 161.4990234375,
+      "brightness": 2267.2352432334374,
+      "loudness": 0.055568210780620575,
+      "zhenfen": 80.0,
+      "ningjing": 0.0,
+      "anding": 0.0,
+      "neixing": 0.0,
+      "shuchang": 20.0
+    },
+    {
+      "track": "gong_02",
+      "name": "浏阳河",
+      "tempo": 184.5703125,
+      "brightness": 958.848742585263,
+      "loudness": 0.041524600237607956,
+      "zhenfen": 6.7,
+      "ningjing": 13.3,
+      "anding": 26.7,
+      "neixing": 0.0,
+      "shuchang": 53.3
+    },
+    {
+      "track": "shang_05",
+      "name": "阳关三叠",
+      "tempo": 123.046875,
+      "brightness": 1021.018699121444,
+      "loudness": 0.05237748473882675,
+      "zhenfen": 0.0,
+      "ningjing": 33.3,
+      "anding": 26.7,
+      "neixing": 13.3,
+      "shuchang": 26.7
+    },
+    {
+      "track": "jue_02",
+      "name": "姑苏行",
+      "tempo": 95.703125,
+      "brightness": 1984.8268729087226,
+      "loudness": 0.09112050384283066,
+      "zhenfen": 18.2,
+      "ningjing": 0.0,
+      "anding": 18.2,
+      "neixing": 27.3,
+      "shuchang": 36.4
+    },
+    {
+      "track": "gong_01",
+      "name": "平湖秋月",
+      "tempo": 143.5546875,
+      "brightness": 1740.2906164756525,
+      "loudness": 0.05472206324338913,
+      "zhenfen": 0.0,
+      "ningjing": 0.0,
+      "anding": 25.0,
+      "neixing": 25.0,
+      "shuchang": 50.0
+    },
+    {
+      "track": "zhi_04",
+      "name": "步步高",
+      "tempo": 95.703125,
+      "brightness": 2385.5440430330646,
+      "loudness": 0.06368668377399445,
+      "zhenfen": 60.0,
+      "ningjing": 6.7,
+      "anding": 6.7,
+      "neixing": 0.0,
+      "shuchang": 26.7
+    },
+    {
+      "track": "yu_03",
+      "name": "寒鸦戏水",
+      "tempo": 78.30255681818181,
+      "brightness": 1231.0750366696768,
+      "loudness": 0.02308070845901966,
+      "zhenfen": 10.0,
+      "ningjing": 10.0,
+      "anding": 30.0,
+      "neixing": 30.0,
+      "shuchang": 20.0
+    },
+    {
+      "track": "gong_05",
+      "name": "踏雪寻梅",
+      "tempo": 151.99908088235293,
+      "brightness": 1309.7217007311776,
+      "loudness": 0.07404551655054092,
+      "zhenfen": 14.3,
+      "ningjing": 7.1,
+      "anding": 21.4,
+      "neixing": 7.1,
+      "shuchang": 50.0
+    },
+    {
+      "track": "yu_02",
+      "name": "二泉映月",
+      "tempo": 69.83741554054055,
+      "brightness": 1295.3903268652518,
+      "loudness": 0.039746757596731186,
+      "zhenfen": 0.0,
+      "ningjing": 20.0,
+      "anding": 20.0,
+      "neixing": 40.0,
+      "shuchang": 20.0
+    },
+    {
+      "track": "shang_03",
+      "name": "拔根芦柴花",
+      "tempo": 129.19921875,
+      "brightness": 1937.929124436697,
+      "loudness": 0.06858974695205688,
+      "zhenfen": 54.5,
+      "ningjing": 0.0,
+      "anding": 0.0,
+      "neixing": 9.1,
+      "shuchang": 36.4
+    },
+    {
+      "track": "yu_01",
+      "name": "乌夜啼",
+      "tempo": 117.45383522727273,
+      "brightness": 975.0213302240414,
+      "loudness": 0.03996067866683006,
+      "zhenfen": 0.0,
+      "ningjing": 20.0,
+      "anding": 40.0,
+      "neixing": 20.0,
+      "shuchang": 20.0
+    },
+    {
+      "track": "zhi_05",
+      "name": "解放军进行曲",
+      "tempo": 112.34714673913044,
+      "brightness": 1589.983178412828,
+      "loudness": 0.11238684505224228,
+      "zhenfen": 80.0,
+      "ningjing": 0.0,
+      "anding": 10.0,
+      "neixing": 0.0,
+      "shuchang": 10.0
+    },
+    {
+      "track": "jue_04",
+      "name": "花好月圆",
+      "tempo": 129.19921875,
+      "brightness": 2279.5474379209104,
+      "loudness": 0.033828798681497574,
+      "zhenfen": 71.4,
+      "ningjing": 0.0,
+      "anding": 0.0,
+      "neixing": 14.3,
+      "shuchang": 14.3
+    },
+    {
+      "track": "shang_04",
+      "name": "shang_04",
+      "tempo": 151.99908088235293,
+      "brightness": 1748.5733600813155,
+      "loudness": 0.13001613318920135,
+      "zhenfen": 100.0,
+      "ningjing": 0.0,
+      "anding": 0.0,
+      "neixing": 0.0,
+      "shuchang": 0.0
+    },
+    {
+      "track": "jue_03",
+      "name": "胡笳十八拍",
+      "tempo": 0.0,
+      "brightness": 0.0,
+      "loudness": 0.0,
+      "zhenfen": 28.6,
+      "ningjing": 28.6,
+      "anding": 14.3,
+      "neixing": 28.6,
+      "shuchang": 0.0
+    }
+  ]
+}

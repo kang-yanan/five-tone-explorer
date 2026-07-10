@@ -1,0 +1,2588 @@
+CloudBase CLI 3.5.6-beta.0
+试试 tcb ai 命令，开启 AI 原生开发
+[
+  {
+    "_id": "4a3e78116a26b3160064eef52fd990aa",
+    "participant": {
+      "age": {
+        "$numberInt": "44"
+      },
+      "gender": "female",
+      "musicTraining": "no",
+      "familiarity": {
+        "$numberInt": "2"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "1"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_02",
+        "trackName": "浏阳河",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_04",
+        "trackName": "红旗颂",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_02",
+        "trackName": "姑苏行",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "anding"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_03",
+        "trackName": "春节序曲",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_03",
+        "trackName": "寒鸦戏水",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "neixing"
+      }
+    ]
+  },
+  {
+    "_id": "4a3e78116a26b573006509f359214b7a",
+    "participant": {
+      "age": {
+        "$numberInt": "44"
+      },
+      "gender": "female",
+      "musicTraining": "no",
+      "familiarity": {
+        "$numberInt": "2"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "3"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_02",
+        "trackName": "浏阳河",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "anding"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_02",
+        "trackName": "广陵散",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "anding"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_01",
+        "trackName": "列子御风",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "neixing"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_01",
+        "trackName": "喜洋洋",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_05",
+        "trackName": "江河水",
+        "arousal": {
+          "$numberInt": "3"
+        },
+        "emotion": "ningjing"
+      }
+    ]
+  },
+  {
+    "_id": "f2dd55436a26b7c701d4b1f55532a04f",
+    "participant": {
+      "age": {
+        "$numberInt": "20"
+      },
+      "gender": "male",
+      "musicTraining": "amateur",
+      "familiarity": {
+        "$numberInt": "4"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "2"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_03",
+        "trackName": "紫竹调",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_05",
+        "trackName": "阳关三叠",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "ningjing"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_04",
+        "trackName": "花好月圆",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_04",
+        "trackName": "步步高",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_05",
+        "trackName": "江河水",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "neixing"
+      }
+    ]
+  },
+  {
+    "_id": "f2dd55436a26b8f501d511d405a63f86",
+    "participant": {
+      "age": {
+        "$numberInt": "22"
+      },
+      "gender": "male",
+      "musicTraining": "trained",
+      "familiarity": {
+        "$numberInt": "1"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "2"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_02",
+        "trackName": "浏阳河",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "anding"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_04",
+        "trackName": "红旗颂",
+        "arousal": {
+          "$numberInt": "5"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_05",
+        "trackName": "霓裳曲",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "anding"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_05",
+        "trackName": "解放军进行曲",
+        "arousal": {
+          "$numberInt": "5"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_02",
+        "trackName": "二泉映月",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "shuchang"
+      }
+    ]
+  },
+  {
+    "_id": "f2dd55436a26bc0801d5c2f343dded55",
+    "participant": {
+      "age": {
+        "$numberInt": "40"
+      },
+      "gender": "female",
+      "musicTraining": "trained",
+      "familiarity": {
+        "$numberInt": "4"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "1"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_04",
+        "trackName": "花三六",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "anding"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_02",
+        "trackName": "广陵散",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_04",
+        "trackName": "花好月圆",
+        "arousal": {
+          "$numberInt": "5"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_01",
+        "trackName": "喜洋洋",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_01",
+        "trackName": "乌夜啼",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "shuchang"
+      }
+    ]
+  },
+  {
+    "_id": "55e1d1ad6a26bca3008293fd43dd4ad6",
+    "participant": {
+      "age": {
+        "$numberInt": "51"
+      },
+      "gender": "male",
+      "musicTraining": "no",
+      "familiarity": {
+        "$numberInt": "3"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "1"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_05",
+        "trackName": "踏雪寻梅",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "anding"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_04",
+        "trackName": "红旗颂",
+        "arousal": {
+          "$numberInt": "5"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_02",
+        "trackName": "姑苏行",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_04",
+        "trackName": "步步高",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "ningjing"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_03",
+        "trackName": "寒鸦戏水",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "neixing"
+      }
+    ]
+  },
+  {
+    "_id": "55e1d1ad6a26bcb3008294c2034c064d",
+    "participant": {
+      "age": {
+        "$numberInt": "19"
+      },
+      "gender": "female",
+      "musicTraining": "trained",
+      "familiarity": {
+        "$numberInt": "4"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "2"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_03",
+        "trackName": "紫竹调",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_02",
+        "trackName": "广陵散",
+        "arousal": {
+          "$numberInt": "3"
+        },
+        "emotion": "anding"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_04",
+        "trackName": "花好月圆",
+        "arousal": {
+          "$numberInt": "3"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_01",
+        "trackName": "喜洋洋",
+        "arousal": {
+          "$numberInt": "3"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_01",
+        "trackName": "乌夜啼",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "ningjing"
+      }
+    ]
+  },
+  {
+    "_id": "43834a186a26bccf00b716084f90b155",
+    "participant": {
+      "age": {
+        "$numberInt": "21"
+      },
+      "gender": "male",
+      "musicTraining": "no",
+      "familiarity": {
+        "$numberInt": "2"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "1"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_05",
+        "trackName": "踏雪寻梅",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "neixing"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_05",
+        "trackName": "阳关三叠",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "anding"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_04",
+        "trackName": "花好月圆",
+        "arousal": {
+          "$numberInt": "3"
+        },
+        "emotion": "neixing"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_01",
+        "trackName": "喜洋洋",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_04",
+        "trackName": "梁祝",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "shuchang"
+      }
+    ]
+  },
+  {
+    "_id": "f2dd55436a26bd1301d5e2a067494945",
+    "participant": {
+      "age": {
+        "$numberInt": "21"
+      },
+      "gender": "female",
+      "musicTraining": "no",
+      "familiarity": {
+        "$numberInt": "2"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "1"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_02",
+        "trackName": "浏阳河",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_01",
+        "trackName": "十面埋伏",
+        "arousal": {
+          "$numberInt": "5"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_04",
+        "trackName": "花好月圆",
+        "arousal": {
+          "$numberInt": "5"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_05",
+        "trackName": "解放军进行曲",
+        "arousal": {
+          "$numberInt": "5"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_01",
+        "trackName": "乌夜啼",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "anding"
+      }
+    ]
+  },
+  {
+    "_id": "43834a186a26be2200b7353b163748cb",
+    "participant": {
+      "age": {
+        "$numberInt": "20"
+      },
+      "gender": "male",
+      "musicTraining": "no",
+      "familiarity": {
+        "$numberInt": "2"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "1"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_04",
+        "trackName": "花三六",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_03",
+        "trackName": "拔根芦柴花",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_01",
+        "trackName": "列子御风",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "anding"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_05",
+        "trackName": "解放军进行曲",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_01",
+        "trackName": "乌夜啼",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "anding"
+      }
+    ]
+  },
+  {
+    "_id": "f2dd55436a26c23501d7148024201e11",
+    "participant": {
+      "age": {
+        "$numberInt": "19"
+      },
+      "gender": "female",
+      "musicTraining": "no",
+      "familiarity": {
+        "$numberInt": "4"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "1"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_05",
+        "trackName": "踏雪寻梅",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "anding"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_03",
+        "trackName": "拔根芦柴花",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_05",
+        "trackName": "霓裳曲",
+        "arousal": {
+          "$numberInt": "3"
+        },
+        "emotion": "neixing"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_05",
+        "trackName": "解放军进行曲",
+        "arousal": {
+          "$numberInt": "5"
+        },
+        "emotion": "anding"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_04",
+        "trackName": "梁祝",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "anding"
+      }
+    ]
+  },
+  {
+    "_id": "4a3e78116a26c24e006616a443f942cc",
+    "participant": {
+      "age": {
+        "$numberInt": "21"
+      },
+      "gender": "male",
+      "musicTraining": "amateur",
+      "familiarity": {
+        "$numberInt": "3"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "1"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_01",
+        "trackName": "平湖秋月",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "neixing"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_03",
+        "trackName": "拔根芦柴花",
+        "arousal": {
+          "$numberInt": "3"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_02",
+        "trackName": "姑苏行",
+        "arousal": {
+          "$numberInt": "3"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_04",
+        "trackName": "步步高",
+        "arousal": {
+          "$numberInt": "3"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_05",
+        "trackName": "江河水",
+        "arousal": {
+          "$numberInt": "3"
+        },
+        "emotion": "shuchang"
+      }
+    ]
+  },
+  {
+    "_id": "f2dd55436a26c26001d71a1b71bac947",
+    "participant": {
+      "age": {
+        "$numberInt": "20"
+      },
+      "gender": "male",
+      "musicTraining": "no",
+      "familiarity": {
+        "$numberInt": "2"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "3"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_02",
+        "trackName": "浏阳河",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "ningjing"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_03",
+        "trackName": "拔根芦柴花",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_05",
+        "trackName": "霓裳曲",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_05",
+        "trackName": "解放军进行曲",
+        "arousal": {
+          "$numberInt": "5"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_02",
+        "trackName": "二泉映月",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "ningjing"
+      }
+    ]
+  },
+  {
+    "_id": "43834a186a26c39e00b7b94b7b227aaa",
+    "participant": {
+      "age": {
+        "$numberInt": "20"
+      },
+      "gender": "female",
+      "musicTraining": "amateur",
+      "familiarity": {
+        "$numberInt": "2"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "2"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_02",
+        "trackName": "浏阳河",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_01",
+        "trackName": "十面埋伏",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_05",
+        "trackName": "霓裳曲",
+        "arousal": {
+          "$numberInt": "5"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_02",
+        "trackName": "新春乐",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_05",
+        "trackName": "江河水",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "ningjing"
+      }
+    ]
+  },
+  {
+    "_id": "55e1d1ad6a26c3d4008306b4295fa666",
+    "participant": {
+      "age": {
+        "$numberInt": "20"
+      },
+      "gender": "male",
+      "musicTraining": "no",
+      "familiarity": {
+        "$numberInt": "2"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "2"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_03",
+        "trackName": "紫竹调",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_01",
+        "trackName": "十面埋伏",
+        "arousal": {
+          "$numberInt": "3"
+        },
+        "emotion": "neixing"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_01",
+        "trackName": "列子御风",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "anding"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_03",
+        "trackName": "春节序曲",
+        "arousal": {
+          "$numberInt": "5"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_03",
+        "trackName": "寒鸦戏水",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "zhenfen"
+      }
+    ]
+  },
+  {
+    "_id": "4a3e78116a26c43b00665da94d9259b3",
+    "participant": {
+      "age": {
+        "$numberInt": "19"
+      },
+      "gender": "female",
+      "musicTraining": "no",
+      "familiarity": {
+        "$numberInt": "4"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "1"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_02",
+        "trackName": "浏阳河",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_02",
+        "trackName": "广陵散",
+        "arousal": {
+          "$numberInt": "3"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_01",
+        "trackName": "列子御风",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "ningjing"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_05",
+        "trackName": "解放军进行曲",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_01",
+        "trackName": "乌夜啼",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "shuchang"
+      }
+    ]
+  },
+  {
+    "_id": "43834a186a26c44500b7c5fa13229204",
+    "participant": {
+      "age": {
+        "$numberInt": "21"
+      },
+      "gender": "female",
+      "musicTraining": "no",
+      "familiarity": {
+        "$numberInt": "3"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "1"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_04",
+        "trackName": "花三六",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_02",
+        "trackName": "广陵散",
+        "arousal": {
+          "$numberInt": "3"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_01",
+        "trackName": "列子御风",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "anding"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_05",
+        "trackName": "解放军进行曲",
+        "arousal": {
+          "$numberInt": "5"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_03",
+        "trackName": "寒鸦戏水",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "shuchang"
+      }
+    ]
+  },
+  {
+    "_id": "f2dd55436a26c54b01d81f9c4c13d8c4",
+    "participant": {
+      "age": {
+        "$numberInt": "36"
+      },
+      "gender": "female",
+      "musicTraining": "amateur",
+      "familiarity": {
+        "$numberInt": "4"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "2"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_01",
+        "trackName": "平湖秋月",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "anding"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_03",
+        "trackName": "拔根芦柴花",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "neixing"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_05",
+        "trackName": "霓裳曲",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "neixing"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_04",
+        "trackName": "步步高",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_01",
+        "trackName": "乌夜啼",
+        "arousal": {
+          "$numberInt": "3"
+        },
+        "emotion": "neixing"
+      }
+    ]
+  },
+  {
+    "_id": "f2dd55436a26c58501d82b303c6eb269",
+    "participant": {
+      "age": {
+        "$numberInt": "19"
+      },
+      "gender": "female",
+      "musicTraining": "trained",
+      "familiarity": {
+        "$numberInt": "4"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "2"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_05",
+        "trackName": "踏雪寻梅",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_05",
+        "trackName": "阳关三叠",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "neixing"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_01",
+        "trackName": "列子御风",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "ningjing"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_02",
+        "trackName": "新春乐",
+        "arousal": {
+          "$numberInt": "5"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_02",
+        "trackName": "二泉映月",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "neixing"
+      }
+    ]
+  },
+  {
+    "_id": "43834a186a26c6a700b802c51386fe14",
+    "participant": {
+      "age": {
+        "$numberInt": "19"
+      },
+      "gender": "male",
+      "musicTraining": "no",
+      "familiarity": {
+        "$numberInt": "2"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "1"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_05",
+        "trackName": "踏雪寻梅",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_02",
+        "trackName": "广陵散",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_04",
+        "trackName": "花好月圆",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_03",
+        "trackName": "春节序曲",
+        "arousal": {
+          "$numberInt": "5"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_01",
+        "trackName": "乌夜啼",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "anding"
+      }
+    ]
+  },
+  {
+    "_id": "43834a186a26c6e300b808d6718b5d3a",
+    "participant": {
+      "age": {
+        "$numberInt": "19"
+      },
+      "gender": "male",
+      "musicTraining": "trained",
+      "familiarity": {
+        "$numberInt": "4"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "2"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_05",
+        "trackName": "踏雪寻梅",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_05",
+        "trackName": "阳关三叠",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_05",
+        "trackName": "霓裳曲",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "anding"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_02",
+        "trackName": "新春乐",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_05",
+        "trackName": "江河水",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "ningjing"
+      }
+    ]
+  },
+  {
+    "_id": "55e1d1ad6a26c87500834d042b620af8",
+    "participant": {
+      "age": {
+        "$numberInt": "21"
+      },
+      "gender": "female",
+      "musicTraining": "no",
+      "familiarity": {
+        "$numberInt": "2"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "1"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_03",
+        "trackName": "紫竹调",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "neixing"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_01",
+        "trackName": "十面埋伏",
+        "arousal": {
+          "$numberInt": "5"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_01",
+        "trackName": "列子御风",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_05",
+        "trackName": "解放军进行曲",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_03",
+        "trackName": "寒鸦戏水",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "anding"
+      }
+    ]
+  },
+  {
+    "_id": "4a3e78116a26c8cb00669a317866a351",
+    "participant": {
+      "age": {
+        "$numberInt": "20"
+      },
+      "gender": "female",
+      "musicTraining": "no",
+      "familiarity": {
+        "$numberInt": "2"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "1"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_05",
+        "trackName": "踏雪寻梅",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_02",
+        "trackName": "广陵散",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "ningjing"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_01",
+        "trackName": "列子御风",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "neixing"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_02",
+        "trackName": "新春乐",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_04",
+        "trackName": "梁祝",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "shuchang"
+      }
+    ]
+  },
+  {
+    "_id": "43834a186a26c8e800b8310c5336389f",
+    "participant": {
+      "age": {
+        "$numberInt": "20"
+      },
+      "gender": "male",
+      "musicTraining": "no",
+      "familiarity": {
+        "$numberInt": "4"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "1"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_02",
+        "trackName": "浏阳河",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_03",
+        "trackName": "拔根芦柴花",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_02",
+        "trackName": "姑苏行",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "anding"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_04",
+        "trackName": "步步高",
+        "arousal": {
+          "$numberInt": "5"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_01",
+        "trackName": "乌夜啼",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "shuchang"
+      }
+    ]
+  },
+  {
+    "_id": "f2dd55436a26cc1b01da29f77ff9100b",
+    "participant": {
+      "age": {
+        "$numberInt": "36"
+      },
+      "gender": "male",
+      "musicTraining": "no",
+      "familiarity": {
+        "$numberInt": "2"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "2"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_01",
+        "trackName": "平湖秋月",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_01",
+        "trackName": "十面埋伏",
+        "arousal": {
+          "$numberInt": "3"
+        },
+        "emotion": "neixing"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_01",
+        "trackName": "列子御风",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "ningjing"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_04",
+        "trackName": "步步高",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_03",
+        "trackName": "寒鸦戏水",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "neixing"
+      }
+    ]
+  },
+  {
+    "_id": "4a3e78116a26cd520066d2fb1a45461d",
+    "participant": {
+      "age": {
+        "$numberInt": "18"
+      },
+      "gender": "female",
+      "musicTraining": "amateur",
+      "familiarity": {
+        "$numberInt": "2"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "1"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_03",
+        "trackName": "紫竹调",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_03",
+        "trackName": "拔根芦柴花",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_03",
+        "trackName": "胡笳十八拍",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "neixing"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_04",
+        "trackName": "步步高",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_04",
+        "trackName": "梁祝",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "anding"
+      }
+    ]
+  },
+  {
+    "_id": "f2dd55436a26cec401dac354395533fd",
+    "participant": {
+      "age": {
+        "$numberInt": "40"
+      },
+      "gender": "female",
+      "musicTraining": "no",
+      "familiarity": {
+        "$numberInt": "2"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "3"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_02",
+        "trackName": "浏阳河",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "ningjing"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_05",
+        "trackName": "阳关三叠",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_02",
+        "trackName": "姑苏行",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_02",
+        "trackName": "新春乐",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_04",
+        "trackName": "梁祝",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "ningjing"
+      }
+    ]
+  },
+  {
+    "_id": "43834a186a26cf5400b8d3965d892569",
+    "participant": {
+      "age": {
+        "$numberInt": "45"
+      },
+      "gender": "male",
+      "musicTraining": "amateur",
+      "familiarity": {
+        "$numberInt": "3"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "0"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_05",
+        "trackName": "踏雪寻梅",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_05",
+        "trackName": "阳关三叠",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "anding"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_02",
+        "trackName": "姑苏行",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "neixing"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_04",
+        "trackName": "步步高",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_04",
+        "trackName": "梁祝",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "shuchang"
+      }
+    ]
+  },
+  {
+    "_id": "4a3e78116a26cf690066ed53316dc38a",
+    "participant": {
+      "age": {
+        "$numberInt": "16"
+      },
+      "gender": "male",
+      "musicTraining": "no",
+      "familiarity": {
+        "$numberInt": "1"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "2"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_04",
+        "trackName": "花三六",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "neixing"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_02",
+        "trackName": "广陵散",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "anding"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_01",
+        "trackName": "列子御风",
+        "arousal": {
+          "$numberInt": "3"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_04",
+        "trackName": "步步高",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_03",
+        "trackName": "寒鸦戏水",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "anding"
+      }
+    ]
+  },
+  {
+    "_id": "4a3e78116a26cffc0066f4514fdb5822",
+    "participant": {
+      "age": {
+        "$numberInt": "21"
+      },
+      "gender": "female",
+      "musicTraining": "no",
+      "familiarity": {
+        "$numberInt": "2"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "2"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_02",
+        "trackName": "浏阳河",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_02",
+        "trackName": "广陵散",
+        "arousal": {
+          "$numberInt": "3"
+        },
+        "emotion": "anding"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_01",
+        "trackName": "列子御风",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_04",
+        "trackName": "步步高",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_01",
+        "trackName": "乌夜啼",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "ningjing"
+      }
+    ]
+  },
+  {
+    "_id": "55e1d1ad6a26d1250083ce7476a20e28",
+    "participant": {
+      "age": {
+        "$numberInt": "17"
+      },
+      "gender": "male",
+      "musicTraining": "no",
+      "familiarity": {
+        "$numberInt": "2"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "2"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_04",
+        "trackName": "花三六",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_02",
+        "trackName": "广陵散",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_01",
+        "trackName": "列子御风",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "anding"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_01",
+        "trackName": "喜洋洋",
+        "arousal": {
+          "$numberInt": "5"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_04",
+        "trackName": "梁祝",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "ningjing"
+      }
+    ]
+  },
+  {
+    "_id": "43834a186a26d12e00b8fb6122849134",
+    "participant": {
+      "age": {
+        "$numberInt": "16"
+      },
+      "gender": "female",
+      "musicTraining": "trained",
+      "familiarity": {
+        "$numberInt": "4"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "1"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_03",
+        "trackName": "紫竹调",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "neixing"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_01",
+        "trackName": "十面埋伏",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_03",
+        "trackName": "胡笳十八拍",
+        "arousal": {
+          "$numberInt": "3"
+        },
+        "emotion": "anding"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_01",
+        "trackName": "喜洋洋",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_04",
+        "trackName": "梁祝",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "anding"
+      }
+    ]
+  },
+  {
+    "_id": "55e1d1ad6a26d1fa0083da920eb1b656",
+    "participant": {
+      "age": {
+        "$numberInt": "43"
+      },
+      "gender": "female",
+      "musicTraining": "amateur",
+      "familiarity": {
+        "$numberInt": "2"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "1"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_04",
+        "trackName": "花三六",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_05",
+        "trackName": "阳关三叠",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "anding"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_03",
+        "trackName": "胡笳十八拍",
+        "arousal": {
+          "$numberInt": "3"
+        },
+        "emotion": "neixing"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_02",
+        "trackName": "新春乐",
+        "arousal": {
+          "$numberInt": "5"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_04",
+        "trackName": "梁祝",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "shuchang"
+      }
+    ]
+  },
+  {
+    "_id": "4a3e78116a26d363006721b130ecfdb2",
+    "participant": {
+      "age": {
+        "$numberInt": "17"
+      },
+      "gender": "female",
+      "musicTraining": "trained",
+      "familiarity": {
+        "$numberInt": "4"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "0"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_05",
+        "trackName": "踏雪寻梅",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_05",
+        "trackName": "阳关三叠",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "ningjing"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_04",
+        "trackName": "花好月圆",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_01",
+        "trackName": "喜洋洋",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_04",
+        "trackName": "梁祝",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "anding"
+      }
+    ]
+  },
+  {
+    "_id": "55e1d1ad6a26d59a00842dae44b17840",
+    "participant": {
+      "age": {
+        "$numberInt": "16"
+      },
+      "gender": "female",
+      "musicTraining": "trained",
+      "familiarity": {
+        "$numberInt": "4"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "1"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_02",
+        "trackName": "浏阳河",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_03",
+        "trackName": "拔根芦柴花",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_01",
+        "trackName": "列子御风",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "anding"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_01",
+        "trackName": "喜洋洋",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_05",
+        "trackName": "江河水",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "anding"
+      }
+    ]
+  },
+  {
+    "_id": "43834a186a26d7b700b988c94b4752e5",
+    "participant": {
+      "age": {
+        "$numberInt": "18"
+      },
+      "gender": "male",
+      "musicTraining": "amateur",
+      "familiarity": {
+        "$numberInt": "2"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "2"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_01",
+        "trackName": "平湖秋月",
+        "arousal": {
+          "$numberInt": "3"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_05",
+        "trackName": "阳关三叠",
+        "arousal": {
+          "$numberInt": "3"
+        },
+        "emotion": "neixing"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_03",
+        "trackName": "胡笳十八拍",
+        "arousal": {
+          "$numberInt": "3"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_02",
+        "trackName": "新春乐",
+        "arousal": {
+          "$numberInt": "3"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_02",
+        "trackName": "二泉映月",
+        "arousal": {
+          "$numberInt": "3"
+        },
+        "emotion": "neixing"
+      }
+    ]
+  },
+  {
+    "_id": "43834a186a26e41000ba788e6b26fc06",
+    "participant": {
+      "age": {
+        "$numberInt": "45"
+      },
+      "gender": "female",
+      "musicTraining": "no",
+      "familiarity": {
+        "$numberInt": "2"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "3"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_02",
+        "trackName": "浏阳河",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "anding"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_05",
+        "trackName": "阳关三叠",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_01",
+        "trackName": "列子御风",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "neixing"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_04",
+        "trackName": "步步高",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_01",
+        "trackName": "乌夜啼",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "ningjing"
+      }
+    ]
+  },
+  {
+    "_id": "f2dd55436a26e44b01e1beec236c5ee1",
+    "participant": {
+      "age": {
+        "$numberInt": "48"
+      },
+      "gender": "male",
+      "musicTraining": "no",
+      "familiarity": {
+        "$numberInt": "2"
+      }
+    },
+    "matchedCount": {
+      "$numberInt": "2"
+    },
+    "summary": [
+      {
+        "mode": "gong",
+        "label": "宫 Gōng",
+        "track": "gong_04",
+        "trackName": "花三六",
+        "arousal": {
+          "$numberInt": "2"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "shang",
+        "label": "商 Shāng",
+        "track": "shang_02",
+        "trackName": "广陵散",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "shuchang"
+      },
+      {
+        "mode": "jue",
+        "label": "角 Jué",
+        "track": "jue_05",
+        "trackName": "霓裳曲",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "neixing"
+      },
+      {
+        "mode": "zhi",
+        "label": "徵 Zhǐ",
+        "track": "zhi_01",
+        "trackName": "喜洋洋",
+        "arousal": {
+          "$numberInt": "4"
+        },
+        "emotion": "zhenfen"
+      },
+      {
+        "mode": "yu",
+        "label": "羽 Yǔ",
+        "track": "yu_05",
+        "trackName": "江河水",
+        "arousal": {
+          "$numberInt": "1"
+        },
+        "emotion": "ningjing"
+      }
+    ]
+  }
+]

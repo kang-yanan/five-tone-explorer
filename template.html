@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>五音情绪感知 · 音乐感受小实验</title>
+<style>
+  :root { --bg: #f7f3ed; --card: #fffdf9; --border: #e2dbcf; --text: #5c5344; --text2: #9b8c78;
+    --gong: #c4a35a; --shang: #b0aca4; --jue: #8ba684; --zhi: #c48173; --yu: #7d8fa8;
+    --gong-bg: #faf3e0; --shang-bg: #f3f1ee; --jue-bg: #e9f1e6; --zhi-bg: #faebe7; --yu-bg: #e6ecf4; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: var(--bg); color: var(--text); min-height: 100vh;
+    display: flex; justify-content: center; align-items: center; padding: 16px; }
+  .phone { max-width: 420px; width: 100%; }
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  .welcome { text-align: center; padding: 40px 20px; }
+  .welcome .icon { font-size: 3em; margin-bottom: 16px; }
+  .welcome h1 { font-size: 1.5em; margin-bottom: 8px; color: var(--text); font-weight: 700; }
+  .welcome p { color: var(--text2); font-size: 0.92em; line-height: 1.7; margin-bottom: 28px; }
+  .welcome .note { font-size: 0.78em; color: #b8a894; margin-top: 16px; }
+
+  .listening { text-align: center; padding: 40px 20px; }
+  .listening .now { font-size: 0.85em; color: var(--text2); margin-bottom: 8px; }
+  .listening .mood { font-size: 2.4em; font-weight: 700; margin-bottom: 4px; transition: color 0.5s; }
+  .listening .hint { font-size: 0.9em; color: var(--text2); margin-bottom: 24px; }
+  .listening .visualizer { display:flex; justify-content:center; align-items:flex-end; gap:4px; height:90px; margin-bottom: 24px; }
+  .listening .bar { width:8px; border-radius:4px; transition:height 0.2s, background 0.5s; min-height:6px; }
+
+  .rating { padding: 24px 20px; }
+  .rating .q { font-size: 1.05em; font-weight: 600; color: var(--text); margin: 18px 0 10px; text-align: center; }
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .opt { padding: 14px 18px; border-radius: 12px; border: 2px solid var(--border); background: var(--card);
+    color: var(--text); font-size: 1em; cursor: pointer; transition: all 0.2s; text-align: center;
+    -webkit-tap-highlight-color: transparent; user-select: none; }
+  .opt:active { transform: scale(0.98); }
+  .opt:hover { border-color: var(--gong); }
+  .opt.picked { border-color: var(--gong); background: var(--gong-bg); font-weight: 600; }
+
+  .result { text-align: center; padding: 30px 20px; }
+  .result h2 { font-size: 1.4em; margin-bottom: 20px; }
+  .result .match-card { padding: 16px; border-radius: 12px; margin-bottom: 10px; text-align: left; display: flex; align-items: center; gap: 12px; }
+  .result .match-card .tone-tag { font-size: 1.2em; font-weight: 700; min-width: 50px; }
+  .result .match-card .tone-dot { width:14px; height:14px; border-radius:50%; flex-shrink:0; }
+  .result .match-card .match-info { flex:1; font-size: 0.85em; color: var(--text2); }
+  .result .match-card .match-info strong { color: var(--text); }
+
+  .btn { display: block; width: 100%; padding: 14px; border-radius: 12px; border: none;
+    font-size: 1.05em; font-weight: 600; cursor: pointer; transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent; text-align: center; }
+  .btn-primary { background: var(--gong); color: #fffdf7; margin-top: 24px; }
+  .btn-primary:active { background: #b39248; transform: scale(0.98); }
+  .btn-secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); margin-top: 8px; }
+
+  .progress { display:flex; gap:8px; justify-content:center; margin-bottom:24px; }
+  .progress .step { width:32px; height:4px; border-radius:2px; background:var(--border); transition:all 0.3s; }
+  .progress .step.filled { background:var(--gong); }
+  @keyframes pulse { 0%,100% { opacity:0.4; } 50% { opacity:1; } }
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <div class="screen active" id="welcome">
+    <div class="welcome">
+      <div class="icon">🎵</div>
+      <h1>音乐感受小实验</h1>
+      <p>Hi～这是一个关于<b>音乐与情绪</b>的小调查。<br>
+      你会听到 <b>6段</b> 内容（其中一段是安静的），<br>每段结束后花 <b>10秒</b> 标一下你的感受。<br>
+      全程 <b>5分钟左右</b>，匿名，没有正确答案。</p>
+      <div class="note">🎧 建议戴上耳机<br>📱 手机/电脑浏览器打开均可</div>
+      <button class="btn btn-primary" onclick="go()">开始聆听 🎧</button>
+    </div>
+  </div>
+
+  <div class="screen" id="listen">
+    <div class="listening">
+      <div class="progress" id="prog"></div>
+      <div class="now">第 <span id="n">1</span> / 6 段</div>
+      <div class="mood" id="mood">🎶</div>
+      <div class="hint">闭上眼睛，放松聆听</div>
+      <div class="visualizer" id="viz"></div>
+    </div>
+  </div>
+
+  <div class="screen" id="rate">
+    <div class="rating">
+      <div class="progress" id="rprog"></div>
+      <div class="q">听完这段音乐，你感觉怎样？</div>
+      <div class="options" id="q1">
+        <button class="opt" data-v="1">😴 很平静</button><button class="opt" data-v="2">🙂 有点平静</button>
+        <button class="opt" data-v="3">😐 没感觉</button><button class="opt" data-v="4">😊 有点兴奋</button>
+        <button class="opt" data-v="5">🤩 很兴奋</button>
+      </div>
+      <div class="q">这段音乐给你的情绪"色调"是？</div>
+      <div class="options" id="q2">
+        <button class="opt" data-v="anding">🏠 安定沉稳的</button><button class="opt" data-v="neixing">🌙 内省收敛的</button>
+        <button class="opt" data-v="shuchang">🌿 舒畅条达的</button><button class="opt" data-v="zhenfen">🔥 开心振奋的</button>
+        <button class="opt" data-v="ningjing">💧 宁静沉静的</button>
+      </div>
+      <button class="btn btn-primary" id="next" disabled>选好后点这里 →</button>
+    </div>
+  </div>
+
+  <div class="screen" id="done">
+    <div class="result">
+      <h2>✅ 完成！谢谢你～</h2>
+      <p style="color:var(--text2);margin-bottom:20px;">你听到的5段音乐分别是：</p>
+      <div id="cards"></div>
+      <p style="color:var(--text2);font-size:0.85em;margin-top:16px;">
+      中国传统五音认为：<br>宫→安定 · 商→内省 · 角→舒畅 · 徵→振奋 · 羽→宁静<br>
+      <span style="color:var(--gong);">👆 你的感受和传统理论对上了多少？</span></p>
+      <button class="btn btn-secondary" onclick="location.reload()">🔄 再来一次</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ========== EMBEDDED REAL MUSIC (45s excerpts, 96kbps) ==========
+// Each track performed by real musicians on traditional Chinese instruments
+// Source: curated five-tone music library
+
+const AUDIO_B64 = {
+  gong:  "{{GONG_B64}}",   // 平胡秋月 — 宫调·古筝
+  shang: "{{SHANG_B64}}",  // 阳关三叠 — 商调·古琴
+  jue:   "{{JUE_B64}}",    // 姑苏行 — 角调·笛子
+  zhi:   "{{ZHI_B64}}",    // 春节序曲 — 徵调·民乐合奏
+  yu:    "{{YU_B64}}"      // 二泉映月 — 羽调·二胡
+};
+
+const MODES = {
+  gong:  { label:'宫 Gōng', emo:'安定沉稳', color:'#c4a35a', bg:'#faf3e0', key:'anding', track:'平胡秋月' },
+  shang: { label:'商 Shāng', emo:'内省收敛', color:'#b0aca4', bg:'#f3f1ee', key:'neixing', track:'阳关三叠' },
+  jue:   { label:'角 Jué', emo:'舒畅条达', color:'#8ba684', bg:'#e9f1e6', key:'shuchang', track:'姑苏行' },
+  zhi:   { label:'徵 Zhǐ', emo:'开心振奋', color:'#c48173', bg:'#faebe7', key:'zhenfen', track:'春节序曲' },
+  yu:    { label:'羽 Yǔ', emo:'宁静沉静', color:'#7d8fa8', bg:'#e6ecf4', key:'ningjing', track:'二泉映月' },
+  _rest: { label:'(静息)', emo:'—', color:'#c0b8a8', bg:'#f5f2ec', key:'_rest', track:'安静基线' }
+};
+const FIVE_TONES = ['gong','shang','jue','zhi','yu'];
+const ALL_CONDITIONS = ['gong','shang','jue','zhi','yu','_rest'];
+const BAR_COUNT = 10;
+
+let ctx, order=[], round=0, ratings=[], a1=null, a2=null, src=null, ana=null, rid=null;
+let decodedBuffers = {}; // cached decoded AudioBuffers
+
+// ========== AUDIO ==========
+async function loadBuffer(mode) {
+  if (decodedBuffers[mode]) return decodedBuffers[mode];
+  const b64 = AUDIO_B64[mode];
+  const binary = atob(b64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  const buf = await ctx.decodeAudioData(bytes.buffer.slice(0));
+  decodedBuffers[mode] = buf;
+  return buf;
+}
+
+function playMode(mode) {
+  stopAudio();
+  loadBuffer(mode).then(buffer => {
+    const source = ctx.createBufferSource();
+    source.buffer = buffer;
+    const analyser = ctx.createAnalyser();
+    analyser.fftSize = 256;
+    analyser.smoothingTimeConstant = 0.5;
+    source.connect(analyser);
+    analyser.connect(ctx.destination);
+    source.start(0);
+    src = source;
+    ana = analyser;
+    animateBars(mode);
+    source.onended = () => { stopViz(); showRate(); };
+  });
+}
+
+function animateBars(mode) {
+  if (!ana || !src) return;
+  const fd = new Uint8Array(ana.frequencyBinCount);
+  ana.getByteFrequencyData(fd);
+  const bars = document.querySelectorAll('#viz .bar');
+  const color = MODES[mode].color;
+  bars.forEach((b, i) => {
+    const idx = Math.floor(i * fd.length / bars.length);
+    const h = 8 + (fd[idx] / 255) * 78;
+    b.style.height = h + 'px';
+    b.style.background = color;
+  });
+  rid = requestAnimationFrame(() => animateBars(mode));
+}
+
+function stopViz() { if (rid) { cancelAnimationFrame(rid); rid=null; } }
+function stopAudio() {
+  stopViz();
+  if (src) { try { src.stop(); } catch(e){} src=null; ana=null; }
+}
+
+// ========== UI ==========
+function show(id) { document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+function progBars(cid) {
+  document.getElementById(cid).innerHTML = [0,1,2,3,4,5].map(i => `<div class="step${i<round?' filled':''}"></div>`).join('');
+}
+
+(function(){
+  const v = document.getElementById('viz');
+  v.innerHTML = Array.from({length:BAR_COUNT}, () => '<div class="bar" style="height:12px;background:var(--border)"></div>').join('');
+})();
+
+async function go() {
+  ctx = new (window.AudioContext||window.webkitAudioContext)();
+  if (ctx.state==='suspended') await ctx.resume();
+  order = [...ALL_CONDITIONS].sort(()=>Math.random()-0.5);
+  round=0; ratings=[]; a1=null; a2=null;
+  show('listen'); progBars('prog'); playRound();
+}
+
+function playRound() {
+  if (round>=6) { finish(); return; }
+  stopAudio();
+  document.getElementById('n').textContent = round+1;
+  const mode = order[round];
+  const info = MODES[mode];
+  document.getElementById('mood').textContent = mode==='_rest' ? '🤫' : '🎶';
+  document.getElementById('mood').style.color = info.color;
+  document.getElementById('mood').style.fontSize = mode==='_rest' ? '4em' : '2.4em';
+  progBars('prog');
+
+  if (mode === '_rest') {
+    const bars = document.querySelectorAll('#viz .bar');
+    bars.forEach(b => { b.style.height='10px'; b.style.background='#d5cfc4'; });
+    setTimeout(() => showRate(), 30000);
+  } else {
+    playMode(mode);
+  }
+}
+
+function showRate() {
+  show('rate'); progBars('rprog');
+  a1=null; a2=null;
+  document.getElementById('next').disabled = true;
+  document.getElementById('next').textContent = '选好后点这里 →';
+  document.querySelectorAll('#q1 .opt,#q2 .opt').forEach(b=>b.classList.remove('picked'));
+  document.querySelectorAll('#q1 .opt').forEach(b=>{ b.onclick=function(){
+    document.querySelectorAll('#q1 .opt').forEach(x=>x.classList.remove('picked'));
+    this.classList.add('picked'); a1=parseInt(this.dataset.v); chk();
+  };});
+  document.querySelectorAll('#q2 .opt').forEach(b=>{ b.onclick=function(){
+    document.querySelectorAll('#q2 .opt').forEach(x=>x.classList.remove('picked'));
+    this.classList.add('picked'); a2=this.dataset.v; chk();
+  };});
+}
+
+function chk() {
+  if (a1!==null && a2!==null) {
+    document.getElementById('next').disabled = false;
+    document.getElementById('next').textContent = '下一段 →';
+  }
+}
+
+function confirmRating() {
+  ratings.push({ round:round+1, mode:order[round], arousal:a1, emotion:a2 });
+  round++; a1=null; a2=null;
+  show('listen'); progBars('prog');
+  setTimeout(playRound, 400);
+}
+
+function finish() {
+  show('done');
+  const toneRatings = ratings.filter(r => r.mode !== '_rest');
+  const restRating = ratings.find(r => r.mode === '_rest');
+
+  document.getElementById('cards').innerHTML = toneRatings.map(r=>{
+    const info = MODES[r.mode];
+    return `<div class="match-card" style="background:${info.bg};border-left:3px solid ${info.color}">
+      <div class="tone-dot" style="background:${info.color}"></div>
+      <div class="tone-tag" style="color:${info.color}">${info.label}</div>
+      <div class="match-info">
+        曲目：<strong>${info.track}</strong><br>
+        你感觉：<strong>${['','很平静','有点平静','没感觉','有点兴奋','很兴奋'][r.arousal]}</strong>，
+        <strong>${{anding:'安定沉稳',neixing:'内省收敛',shuchang:'舒畅条达',zhenfen:'开心振奋',ningjing:'宁静沉静'}[r.emotion]}</strong><br>
+        传统认为：${info.emo} ${r.emotion===info.key?' ✅ 对上了！':''}
+      </div>
+    </div>`;
+  }).join('');
+
+  const rec = {
+    ts: new Date().toISOString(),
+    order, ratings,
+    restBaseline: restRating ? { arousal: restRating.arousal, emotion: restRating.emotion } : null,
+    summary: FIVE_TONES.map(m=>{
+      const r=ratings.find(x=>x.mode===m);
+      return r?{mode:m,label:MODES[m].label,track:MODES[m].track,arousal:r.arousal,emotion:r.emotion}:null;
+    }).filter(Boolean)
+  };
+  const all = JSON.parse(localStorage.getItem('5tone_v3')||'[]');
+  all.push(rec); localStorage.setItem('5tone_v3',JSON.stringify(all));
+  console.log('📊 saved',all.length,'records',JSON.stringify(rec,null,2));
+}
+</script>
+</body>
+</html>
