@@ -1,79 +1,95 @@
+# FiveTone Explorer
 
+**Zero-Install Mobile Sensing for Music Emotion Research in the Wild**
 
-# 五音情绪感知实验
+[![UbiComp 2026](https://img.shields.io/badge/UbiComp-2026-blue)](https://www.ubicomp.org/ubicomp2026/)
+[![License](https://img.shields.io/badge/License-Academic%20Use%20Only-lightgrey)](#license)
 
-#### 介绍
+> 🏆 Accepted at **UbiComp 2026 Teenager Show** (55/112, 49.1% acceptance rate)
 
-五音情绪感知实验是一个基于 Web 的心理声学实验项目，旨在研究中国古典五声音阶（宫、商、角、徵、羽）与情绪感知之间的关系。
+FiveTone Explorer is a single-URL mobile web tool that turns any smartphone into a music-emotion research platform. It streams music, collects self-reported emotion ratings, and passively logs smartphone accelerometer data via the DeviceMotion API — all without app installation.
 
-五音是中国传统音乐理论中的五个基本音阶，分别对应：
-- **宫**（gong）- 相当于现代音阶的 do 音
-- **商**（shang）- 相当于现代音阶的 re 音
-- **角**（jue）- 相当于现代音阶的 mi 音
-- **徵**（zhi）- 相当于现代音阶的 sol 音
-- **羽**（yu）- 相当于现代音阶的 la 音
+---
 
-本实验通过播放不同音阶的音乐片段，收集受试者对音乐情绪的主观感知数据，探索五声音阶与情绪唤起之间的关联。
+## 🔬 Research Findings
 
-#### 软件架构
+In a one-day WeChat deployment (N = 56), the tool collected **275 emotion observations** and **835,266 accelerometer samples** from 43 participants in naturalistic conditions:
 
-本项目是一个纯前端的 Web 应用，采用以下技术架构：
+1. **In-browser motion sensing carries behavioral signal** — directional associations between body movement and music-evoked arousal
+2. **Classification crisis documented** — three-source cross-validation of pentatonic mode labels finds pairwise agreement ≤ 46%
+3. **Acoustic features predict arousal** — zero-crossing rate, spectral centroid, and bandwidth correlate with self-reported arousal at effect sizes consistent with lab studies
+4. **Cross-cultural extensibility** — same URL-based deployment extended to Western classical music with zero code changes
 
-- **HTML5** - 页面结构
-- **CSS3** - 样式与动画
-- **JavaScript** - 交互逻辑
-- **Web Audio API** - 音频处理与可视化
+---
 
-#### 功能特点
+## 📂 Repository Contents
 
-- **欢迎界面** - 实验说明与开始入口
-- **听觉实验界面** - 播放五音音频，实时可视化展示
-- **情绪评分界面** - 收集受试者的情绪感知数据（唤醒度与情绪类型）
-- **结果展示** - 实验完成后展示汇总结果
+| Directory/File | Description |
+|---|---|
+| `index.html` | Main experiment web application |
+| `index_light.html` | Lightweight variant |
+| `acoustic_emotion_analysis.py` | Acoustic feature extraction + emotion correlation (librosa) |
+| `bottom_up_analysis.py` | Data-driven clustering of emotion responses |
+| `mode_detect.py` | Algorithmic pentatonic mode detection (MIR) |
+| `detailed_analysis.py` | Multiple regression + PCA + age-group analysis |
+| `latest_data.json` | Anonymized participant response data (N = 56) |
+| `age_data.json` | Participant demographics |
+| `functions/submitData/` | CloudBase serverless function |
+| `china_west_comparison/` | Cross-cultural extension (Chinese vs. Western stimuli) |
 
-#### 项目结构
+**Note:** Audio stimulus files (~38 MB) are hosted on CDN and not included in this repository.
 
-```
-five-tone/
-├── audio/               # 音频文件
-│   ├── gong_*.mp3      # 宫音系列
-│   ├── shang_*.mp3     # 商音系列
-│   ├── jue_*.mp3       # 角音系列
-│   ├── zhi_*.mp3       # 徵音系列
-│   └── yu_*.mp3        # 羽音系列
-├── index.html           # 主页面
-└── README.md            # 项目说明
-```
+---
 
-#### 安装教程
+## 🚀 Quick Start
 
-1. 克隆或下载本仓库到本地
-2. 确保音频文件完整下载（建议使用 Git LFS）
-3. 直接在浏览器中打开 `index.html` 即可运行
-
+1. Open `index.html` in a browser, or serve locally:
 ```bash
-# 如果使用 Git
-git clone https://gitee.com/CathyKang/five-tone.git
-cd five-tone
-# 使用本地服务器运行（推荐）
 python -m http.server 8080
-# 然后访问 http://localhost:8080
+# Visit http://localhost:8080
 ```
 
-#### 使用说明
+2. The live deployment is accessible at:
+```
+https://five-tone-cathykang-d4b0676685c9-1409437628.tcloudbaseapp.com
+```
 
-1. 打开实验页面，点击开始按钮进入实验
-2. 认真聆听每段播放的五音音乐
-3. 根据聆听感受完成情绪评分问卷
-4. 完成所有测试后查看实验结果
+---
 
-#### 参与贡献
+## 📄 Citation
 
-1. Fork 本仓库
-2. 新建 Feature 分支 (`git checkout -b feature/your-feature`)
-3. 提交你的修改
-4. 创建 Pull Request
+If you use this work in your research, please cite:
 
-#### 许可证
+```bibtex
+@inproceedings{kang2026fivetone,
+  title     = {FiveTone Explorer: Zero-Install Mobile Sensing for Music Emotion Research in the Wild},
+  author    = {Kang, Yanan},
+  booktitle = {Companion Proceedings of the 2026 ACM International Joint Conference
+               on Pervasive and Ubiquitous Computing (UbiComp '26 Companion)},
+  year      = {2026},
+  publisher = {ACM},
+  address   = {New York, NY, USA},
+  doi       = {to be assigned}
+}
+```
 
-本项目仅供学术研究使用。
+---
+
+## ⚖️ License
+
+**This project is for academic research purposes only.** All rights reserved. The code, data, and analysis scripts in this repository are provided to support reproducibility of the accompanying UbiComp 2026 publication. Redistribution or commercial use requires explicit permission from the author.
+
+---
+
+## 👤 Author
+
+**Kang Yanan** — Zhoupu High School Affiliated to East China Normal University, Shanghai, China
+
+- GitHub: [@kang-yanan](https://github.com/kang-yanan)
+- ORCID: [0000-0003-1875-4807](https://orcid.org/0000-0003-1875-4807) (Advisor: Juanjuan Jiang)
+
+---
+
+## 📧 Contact
+
+For questions about the paper, code, or data, please open a GitHub issue or contact the author.
