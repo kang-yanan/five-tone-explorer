@@ -1,5 +1,13 @@
-# Audio files — hosted on CDN (38MB)
-audio/
+# Audio: only keep embed25 (used by both index.html variants)
+audio/*.mp3
+audio/embed/
+audio/western/
+audio/western_processed/
+china_west_comparison/audio/*.mp3
+china_west_comparison/audio/embed/
+china_west_comparison/audio/western/
+china_west_comparison/audio/western_processed/
+*.b64
 
 # Paper drafts — not public
 *.docx
@@ -13,15 +21,21 @@ __pycache__/
 
 # Binary archives
 *.npz
+*.rar
 
 # Cloud credentials
 cloudbaserc.json
 
-# Temporary / working files
+# Temp / working / archive
 _session_context/
 _review_temp_*
+_review_check.txt
+_email_draft.txt
 *.cut
 comment.cut
+archive_music_psychology/
+TAPS_submission/
+新建文件夹/
 
 # Diagrams
 *.vsdx
