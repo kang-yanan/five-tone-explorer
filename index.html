@@ -71,6 +71,7 @@
   .motion-dot { width:8px; height:8px; border-radius:50%; transition: background 0.5s; }
   .motion-dot.still { background:#8ba684; }
   .motion-dot.moving { background:#e0a060; }
+  .motion-dot.off { background:#c0b8a8; }
 
   /* Dashboard */
   .dash-tabs { display:flex; gap:0; margin-bottom:16px; border-radius:12px; overflow:hidden; border:1px solid var(--border); }
@@ -233,6 +234,7 @@ const I18N = {
     'listen.episode': '第', 'listen.of': '/ 6 段',
     'listen.hintPlay': '闭上眼睛，放松聆听', 'listen.hintRest': '保持安静，放松30秒',
     'listen.motionInit': '检测手机姿态中...',
+    'listen.motionOff': '📱 未启用姿态检测 · 不影响测试',
     'listen.still': '📱 手机平稳 · 沉浸聆听 ✓',
     'listen.moving': '📱 检测到移动 · 建议放下手机闭眼聆听',
     'rate.q1': '听完这段音乐，你感觉怎样？',
@@ -277,6 +279,7 @@ const I18N = {
     'listen.episode': 'Part', 'listen.of': '/ 6',
     'listen.hintPlay': 'Close your eyes and just listen', 'listen.hintRest': 'Stay quiet and relax for 30 seconds',
     'listen.motionInit': 'Detecting phone orientation…',
+    'listen.motionOff': '📱 Motion sensing off · does not affect the test',
     'listen.still': '📱 Phone steady · immersive listening ✓',
     'listen.moving': '📱 Movement detected · put the phone down and close your eyes',
     'rate.q1': 'How do you feel after this piece?',
@@ -374,11 +377,13 @@ function pick(el, type) {
 function checkInfoReady() {
   document.getElementById('infoNext').disabled = !(document.getElementById('age').value && genderPicked && musicPicked && familiarPicked);
 }
-function confirmInfo() {
+async function confirmInfo() {
   participantInfo = {
     age: parseInt(document.getElementById('age').value),
     gender: genderPicked, musicTraining: musicPicked, familiarity: familiarPicked
   };
+  // iOS 13+ 取加速度计必须先申请，且必须由用户手势触发 —— 这个按钮是最后的手势点
+  await requestMotionPermission();
   resetMotionTracking();
   show('listen'); progBars('prog'); playRound();
 }
@@ -488,11 +493,27 @@ function confirmRating() {
 }
 
 // ========== 加速度计 ==========
-function resetMotionTracking() { stopMotionTracking(); motionSamples=[]; motionPerRound=[]; }
+// iOS 13+ 需要显式授权才能读加速度计；Android/桌面端没有这道门
+let motionPermission = null;          // null=未申请 · 'granted' · 'denied'
+function motionUnavailable() {
+  return typeof DeviceMotionEvent === 'undefined' || motionPermission === 'denied';
+}
+async function requestMotionPermission() {
+  try {
+    if (typeof DeviceMotionEvent === 'undefined') { motionPermission = 'denied'; return; }
+    if (typeof DeviceMotionEvent.requestPermission !== 'function') { motionPermission = 'granted'; return; }
+    if (motionPermission === 'granted') return;
+    motionPermission = await DeviceMotionEvent.requestPermission();
+  } catch(e) {
+    console.warn('Motion permission:', e);
+    motionPermission = 'denied';
+  }
+}
+function resetMotionTracking() { stopMotionTracking(); motionSamples=[]; motionPerRound=[]; lastMotionInfo=null; }
 function startMotionTracking() {
   try {
     motionSamples=[];
-    if (typeof DeviceMotionEvent === 'undefined') return;
+    if (motionUnavailable()) { refreshMotionLabel(); return; }
     const handler = e => {
       const a = e.accelerationIncludingGravity;
       if (!a||a.x===null) return;
@@ -501,6 +522,14 @@ function startMotionTracking() {
     window.addEventListener('devicemotion', handler);
     motionWatchId = {handler};
   } catch(e) { console.warn('Motion:',e); }
+}
+// 按当前状态刷新指示器文字（切语言、取不到传感器时都要走这里）
+function refreshMotionLabel() {
+  const dot=document.getElementById('motionDot'), label=document.getElementById('motionLabel');
+  if(!dot||!label) return;
+  if (motionUnavailable()) { dot.className='motion-dot off'; label.textContent=t('listen.motionOff'); return; }
+  if (lastMotionInfo) { updateMotionUI(lastMotionInfo); return; }
+  dot.className='motion-dot still'; label.textContent=t('listen.motionInit');
 }
 function stopMotionTracking() {
   try {
@@ -667,9 +696,8 @@ function applyLang() {
   if (document.getElementById('listen').classList.contains('active') && order.length) {
     document.getElementById('hint').textContent =
       order[round]==='_rest' ? t('listen.hintRest') : t('listen.hintPlay');
-    if (lastMotionInfo) updateMotionUI(lastMotionInfo);
+    refreshMotionLabel();
   }
-  if (document.getElementById('rate').classList.contains('active') && lastMotionInfo) updateMotionUI(lastMotionInfo);
 }
 function toggleLang() {
   LANG = LANG==='zh' ? 'en' : 'zh';
