@@ -16,6 +16,13 @@
   .screen { display: none; }
   .screen.active { display: block; }
 
+  /* 语言切换 */
+  #langBtn { position: fixed; top: 12px; right: 12px; z-index: 99;
+    padding: 7px 14px; border-radius: 20px; border: 1px solid var(--border);
+    background: var(--card); color: var(--text); font-size: 0.8em; font-weight: 600;
+    cursor: pointer; font-family: inherit; -webkit-tap-highlight-color: transparent; }
+  #langBtn:active { transform: scale(0.96); }
+
   .welcome { text-align: center; padding: 40px 20px; }
   .welcome .icon { font-size: 3em; margin-bottom: 16px; }
   .welcome h1 { font-size: 1.5em; margin-bottom: 8px; color: var(--text); font-weight: 700; }
@@ -78,7 +85,7 @@
   .stat-card .lbl { font-size:0.75em; color:var(--text2); margin-top:2px; }
 
   .bar-row { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
-  .bar-row .bar-label { font-size:0.82em; min-width:44px; text-align:right; font-weight:600; }
+  .bar-row .bar-label { font-size:0.82em; min-width:50px; text-align:right; font-weight:600; }
   .bar-row .bar-track { flex:1; height:22px; background:#eee; border-radius:11px; overflow:hidden; }
   .bar-row .bar-fill { height:100%; border-radius:11px; transition:width 0.6s; display:flex; align-items:center; padding-left:8px; font-size:0.72em; color:#fff; font-weight:600; }
   .bar-row .bar-pct { font-size:0.78em; color:var(--text2); min-width:36px; }
@@ -92,6 +99,7 @@
 </style>
 </head>
 <body>
+<button id="langBtn" onclick="toggleLang()">EN</button>
 <div class="phone">
 
   <!-- 欢迎页 -->
@@ -99,42 +107,38 @@
     <div class="welcome">
       <div class="icon">🎵</div>
       <h1>FiveTone Explorer</h1>
-      <p>中国传统五音（宫商角徵羽）认为每种调式对应一种情绪。<br>
-      但<b>对你个人</b>来说，这个理论成立吗？<br><br>
-      戴上耳机，听<b>6段</b>音乐（含1段静息基线），<br>
-      标记你的真实感受，<b>发现你自己的音乐情绪指纹</b>。<br>
-      全程 ~5分钟，匿名，没有标准答案。</p>
-      <div class="note">🎧 建议戴上耳机 · 保持放松<br>📱 手机/电脑浏览器均可</div>
-      <button class="btn btn-primary" onclick="go()">开始探索 🎧</button>
+      <p data-i18n="welcome.body"></p>
+      <div class="note" data-i18n="welcome.note"></div>
+      <button class="btn btn-primary" onclick="go()" data-i18n="welcome.btn"></button>
     </div>
   </div>
 
   <!-- 信息页 -->
   <div class="screen" id="info">
     <div class="rating">
-      <h2 style="text-align:center;margin-bottom:24px;">📋 关于你</h2>
-      <div class="q">年龄</div>
-      <div class="options"><input type="number" id="age" placeholder="输入年龄" min="10" max="99" style="width:100%;padding:14px;border-radius:12px;border:2px solid var(--border);background:var(--card);font-size:1em;text-align:center;color:var(--text);" oninput="checkInfoReady()"></div>
-      <div class="q">性别</div>
+      <h2 style="text-align:center;margin-bottom:24px;" data-i18n="info.title"></h2>
+      <div class="q" data-i18n="info.age"></div>
+      <div class="options"><input type="number" id="age" data-i18n-ph="info.agePh" min="10" max="99" style="width:100%;padding:14px;border-radius:12px;border:2px solid var(--border);background:var(--card);font-size:1em;text-align:center;color:var(--text);" oninput="checkInfoReady()"></div>
+      <div class="q" data-i18n="info.gender"></div>
       <div class="options" id="genderOpts">
-        <button class="opt" data-v="male" onclick="pick(this,'gender')">👦 男</button>
-        <button class="opt" data-v="female" onclick="pick(this,'gender')">👧 女</button>
+        <button class="opt" data-v="male" onclick="pick(this,'gender')" data-i18n="info.male"></button>
+        <button class="opt" data-v="female" onclick="pick(this,'gender')" data-i18n="info.female"></button>
       </div>
-      <div class="q">是否学过乐器/音乐？</div>
+      <div class="q" data-i18n="info.music"></div>
       <div class="options" id="musicOpts">
-        <button class="opt" data-v="no" onclick="pick(this,'music')">🎵 没学过</button>
-        <button class="opt" data-v="amateur" onclick="pick(this,'music')">🎸 业余学过</button>
-        <button class="opt" data-v="trained" onclick="pick(this,'music')">🎹 系统训练过</button>
+        <button class="opt" data-v="no" onclick="pick(this,'music')" data-i18n="info.musNo"></button>
+        <button class="opt" data-v="amateur" onclick="pick(this,'music')" data-i18n="info.musAm"></button>
+        <button class="opt" data-v="trained" onclick="pick(this,'music')" data-i18n="info.musTr"></button>
       </div>
-      <div class="q">对中国传统音乐的熟悉程度</div>
+      <div class="q" data-i18n="info.familiar"></div>
       <div class="options" id="familiarOpts">
-        <button class="opt" data-v="1" onclick="pick(this,'familiar')">1 — 完全不熟</button>
-        <button class="opt" data-v="2" onclick="pick(this,'familiar')">2 — 听过一点</button>
-        <button class="opt" data-v="3" onclick="pick(this,'familiar')">3 — 一般</button>
-        <button class="opt" data-v="4" onclick="pick(this,'familiar')">4 — 比较熟悉</button>
-        <button class="opt" data-v="5" onclick="pick(this,'familiar')">5 — 非常熟悉</button>
+        <button class="opt" data-v="1" onclick="pick(this,'familiar')" data-i18n="info.fam1"></button>
+        <button class="opt" data-v="2" onclick="pick(this,'familiar')" data-i18n="info.fam2"></button>
+        <button class="opt" data-v="3" onclick="pick(this,'familiar')" data-i18n="info.fam3"></button>
+        <button class="opt" data-v="4" onclick="pick(this,'familiar')" data-i18n="info.fam4"></button>
+        <button class="opt" data-v="5" onclick="pick(this,'familiar')" data-i18n="info.fam5"></button>
       </div>
-      <button class="btn btn-primary" id="infoNext" disabled onclick="confirmInfo()">继续 →</button>
+      <button class="btn btn-primary" id="infoNext" disabled onclick="confirmInfo()" data-i18n="info.next"></button>
     </div>
   </div>
 
@@ -142,13 +146,13 @@
   <div class="screen" id="listen">
     <div class="listening">
       <div class="progress" id="prog"></div>
-      <div class="now">第 <span id="n">1</span> / 6 段</div>
+      <div class="now"><span data-i18n="listen.episode"></span> <span id="n">1</span> <span data-i18n="listen.of"></span></div>
       <div class="mood" id="mood">🎶</div>
-      <div class="hint" id="hint">闭上眼睛，放松聆听</div>
+      <div class="hint" id="hint"></div>
       <div class="visualizer" id="viz"></div>
       <div class="motion-indicator">
         <div class="motion-dot still" id="motionDot"></div>
-        <span id="motionLabel">检测手机姿态中...</span>
+        <span id="motionLabel" data-i18n="listen.motionInit"></span>
       </div>
     </div>
   </div>
@@ -157,68 +161,189 @@
   <div class="screen" id="rate">
     <div class="rating">
       <div class="progress" id="rprog"></div>
-      <div class="q">听完这段音乐，你感觉怎样？</div>
+      <div class="q" data-i18n="rate.q1"></div>
       <div class="options" id="q1">
-        <button class="opt" data-v="1">😴 很平静</button>
-        <button class="opt" data-v="2">🙂 有点平静</button>
-        <button class="opt" data-v="3">😐 没感觉</button>
-        <button class="opt" data-v="4">😊 有点兴奋</button>
-        <button class="opt" data-v="5">🤩 很兴奋</button>
+        <button class="opt" data-v="1" data-i18n="rate.a1"></button>
+        <button class="opt" data-v="2" data-i18n="rate.a2"></button>
+        <button class="opt" data-v="3" data-i18n="rate.a3"></button>
+        <button class="opt" data-v="4" data-i18n="rate.a4"></button>
+        <button class="opt" data-v="5" data-i18n="rate.a5"></button>
       </div>
-      <div class="q">这段音乐给你的情绪"色调"是？</div>
+      <div class="q" data-i18n="rate.q2"></div>
       <div class="options" id="q2">
-        <button class="opt" data-v="anding">🏠 安定沉稳的</button>
-        <button class="opt" data-v="neixing">🌙 内省收敛的</button>
-        <button class="opt" data-v="shuchang">🌿 舒畅条达的</button>
-        <button class="opt" data-v="zhenfen">🔥 开心振奋的</button>
-        <button class="opt" data-v="ningjing">💧 宁静沉静的</button>
+        <button class="opt" data-v="anding" data-i18n="rate.e1"></button>
+        <button class="opt" data-v="neixing" data-i18n="rate.e2"></button>
+        <button class="opt" data-v="shuchang" data-i18n="rate.e3"></button>
+        <button class="opt" data-v="zhenfen" data-i18n="rate.e4"></button>
+        <button class="opt" data-v="ningjing" data-i18n="rate.e5"></button>
       </div>
-      <button class="btn btn-primary" id="next" disabled onclick="confirmRating()">选好后点这里 →</button>
+      <button class="btn btn-primary" id="next" disabled onclick="confirmRating()" data-i18n="rate.next"></button>
     </div>
   </div>
 
   <!-- 结果页 -->
   <div class="screen" id="done">
     <div class="result">
-      <h2>✅ 探索完成！</h2>
+      <h2 data-i18n="done.title"></h2>
       <div class="dash-tabs">
-        <button class="dash-tab active" onclick="switchTab('personal')">🎯 我的情绪指纹</button>
-        <button class="dash-tab" onclick="switchTab('group')">📊 群体概览</button>
+        <button class="dash-tab active" onclick="switchTab('personal')" data-i18n="done.tab1"></button>
+        <button class="dash-tab" onclick="switchTab('group')" data-i18n="done.tab2"></button>
       </div>
 
       <div class="dash-panel active" id="panelPersonal">
-        <p style="color:var(--text2);margin-bottom:14px;font-size:0.85em;">你听到的5段音乐与你的情绪感受：</p>
+        <p style="color:var(--text2);margin-bottom:14px;font-size:0.85em;" data-i18n="done.lead"></p>
         <div id="cards"></div>
-        <p style="color:var(--text2);font-size:0.8em;margin-top:12px;">
-        传统五音：宫→安定 · 商→内省 · 角→舒畅 · 徵→振奋 · 羽→宁静</p>
-        <button class="btn btn-primary" onclick="copyData()" style="background:var(--jue);margin:10px 0;">📋 复制我的数据</button>
-        <p style="color:var(--text2);font-size:0.72em;">点击复制 → 回微信群 → 长按粘贴发送</p>
+        <p style="color:var(--text2);font-size:0.8em;margin-top:12px;" data-i18n="done.legend"></p>
+        <button class="btn btn-primary" onclick="copyData()" style="background:var(--jue);margin:10px 0;" data-i18n="done.copy"></button>
+        <p style="color:var(--text2);font-size:0.72em;" data-i18n="done.copyHint"></p>
       </div>
 
       <div class="dash-panel" id="panelGroup">
         <div class="stat-grid" id="statGrid"></div>
-        <div class="bar-row" id="matchChart"></div>
-        <p style="font-size:0.76em;color:var(--text2);margin:4px 0 14px;">⬆ 各调式情绪匹配率</p>
-        <div class="bar-row" id="arousalChart"></div>
-        <p style="font-size:0.76em;color:var(--text2);margin:4px 0 14px;">⬆ 各调式平均唤醒度（1平静→5兴奋）</p>
+        <div id="matchChart"></div>
+        <p style="font-size:0.76em;color:var(--text2);margin:4px 0 14px;" data-i18n="done.matchCap"></p>
+        <div id="arousalChart"></div>
+        <p style="font-size:0.76em;color:var(--text2);margin:4px 0 14px;" data-i18n="done.arousalCap"></p>
         <div id="personalVsGroup"></div>
       </div>
 
-      <button class="btn btn-secondary" onclick="location.reload()" style="margin-top:8px;">🔄 再来一次</button>
+      <button class="btn btn-secondary" onclick="location.reload()" style="margin-top:8px;" data-i18n="done.again"></button>
     </div>
   </div>
 
 </div>
 
 <script>
+// ========== 语言层 ==========
+const I18N = {
+  zh: {
+    'doc.title': 'FiveTone Explorer · 个人化五音情绪交互探索系统',
+    'welcome.body': '中国传统五音（宫商角徵羽）认为每种调式对应一种情绪。<br>但<b>对你个人</b>来说，这个理论成立吗？<br><br>戴上耳机，听<b>6段</b>音乐（含1段静息基线），<br>标记你的真实感受，<b>发现你自己的音乐情绪指纹</b>。<br>全程 ~5分钟，匿名，没有标准答案。',
+    'welcome.note': '🎧 建议戴上耳机 · 保持放松<br>📱 手机/电脑浏览器均可',
+    'welcome.btn': '开始探索 🎧',
+    'info.title': '📋 关于你',
+    'info.age': '年龄', 'info.agePh': '输入年龄',
+    'info.gender': '性别', 'info.male': '👦 男', 'info.female': '👧 女',
+    'info.music': '是否学过乐器/音乐？',
+    'info.musNo': '🎵 没学过', 'info.musAm': '🎸 业余学过', 'info.musTr': '🎹 系统训练过',
+    'info.familiar': '对中国传统音乐的熟悉程度',
+    'info.fam1': '1 — 完全不熟', 'info.fam2': '2 — 听过一点', 'info.fam3': '3 — 一般',
+    'info.fam4': '4 — 比较熟悉', 'info.fam5': '5 — 非常熟悉',
+    'info.next': '继续 →',
+    'listen.episode': '第', 'listen.of': '/ 6 段',
+    'listen.hintPlay': '闭上眼睛，放松聆听', 'listen.hintRest': '保持安静，放松30秒',
+    'listen.motionInit': '检测手机姿态中...',
+    'listen.still': '📱 手机平稳 · 沉浸聆听 ✓',
+    'listen.moving': '📱 检测到移动 · 建议放下手机闭眼聆听',
+    'rate.q1': '听完这段音乐，你感觉怎样？',
+    'rate.a1': '😴 很平静', 'rate.a2': '🙂 有点平静', 'rate.a3': '😐 没感觉', 'rate.a4': '😊 有点兴奋', 'rate.a5': '🤩 很兴奋',
+    'rate.q2': '这段音乐给你的情绪“色调”是？',
+    'rate.e1': '🏠 安定沉稳的', 'rate.e2': '🌙 内省收敛的', 'rate.e3': '🌿 舒畅条达的',
+    'rate.e4': '🔥 开心振奋的', 'rate.e5': '💧 宁静沉静的',
+    'rate.next': '选好后点这里 →',
+    'done.title': '✅ 探索完成！',
+    'done.tab1': '🎯 我的情绪指纹', 'done.tab2': '📊 群体概览',
+    'done.lead': '你听到的5段音乐与你的情绪感受：',
+    'done.legend': '传统五音：宫→安定 · 商→内省 · 角→舒畅 · 徵→振奋 · 羽→宁静',
+    'done.copy': '📋 复制我的数据',
+    'done.copyHint': '点击复制 → 回微信群 → 长按粘贴发送',
+    'done.matchCap': '⬆ 各调式情绪匹配率',
+    'done.arousalCap': '⬆ 各调式平均唤醒度（1平静→5兴奋）',
+    'done.again': '🔄 再来一次',
+    'card.piece': '曲目：', 'card.you': '你感觉：', 'card.trad': '传统认为：', 'card.hit': ' ✅ 对上了！',
+    'grp.total': '总参与人次', 'grp.done': '完成率',
+    'grp.empty': '还没有数据，成为第一个探索者吧！',
+    'grp.vs': '🎯 你 vs 群体：',
+    'grp.match': '群体', 'grp.matchSuffix': '%匹配',
+    'grp.hit': '✅ 匹配', 'grp.miss': '🔀 不同',
+    'alert.nodata': '没有数据',
+    'alert.copied': '已复制！回微信群长按粘贴发送。',
+    'alert.copiedShort': '已复制！'
+  },
+  en: {
+    'doc.title': 'FiveTone Explorer · Discover Your Own Music-Emotion Fingerprint',
+    'welcome.body': 'In Chinese music theory the five pentatonic modes — <b>Gōng 宫, Shāng 商, Jué 角, Zhǐ 徵, Yǔ 羽</b> — are each said to carry an emotion of their own.<br>But <b>for you personally</b> — does that hold?<br><br>Put on headphones, listen to <b>6 segments</b> (one is a silent baseline),<br>mark how you actually feel, and <b>find your own music-emotion fingerprint</b>.<br>About 5 minutes. Anonymous. No right answers.',
+    'welcome.note': '🎧 Headphones recommended · Stay relaxed<br>📱 Works on phone or desktop',
+    'welcome.btn': 'Start exploring 🎧',
+    'info.title': '📋 About you',
+    'info.age': 'Age', 'info.agePh': 'Enter your age',
+    'info.gender': 'Gender', 'info.male': '👦 Male', 'info.female': '👧 Female',
+    'info.music': 'Any instrument or music training?',
+    'info.musNo': '🎵 None', 'info.musAm': '🎸 Amateur', 'info.musTr': '🎹 Formal training',
+    'info.familiar': 'How familiar are you with Chinese traditional music?',
+    'info.fam1': '1 — Not at all', 'info.fam2': '2 — Heard a little', 'info.fam3': '3 — Average',
+    'info.fam4': '4 — Fairly familiar', 'info.fam5': '5 — Very familiar',
+    'info.next': 'Continue →',
+    'listen.episode': 'Part', 'listen.of': '/ 6',
+    'listen.hintPlay': 'Close your eyes and just listen', 'listen.hintRest': 'Stay quiet and relax for 30 seconds',
+    'listen.motionInit': 'Detecting phone orientation…',
+    'listen.still': '📱 Phone steady · immersive listening ✓',
+    'listen.moving': '📱 Movement detected · put the phone down and close your eyes',
+    'rate.q1': 'How do you feel after this piece?',
+    'rate.a1': '😴 Very calm', 'rate.a2': '🙂 Somewhat calm', 'rate.a3': '😐 Neutral', 'rate.a4': '😊 Somewhat aroused', 'rate.a5': '🤩 Very aroused',
+    'rate.q2': 'What emotional colour does this piece have?',
+    'rate.e1': '🏠 Settled and steady', 'rate.e2': '🌙 Introspective and restrained', 'rate.e3': '🌿 Free-flowing and expansive',
+    'rate.e4': '🔥 Joyful and uplifting', 'rate.e5': '💧 Serene and tranquil',
+    'rate.next': 'Tap here once you have chosen →',
+    'done.title': '✅ All done!',
+    'done.tab1': '🎯 My fingerprint', 'done.tab2': '📊 Group overview',
+    'done.lead': 'The 5 pieces you heard, and how they felt to you:',
+    'done.legend': 'Traditional mapping: Gōng→settled · Shāng→introspective · Jué→expansive · Zhǐ→uplifting · Yǔ→serene',
+    'done.copy': '📋 Copy my data',
+    'done.copyHint': 'Tap to copy — then show or send it to us',
+    'done.matchCap': '⬆ Emotion match rate by mode',
+    'done.arousalCap': '⬆ Mean arousal by mode (1 = calm → 5 = aroused)',
+    'done.again': '🔄 Go again',
+    'card.piece': 'Piece: ', 'card.you': 'You felt: ', 'card.trad': 'Traditional view: ', 'card.hit': ' ✅ match!',
+    'grp.total': 'Total runs', 'grp.done': 'Completion',
+    'grp.empty': 'No data yet — be the first explorer!',
+    'grp.vs': '🎯 You vs. the group:',
+    'grp.match': 'group ', 'grp.matchSuffix': '% match',
+    'grp.hit': '✅ match', 'grp.miss': '🔀 differs',
+    'alert.nodata': 'No data yet',
+    'alert.copied': 'Copied! Paste it to us.',
+    'alert.copiedShort': 'Copied!'
+  }
+};
+// 中文默认，除非浏览器语言不是中文
+let LANG = localStorage.getItem('5tone_lang')
+        || ((navigator.language||'').toLowerCase().startsWith('zh') ? 'zh' : 'en');
+
+function t(k) { return (I18N[LANG] && I18N[LANG][k]) || I18N.zh[k] || k; }
+
+// 按语言变化的词表
+const TRACKS = {
+  zh: { gong:'平胡秋月', shang:'阳关三叠', jue:'姑苏行', zhi:'春节序曲', yu:'二泉映月', _rest:'安静基线' },
+  en: { gong:'Autumn Moon over the Calm Lake (Pinghu Qiuyue)',
+        shang:'Three Variations on the Yangguan Pass (Yangguan Sandie)',
+        jue:'Journey to Gusu (Gusu Xing)',
+        zhi:'Spring Festival Overture',
+        yu:'Moon Reflected in the Second Spring (Erquan Yingyue)',
+        _rest:'Quiet baseline' }
+};
+const TONE_SHORT = { zh:['宫','商','角','徵','羽'], en:['Gōng','Shāng','Jué','Zhǐ','Yǔ'] };
+const EMO_FULL = {
+  zh: { anding:'安定沉稳', neixing:'内省收敛', shuchang:'舒畅条达', zhenfen:'开心振奋', ningjing:'宁静沉静' },
+  en: { anding:'Settled and steady', neixing:'Introspective and restrained', shuchang:'Free-flowing and expansive',
+        zhenfen:'Joyful and uplifting', ningjing:'Serene and tranquil' }
+};
+const EMO_SHORT = {
+  zh: { anding:'安定', neixing:'内省', shuchang:'舒畅', zhenfen:'振奋', ningjing:'宁静' },
+  en: { anding:'Settled', neixing:'Introspective', shuchang:'Expansive', zhenfen:'Uplifting', ningjing:'Serene' }
+};
+const AROUSAL_WORDS = {
+  zh: ['','很平静','有点平静','没感觉','有点兴奋','很兴奋'],
+  en: ['','Very calm','Somewhat calm','Neutral','Somewhat aroused','Very aroused']
+};
+
 // ========== 数据定义 ==========
 const MODES = {
-  gong:  { label:'宫 Gōng', emo:'安定沉稳', color:'#c4a35a', bg:'#faf3e0', key:'anding', track:'平胡秋月' },
-  shang: { label:'商 Shāng', emo:'内省收敛', color:'#b0aca4', bg:'#f3f1ee', key:'neixing', track:'阳关三叠' },
-  jue:   { label:'角 Jué',   emo:'舒畅条达', color:'#8ba684', bg:'#e9f1e6', key:'shuchang', track:'姑苏行' },
-  zhi:   { label:'徵 Zhǐ',  emo:'开心振奋', color:'#c48173', bg:'#faebe7', key:'zhenfen',  track:'春节序曲' },
-  yu:    { label:'羽 Yǔ',    emo:'宁静沉静', color:'#7d8fa8', bg:'#e6ecf4', key:'ningjing', track:'二泉映月' },
-  _rest: { label:'静息基线', emo:'—', color:'#c0b8a8', bg:'#f5f2ec', key:'_rest', track:'安静基线' }
+  gong:  { label:'宫 Gōng',  color:'#c4a35a', bg:'#faf3e0', key:'anding' },
+  shang: { label:'商 Shāng', color:'#b0aca4', bg:'#f3f1ee', key:'neixing' },
+  jue:   { label:'角 Jué',   color:'#8ba684', bg:'#e9f1e6', key:'shuchang' },
+  zhi:   { label:'徵 Zhǐ',   color:'#c48173', bg:'#faebe7', key:'zhenfen' },
+  yu:    { label:'羽 Yǔ',    color:'#7d8fa8', bg:'#e6ecf4', key:'ningjing' },
+  _rest: { label:'静息基线', color:'#c0b8a8', bg:'#f5f2ec', key:'_rest' }
 };
 const FIVE_TONES = ['gong','shang','jue','zhi','yu'];
 const ALL_CONDITIONS = ['gong','shang','jue','zhi','yu','_rest'];
@@ -234,7 +359,8 @@ FIVE_TONES.forEach(m => {
 let ctx, order=[], round=0, ratings=[], a1=null, a2=null, src=null, ana=null, rid=null;
 let participantInfo = {}, genderPicked=null, musicPicked=null, familiarPicked=null;
 let selectedTracks = {}; // {gong: 'audio/embed25/gong_03.mp3', ...}
-let motionSamples=[], motionPerRound=[], motionWatchId=null;
+let motionSamples=[], motionPerRound=[], motionWatchId=null, lastMotionInfo=null;
+let lastToneRatings=[], lastRestRating=null, lastMatchedCount=0;
 
 // ========== 信息页 ==========
 function pick(el, type) {
@@ -326,7 +452,7 @@ function playRound() {
   document.getElementById('mood').textContent = mode==='_rest'?'🤫':'🎶';
   document.getElementById('mood').style.color = info.color;
   document.getElementById('mood').style.fontSize = mode==='_rest'?'4em':'2.4em';
-  document.getElementById('hint').textContent = mode==='_rest'?'保持安静，放松30秒':'闭上眼睛，放松聆听';
+  document.getElementById('hint').textContent = mode==='_rest' ? t('listen.hintRest') : t('listen.hintPlay');
   progBars('prog');
   // 重置可视化条
   document.querySelectorAll('#viz .bar').forEach(b=>{b.style.height='10px';b.style.background='#d5cfc4';});
@@ -392,16 +518,18 @@ function stopMotionTracking() {
 function updateMotionUI(info) {
   const dot=document.getElementById('motionDot'), label=document.getElementById('motionLabel');
   if(!dot||!label||!info) return;
-  if(info.quality==='still'){dot.className='motion-dot still';label.textContent='📱 手机平稳 · 沉浸聆听 ✓';}
-  else{dot.className='motion-dot moving';label.textContent='📱 检测到移动 · 建议放下手机闭眼聆听';}
+  lastMotionInfo = info;
+  if(info.quality==='still'){dot.className='motion-dot still';label.textContent=t('listen.still');}
+  else{dot.className='motion-dot moving';label.textContent=t('listen.moving');}
 }
 
 // ========== 结果 ==========
 function finish() {
   show('done');
-  const toneRatings = ratings.filter(r=>r.mode!=='_rest');
-  const restRating = ratings.find(r=>r.mode==='_rest');
-  const matchedCount = toneRatings.filter(r=>r.emotion===MODES[r.mode].key).length;
+  lastToneRatings = ratings.filter(r=>r.mode!=='_rest');
+  lastRestRating = ratings.find(r=>r.mode==='_rest');
+  lastMatchedCount = lastToneRatings.filter(r=>r.emotion===MODES[r.mode].key).length;
+  const toneRatings = lastToneRatings, restRating = lastRestRating, matchedCount = lastMatchedCount;
 
   const rec = {
     ts: new Date().toISOString(), participant: participantInfo,
@@ -410,7 +538,7 @@ function finish() {
     motionPerRound: motionPerRound.filter(Boolean), matchedCount,
     summary: FIVE_TONES.map(m=>{
       const r=ratings.find(x=>x.mode===m);
-      return r?{mode:m,label:MODES[m].label,track:MODES[m].track,arousal:r.arousal,emotion:r.emotion}:null;
+      return r?{mode:m,label:MODES[m].label,track:TRACKS[LANG][m],arousal:r.arousal,emotion:r.emotion}:null;
     }).filter(Boolean)
   };
 
@@ -419,17 +547,21 @@ function finish() {
   all.push(rec); localStorage.setItem('5tone_v5',JSON.stringify(all));
   console.log('📊 saved',all.length,'records');
 
-  // 渲染个人结果卡片
-  document.getElementById('cards').innerHTML = toneRatings.map(r=>{
+  renderCards();
+}
+
+// 个人结果卡片（单独抽出，切语言时可重渲染）
+function renderCards() {
+  document.getElementById('cards').innerHTML = lastToneRatings.map(r=>{
     const info = MODES[r.mode];
     return `<div class="match-card" style="background:${info.bg};border-left:3px solid ${info.color}">
       <div class="tone-dot" style="background:${info.color}"></div>
       <div class="tone-tag" style="color:${info.color}">${info.label}</div>
       <div class="match-info">
-        曲目：<strong>${info.track}</strong><br>
-        你感觉：<strong>${['','很平静','有点平静','没感觉','有点兴奋','很兴奋'][r.arousal]}</strong>，
-        <strong>${{anding:'安定沉稳',neixing:'内省收敛',shuchang:'舒畅条达',zhenfen:'开心振奋',ningjing:'宁静沉静'}[r.emotion]}</strong><br>
-        传统认为：${info.emo} ${r.emotion===info.key?' ✅ 对上了！':''}
+        ${t('card.piece')}<strong>${TRACKS[LANG][r.mode]}</strong><br>
+        ${t('card.you')}<strong>${AROUSAL_WORDS[LANG][r.arousal]}</strong>，
+        <strong>${EMO_FULL[LANG][r.emotion]}</strong><br>
+        ${t('card.trad')}${EMO_FULL[LANG][info.key]} ${r.emotion===info.key?t('card.hit'):''}
       </div></div>`;
   }).join('');
 }
@@ -437,16 +569,16 @@ function finish() {
 function copyData() {
   const all = JSON.parse(localStorage.getItem('5tone_v5')||'[]');
   const last = all[all.length-1];
-  if (!last) { alert('没有数据'); return; }
+  if (!last) { alert(t('alert.nodata')); return; }
   const out = { participant: participantInfo, experiment: { ratings: last.ratings, order: last.order, selectedTracks: last.selectedTracks, summary: last.summary, motionPerRound: last.motionPerRound } };
   const txt = JSON.stringify(out);
   if (navigator.clipboard) {
-    navigator.clipboard.writeText(txt).then(()=>alert('已复制！回微信群长按粘贴发送。'));
+    navigator.clipboard.writeText(txt).then(()=>alert(t('alert.copied')));
   } else {
     const ta = document.createElement('textarea');
     ta.value=txt; ta.style.position='fixed'; ta.style.left='-9999px';
     document.body.appendChild(ta); ta.select();
-    document.execCommand('copy'); alert('已复制！');
+    document.execCommand('copy'); alert(t('alert.copiedShort'));
     document.body.removeChild(ta);
   }
 }
@@ -469,11 +601,11 @@ function renderGroupDashboard() {
   const all = JSON.parse(localStorage.getItem('5tone_v5')||'[]');
   const nTotal = all.length;
   document.getElementById('statGrid').innerHTML =
-    `<div class="stat-card" style="background:var(--gong-bg)"><div class="num">${nTotal}</div><div class="lbl">总参与人次</div></div>
-     <div class="stat-card" style="background:var(--jue-bg)"><div class="num">${nTotal>0?Math.round(all.filter(r=>r.summary&&r.summary.length===5).length/nTotal*100):0}%</div><div class="lbl">完成率</div></div>`;
+    `<div class="stat-card" style="background:var(--gong-bg)"><div class="num">${nTotal}</div><div class="lbl">${t('grp.total')}</div></div>
+     <div class="stat-card" style="background:var(--jue-bg)"><div class="num">${nTotal>0?Math.round(all.filter(r=>r.summary&&r.summary.length===5).length/nTotal*100):0}%</div><div class="lbl">${t('grp.done')}</div></div>`;
 
   if (nTotal===0) {
-    document.getElementById('matchChart').innerHTML='<p style="color:var(--text2);font-size:0.85em;text-align:center;padding:20px;">还没有数据，成为第一个探索者吧！</p>';
+    document.getElementById('matchChart').innerHTML=`<p style="color:var(--text2);font-size:0.85em;text-align:center;padding:20px;">${t('grp.empty')}</p>`;
     return;
   }
 
@@ -490,7 +622,7 @@ function renderGroupDashboard() {
   document.getElementById('matchChart').innerHTML = FIVE_TONES.map(m=>{
     const pct=modeCounts[m]>0?Math.round(modeMatch[m]/modeCounts[m]*100):0;
     return `<div class="bar-row">
-      <span class="bar-label" style="color:${MODES[m].color}">${['宫','商','角','徵','羽'][FIVE_TONES.indexOf(m)]}</span>
+      <span class="bar-label" style="color:${MODES[m].color}">${TONE_SHORT[LANG][FIVE_TONES.indexOf(m)]}</span>
       <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${MODES[m].color}">${pct>10?pct+'%':''}</div></div>
       <span class="bar-pct">${pct}%</span></div>`;
   }).join('');
@@ -498,7 +630,7 @@ function renderGroupDashboard() {
   document.getElementById('arousalChart').innerHTML = FIVE_TONES.map(m=>{
     const avg=modeCounts[m]>0?(modeArousalSum[m]/modeCounts[m]).toFixed(1):0;
     return `<div class="bar-row">
-      <span class="bar-label" style="color:${MODES[m].color}">${['宫','商','角','徵','羽'][FIVE_TONES.indexOf(m)]}</span>
+      <span class="bar-label" style="color:${MODES[m].color}">${TONE_SHORT[LANG][FIVE_TONES.indexOf(m)]}</span>
       <div class="bar-track"><div class="bar-fill" style="width:${Math.round(avg/5*100)}%;background:${MODES[m].color}">${avg}</div></div>
       <span class="bar-pct">/5</span></div>`;
   }).join('');
@@ -506,24 +638,51 @@ function renderGroupDashboard() {
   const lastRec=all[all.length-1];
   if(lastRec&&lastRec.summary){
     document.getElementById('personalVsGroup').innerHTML =
-      '<p style="font-size:0.82em;color:var(--text2);margin-bottom:6px;">🎯 你 vs 群体：</p>'+
+      `<p style="font-size:0.82em;color:var(--text2);margin-bottom:6px;">${t('grp.vs')}</p>`+
       FIVE_TONES.map(m=>{
         const my=lastRec.summary.find(x=>x.mode===m);
         const gpPct=modeCounts[m]>0?Math.round(modeMatch[m]/modeCounts[m]*100):0;
         const myMatch=my&&my.emotion===MODES[m].key;
         return `<div class="compare-row" style="background:${MODES[m].bg}">
           <div class="t-dot" style="background:${MODES[m].color}"></div>
-          <div class="t-info">${['宫','商','角','徵','羽'][FIVE_TONES.indexOf(m)]} ${my?{anding:'安定',neixing:'内省',shuchang:'舒畅',zhenfen:'振奋',ningjing:'宁静'}[my.emotion]:''}</div>
-          <div class="t-match ${myMatch?'hit':'miss'}">${myMatch?'✅ 匹配':'🔀 不同'}</div>
-          <div style="font-size:0.72em;color:var(--text2)">群体${gpPct}%匹配</div></div>`;
+          <div class="t-info">${TONE_SHORT[LANG][FIVE_TONES.indexOf(m)]} ${my?EMO_SHORT[LANG][my.emotion]:''}</div>
+          <div class="t-match ${myMatch?'hit':'miss'}">${myMatch?t('grp.hit'):t('grp.miss')}</div>
+          <div style="font-size:0.72em;color:var(--text2)">${t('grp.match')}${gpPct}${t('grp.matchSuffix')}</div></div>`;
       }).join('');
   }
+}
+
+// ========== 语言切换 ==========
+function applyLang() {
+  document.documentElement.lang = LANG==='zh' ? 'zh-CN' : 'en';
+  document.title = t('doc.title');
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.innerHTML = t(el.dataset.i18n); });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => { el.placeholder = t(el.dataset.i18nPh); });
+  document.getElementById('langBtn').textContent = LANG==='zh' ? 'EN' : '中文';
+  // 重渲染屏幕上已存在的动态内容
+  if (document.getElementById('done').classList.contains('active')) {
+    if (lastToneRatings.length) renderCards();
+    if (document.getElementById('panelGroup').classList.contains('active')) renderGroupDashboard();
+  }
+  if (document.getElementById('listen').classList.contains('active') && order.length) {
+    document.getElementById('hint').textContent =
+      order[round]==='_rest' ? t('listen.hintRest') : t('listen.hintPlay');
+    if (lastMotionInfo) updateMotionUI(lastMotionInfo);
+  }
+  if (document.getElementById('rate').classList.contains('active') && lastMotionInfo) updateMotionUI(lastMotionInfo);
+}
+function toggleLang() {
+  LANG = LANG==='zh' ? 'en' : 'zh';
+  localStorage.setItem('5tone_lang', LANG);
+  applyLang();
 }
 
 // ========== 初始化可视化条 ==========
 (function(){
   document.getElementById('viz').innerHTML = Array.from({length:BAR_COUNT},()=>'<div class="bar"></div>').join('');
 })();
+
+applyLang();
 </script>
 </body>
 </html>
