@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>听听音乐，说说感受</title>
+<style>
+  :root { --bg:#f7f3ed; --card:#fffdf9; --border:#e2dbcf; --text:#5c5344; --text2:#9b8c78; --accent:#c4a35a; --accent-bg:#faf3e0; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif; background:var(--bg); color:var(--text);
+    min-height:100vh; display:flex; justify-content:center; align-items:center; padding:16px; }
+  .phone { max-width:420px; width:100%; }
+  .screen { display:none; }
+  .screen.active { display:block; }
+
+  .welcome { text-align:center; padding:40px 20px; }
+  .welcome .icon { font-size:3em; margin-bottom:16px; }
+  .welcome h1 { font-size:1.45em; margin-bottom:10px; font-weight:700; }
+  .welcome p { color:var(--text2); font-size:0.92em; line-height:1.75; margin-bottom:24px; }
+  .welcome .note { font-size:0.76em; color:#b8a894; margin-top:16px; line-height:1.7; }
+
+  .listening { text-align:center; padding:36px 20px; }
+  .listening .now { font-size:0.85em; color:var(--text2); margin-bottom:8px; }
+  .listening .mood { font-size:2.4em; margin-bottom:4px; }
+  .listening .hint { font-size:0.9em; color:var(--text2); margin-bottom:20px; }
+  .listening .visualizer { display:flex; justify-content:center; align-items:flex-end; gap:4px; height:90px; margin-bottom:20px; }
+  .listening .bar { width:8px; border-radius:4px; transition:height .15s; min-height:6px; background:var(--border); }
+
+  .rating { padding:24px 20px; }
+  .rating .q { font-size:1.02em; font-weight:600; margin:16px 0 10px; text-align:center; }
+  .options { display:flex; flex-direction:column; gap:8px; }
+  .options.row { flex-direction:row; }
+  .options.row .opt { flex:1; }
+  .opt { padding:13px 10px; border-radius:12px; border:2px solid var(--border); background:var(--card); color:var(--text);
+    font-size:0.92em; cursor:pointer; text-align:center; transition:all .2s; -webkit-tap-highlight-color:transparent; user-select:none; }
+  .opt:active { transform:scale(.98); }
+  .opt.picked { border-color:var(--accent); background:var(--accent-bg); font-weight:600; }
+
+  .btn { display:block; width:100%; padding:14px; border-radius:12px; border:none; font-size:1.05em; font-weight:600;
+    cursor:pointer; transition:all .2s; -webkit-tap-highlight-color:transparent; font-family:inherit; }
+  .btn-primary { background:var(--accent); color:#fffdf7; margin-top:22px; }
+  .btn-primary:active { background:#b39248; transform:scale(.98); }
+  .btn:disabled { opacity:.4; cursor:not-allowed; }
+
+  .progress { display:flex; gap:8px; justify-content:center; margin-bottom:20px; }
+  .progress .step { width:32px; height:4px; border-radius:2px; background:var(--border); transition:all .3s; }
+  .progress .step.filled { background:var(--accent); }
+
+  .motion-indicator { display:flex; align-items:center; justify-content:center; gap:6px; margin-top:10px; font-size:0.76em; color:var(--text2); }
+  .motion-dot { width:8px; height:8px; border-radius:50%; }
+  .motion-dot.still { background:#8ba684; }
+  .motion-dot.moving { background:#e0a060; }
+
+  .result { padding:30px 20px; }
+  .result h2 { font-size:1.35em; margin-bottom:14px; text-align:center; }
+  .result p { font-size:0.9em; line-height:1.8; color:var(--text2); margin-bottom:12px; }
+  .thanks { background:var(--accent-bg); border-radius:14px; padding:18px; margin:18px 0; text-align:left; }
+  .thanks p { color:var(--text); font-size:0.9em; margin-bottom:6px; }
+  .fine { font-size:0.72em; color:#b8a894; text-align:center; margin-top:18px; line-height:1.6; }
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <!-- 欢迎 -->
+  <div class="screen active" id="welcome">
+    <div class="welcome">
+      <div class="icon">🎧</div>
+      <h1>听听音乐，说说感受</h1>
+      <p>一共 7 段：6 段音乐 + 1 段安静，大约 8 分钟。<br>
+         每段结束后回答几个简单的问题。<br>
+         <b>没有对错</b>，按您真实的感受选就好。</p>
+      <button class="btn btn-primary" onclick="go()">开始</button>
+      <div class="note">🎧 最好戴上耳机，找个安静的地方<br>
+        🔒 匿名，不收集姓名 · 未满 18 岁请在家长知情下参与</div>
+    </div>
+  </div>
+
+  <!-- 基本信息 -->
+  <div class="screen" id="info">
+    <div class="rating">
+      <h2 style="text-align:center;margin-bottom:20px;">先认识一下您</h2>
+      <div class="q">您的年龄</div>
+      <input type="number" id="age" placeholder="输入年龄" min="6" max="99"
+             style="width:100%;padding:14px;border-radius:12px;border:2px solid var(--border);background:var(--card);font-size:1em;text-align:center;color:var(--text);"
+             oninput="checkInfoReady()">
+      <div class="q">性别</div>
+      <div class="options row" id="genderOpts">
+        <button class="opt" data-v="male" onclick="pick(this,'gender')">男</button>
+        <button class="opt" data-v="female" onclick="pick(this,'gender')">女</button>
+      </div>
+      <div class="q">您学过乐器或音乐吗？</div>
+      <div class="options" id="musicOpts">
+        <button class="opt" data-v="no" onclick="pick(this,'music')">没学过</button>
+        <button class="opt" data-v="amateur" onclick="pick(this,'music')">业余学过</button>
+        <button class="opt" data-v="trained" onclick="pick(this,'music')">系统训练过</button>
+      </div>
+      <div class="q">开始前，先猜一下</div>
+      <div style="font-size:0.8em;color:var(--text2);text-align:center;margin:-4px 0 8px;">下面两类音乐，哪一种会让您更放松？</div>
+      <div class="options" id="predOpts">
+        <button class="opt" data-v="cn" onclick="pick(this,'pred')">中国传统音乐</button>
+        <button class="opt" data-v="west" onclick="pick(this,'pred')">西方古典音乐</button>
+        <button class="opt" data-v="same" onclick="pick(this,'pred')">差不多</button>
+      </div>
+      <button class="btn btn-primary" id="infoNext" disabled onclick="confirmInfo()">继续 →</button>
+    </div>
+  </div>
+
+  <!-- 聆听 -->
+  <div class="screen" id="listen">
+    <div class="listening">
+      <div class="progress" id="prog"></div>
+      <div class="now" id="nowLabel">第 1 / 7 段</div>
+      <div class="mood" id="mood">🎶</div>
+      <div class="hint" id="hint">闭上眼睛，放松聆听</div>
+      <div class="visualizer" id="viz"></div>
+      <div class="motion-indicator">
+        <div class="motion-dot still" id="motionDot"></div>
+        <span id="motionLabel">检测手机姿态中…</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 评分 -->
+  <div class="screen" id="rate">
+    <div class="rating">
+      <div class="progress" id="rprog"></div>
+
+      <div class="q" id="qRelaxTitle">听完这段，您觉得放松吗？</div>
+      <div class="options row" id="qRelax">
+        <button class="opt" data-v="1">很紧</button>
+        <button class="opt" data-v="2">有点紧</button>
+        <button class="opt" data-v="3">一般</button>
+        <button class="opt" data-v="4">挺放松</button>
+        <button class="opt" data-v="5">很放松</button>
+      </div>
+
+      <div id="musicQs">
+        <div class="q">这段音乐好听吗？</div>
+        <div class="options row" id="qLike">
+          <button class="opt" data-v="1">不好听</button>
+          <button class="opt" data-v="2">一般</button>
+          <button class="opt" data-v="3">还行</button>
+          <button class="opt" data-v="4">好听</button>
+          <button class="opt" data-v="5">很好听</button>
+        </div>
+
+        <div class="q">您愿意再听一遍吗？</div>
+        <div class="options row" id="qReplay">
+          <button class="opt" data-v="yes">愿意</button>
+          <button class="opt" data-v="no">不愿意</button>
+        </div>
+
+        <div class="q">这段音乐打动您了吗？</div>
+        <div class="options row" id="qMoved">
+          <button class="opt" data-v="yes">打动了</button>
+          <button class="opt" data-v="no">没感觉</button>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" id="next" disabled onclick="confirmRating()">选好了 →</button>
+    </div>
+  </div>
+
+  <!-- 结束 -->
+  <div class="screen" id="done">
+    <div class="result">
+      <h2>🎉 完成啦，谢谢您！</h2>
+      <p>您的回答已经记录（匿名，不收集姓名）。</p>
+      <div class="thanks">
+        <p>这个测试想弄清楚一件事：</p>
+        <p><b>听中国民乐和西方古典，哪一种更让人放松？</b></p>
+        <p><b>"我们的音乐"这件事，到底值多少？</b></p>
+        <p>等结果出来，可以把答案告诉您。谢谢您帮忙 🙏</p>
+      </div>
+      <div class="fine">本测试匿名 · 不收集姓名 · 未满 18 岁请在家长知情下参与</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ================== 配置 ==================
+// 页面位置：https://kang-yanan.github.io/five-tone-explorer/study/
+// 音频沿用仓库里已有的 ../audio/embed25/
+const COLLECT_URL = 'https://j-streamlab.com/fivetone/collect';
+const STORE_KEY = 'musicfeel_v1';
+
+// 固定 6 首（所有人听到的完全相同）
+// 中式 3 首与西方 3 首已按 速度/频谱质心/过零率/频谱带宽 做组均值匹配（2026-10-17）
+const MUSIC = [
+  { id:'jue_01',   file:'../audio/embed25/jue_01.mp3',   group:'cn'   },  // 列子御风
+  { id:'shang_05', file:'../audio/embed25/shang_05.mp3', group:'cn'   },  // 阳关三叠
+  { id:'yu_01',    file:'../audio/embed25/yu_01.mp3',    group:'cn'   },  // 乌夜啼
+  { id:'west_01',  file:'audio/west_01.mp3',             group:'west' },  // 肖邦 圆舞曲 Op.64-1
+  { id:'west_02',  file:'audio/west_02.mp3',             group:'west' },  // 肖邦 玛祖卡 Op.24-4
+  { id:'west_03',  file:'audio/west_03.mp3',             group:'west' },  // 肖邦 玛祖卡 Op.50-1
+];
+
+// ================== 状态 ==================
+let order=[], round=0, rows=[], participantInfo={};
+let blockOrder='';   // 'cn-first' / 'west-first'，记录顺序分配
+let motionSamples=[], motionPerRound=[], motionWatchId=null;
+let relaxPicked=null, likePicked=null, replayPicked=null, movedPicked=null;
+let ctx=null, src=null, ana=null, rid=null;
+let playToken=0;   // 每停一次 +1；异步加载回来发现令牌变了就丢弃，防止两段叠放
+let restTimer=null; // 安静段的 30 秒计时器，切轮时清掉
+
+// ================== 存储 & 上传 ==================
+function storeAll(){ try{ return JSON.parse(localStorage.getItem(STORE_KEY)||'[]'); }catch(e){ return []; } }
+function storeSave(a){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(a)); }catch(e){} }
+function deviceId(){
+  let id=localStorage.getItem('musicfeel_devid');
+  if(!id){ id='d'+Date.now().toString(36)+Math.random().toString(36).slice(2,8); localStorage.setItem('musicfeel_devid',id); }
+  return id;
+}
+// 本地预览不往正式收集端写
+const IS_LOCAL = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+function postOne(rec){
+  if(IS_LOCAL) return Promise.resolve(true);
+  return fetch(COLLECT_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(rec)})
+    .then(r=>r.ok).catch(()=>false);
+}
+async function flushPending(){
+  const all=storeAll(); let n=0;
+  for(const rec of all){ if(rec._up) continue; if(await postOne(rec)){ rec._up=true; n++; } else break; }
+  if(n) storeSave(all);
+  return n;
+}
+
+// ================== 信息页 ==================
+function pick(el,type){
+  el.parentElement.querySelectorAll('.opt').forEach(o=>o.classList.remove('picked'));
+  el.classList.add('picked');
+  if(type==='gender') window._gender=el.dataset.v;
+  if(type==='music') window._music=el.dataset.v;
+  if(type==='pred') window._pred=el.dataset.v;
+  checkInfoReady();
+}
+function checkInfoReady(){
+  document.getElementById('infoNext').disabled = !(document.getElementById('age').value && window._gender && window._music && window._pred);
+}
+function confirmInfo(){
+  participantInfo={ age:parseInt(document.getElementById('age').value), gender:window._gender, musicTraining:window._music, prediction:window._pred };
+  resetMotionTracking();
+  show('listen'); playRound();
+}
+
+// ================== 流程 ==================
+function show(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+function progBars(cid){ document.getElementById(cid).innerHTML=[0,1,2,3,4,5,6].map(i=>`<div class="step${i<round?' filled':''}"></div>`).join(''); }
+
+function shuffle(a){
+  const x=a.slice();
+  for(let i=x.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [x[i],x[j]]=[x[j],x[i]]; }
+  return x;
+}
+
+function go(){
+  // 分块反平衡：一半人先听中式三首，一半人先听西方三首；块内顺序固定
+  // 这样「中式 vs 西方」的差异不会被"先听/后听"的疲劳效应污染
+  const cnIdx = MUSIC.map((m,i)=>'m'+i).filter((_,i)=>MUSIC[i].group==='cn');
+  const wsIdx = MUSIC.map((m,i)=>'m'+i).filter((_,i)=>MUSIC[i].group==='west');
+  blockOrder = Math.random() < 0.5 ? 'cn-first' : 'west-first';
+  const seq = blockOrder==='cn-first' ? [...cnIdx, ...wsIdx] : [...wsIdx, ...cnIdx];
+  seq.splice(Math.floor(Math.random()*7), 0, 'rest');   // 安静段随机插入
+  order = seq;
+  round=0; rows=[]; resetMotionTracking();
+  show('info');
+}
+
+function currentMusic(){ return MUSIC[parseInt(order[round].slice(1),10)]; }
+
+function playRound(){
+  if(round>=order.length){ finish(); return; }
+  if(restTimer){ clearTimeout(restTimer); restTimer=null; }
+  stopAudio();
+  startMotionTracking();
+  show('listen');
+  const isRest = order[round]==='rest';
+  document.getElementById('nowLabel').textContent =
+    isRest ? '安静 ' + (round+1) + ' / ' + order.length + ' · 什么都不听' : '第 ' + (round+1) + ' / ' + order.length + ' 段';
+  progBars('prog');
+  document.getElementById('mood').textContent = isRest?'🤫':'🎶';
+  document.getElementById('hint').textContent = isRest?'保持安静，什么都不听，30 秒':'闭上眼睛，放松聆听';
+  document.querySelectorAll('#viz .bar').forEach(b=>{b.style.height='10px';b.style.background='#d5cfc4';});
+  if(isRest){ restTimer = setTimeout(()=>{ restTimer=null; stopMotionTracking(); showRate(); },30000); }
+  else { loadAndPlay(currentMusic().file); }
+}
+
+async function loadAndPlay(url){
+  stopAudio();                                   // 先停掉上一段（并让在途加载作废）
+  const my = playToken;                          // 本次播放的令牌
+  if(!ctx){ ctx=new (window.AudioContext||window.webkitAudioContext)(); }
+  if(ctx.state==='suspended') await ctx.resume();
+  const resp=await fetch(url);
+  const buf=await resp.arrayBuffer();
+  const audioBuf=await ctx.decodeAudioData(buf);
+  if(my !== playToken) return;                   // 等加载的这段时间已经切到下一轮了 → 丢弃
+  stopAudio();
+  const source=ctx.createBufferSource(); source.buffer=audioBuf;
+  const analyser=ctx.createAnalyser(); analyser.fftSize=256; analyser.smoothingTimeConstant=.5;
+  source.connect(analyser); analyser.connect(ctx.destination);
+  src=source; ana=analyser;
+  source.onended=()=>{ if(src!==source) return; stopViz(); stopMotionTracking(); showRate(); };
+  source.start(0); animateBars();
+}
+function animateBars(){
+  if(!ana||!src) return;
+  const fd=new Uint8Array(ana.frequencyBinCount); ana.getByteFrequencyData(fd);
+  const bars=document.querySelectorAll('#viz .bar');
+  bars.forEach((b,i)=>{
+    const idx=Math.floor(i*fd.length/bars.length);
+    b.style.height=(8+(fd[idx]/255)*78)+'px'; b.style.background='#c4a35a';
+  });
+  rid=requestAnimationFrame(animateBars);
+}
+function stopViz(){ if(rid){cancelAnimationFrame(rid);rid=null;} }
+function stopAudio(){ playToken++; stopViz(); if(src){try{src.stop();}catch(e){} src=null; ana=null;} }
+
+// ================== 评分 ==================
+function showRate(){
+  show('rate'); progBars('rprog');
+  const isRest = order[round]==='rest';
+  relaxPicked=likePicked=replayPicked=movedPicked=null;
+  document.getElementById('next').disabled=true;
+  document.getElementById('qRelaxTitle').textContent =
+    isRest ? '安静了一会儿，您现在觉得放松吗？' : '听完这段，您觉得放松吗？';
+  document.getElementById('musicQs').style.display = isRest?'none':'block';
+  document.querySelectorAll('#rate .opt').forEach(b=>b.classList.remove('picked'));
+  bindGroup('qRelax','relax');
+  bindGroup('qLike','like');
+  bindGroup('qReplay','replay');
+  bindGroup('qMoved','moved');
+}
+function bindGroup(id,field){
+  const el=document.getElementById(id); if(!el) return;
+  el.querySelectorAll('.opt').forEach(b=>{
+    b.onclick=function(){
+      el.querySelectorAll('.opt').forEach(x=>x.classList.remove('picked'));
+      this.classList.add('picked');
+      const v=this.dataset.v;
+      if(field==='relax') relaxPicked=parseInt(v);
+      if(field==='like') likePicked=parseInt(v);
+      if(field==='replay') replayPicked=v;
+      if(field==='moved') movedPicked=v;
+      const isRest=order[round]==='rest';
+      document.getElementById('next').disabled = !(relaxPicked && (isRest || (likePicked && replayPicked && movedPicked)));
+    };
+  });
+}
+function confirmRating(){
+  const isRest=order[round]==='rest';
+  rows.push({
+    round: round+1,
+    type: isRest?'rest':'music',
+    track: isRest? null : currentMusic().id,
+    group: isRest? null : currentMusic().group,
+    relax: relaxPicked,
+    liking: isRest? null : likePicked,
+    replay: isRest? null : replayPicked,
+    moved: isRest? null : movedPicked
+  });
+  round++;
+  if(round>=order.length){ finish(); return; }
+  resetMotionTracking();
+  playRound();
+}
+
+// ================== 加速度计（数据质量，不当变量） ==================
+function resetMotionTracking(){ stopMotionTracking(); motionSamples=[]; }
+function startMotionTracking(){
+  try{
+    motionSamples=[];
+    if(typeof DeviceMotionEvent==='undefined') return;
+    const handler=e=>{ const a=e.accelerationIncludingGravity; if(!a||a.x===null) return;
+      motionSamples.push(Math.sqrt((a.x||0)**2+(a.y||0)**2+(a.z||0)**2)); };
+    window.addEventListener('devicemotion',handler);
+    motionWatchId={handler};
+  }catch(e){ console.warn('Motion:',e); }
+}
+function stopMotionTracking(){
+  try{
+    if(!motionWatchId) return;
+    window.removeEventListener('devicemotion',motionWatchId.handler);
+    motionWatchId=null;
+    if(!motionSamples.length){ motionPerRound.push(null); return; }
+    const mean=motionSamples.reduce((a,b)=>a+b,0)/motionSamples.length;
+    const varr=motionSamples.reduce((s,v)=>s+(v-mean)**2,0)/motionSamples.length;
+    motionPerRound.push({mean,variance:varr,n:motionSamples.length,quality:varr<2?'still':'moving'});
+    const dot=document.getElementById('motionDot'), lab=document.getElementById('motionLabel');
+    if(dot&&lab){
+      if(varr<2){ dot.className='motion-dot still'; lab.textContent='📱 手机平稳'; }
+      else { dot.className='motion-dot moving'; lab.textContent='📱 检测到移动'; }
+    }
+  }catch(e){ motionWatchId=null; }
+}
+
+// ================== 结束 ==================
+function finish(){
+  show('done');
+  const musicRows = rows.filter(r=>r.type==='music');
+  const restRow = rows.find(r=>r.type==='rest');
+  const rec={
+    recId: deviceId()+'-'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),
+    ts: new Date().toISOString(),
+    participant: participantInfo,
+    blockOrder,
+    order, rows,
+    selectedTracks: Object.fromEntries(MUSIC.map(m=>[m.id,m.file])),
+    restBaseline: restRow? {relax:restRow.relax} : null,
+    motionPerRound: motionPerRound.filter(Boolean),
+    summary: (()=>{
+      const cn = musicRows.filter(r=>r.group==='cn');
+      const ws = musicRows.filter(r=>r.group==='west');
+      const mean=(a,k)=> a.length? +(a.reduce((s,r)=>s+(r[k]||0),0)/a.length).toFixed(3) : null;
+      const rate=(a,k)=> a.length? +(a.filter(r=>r[k]==='yes').length/a.length).toFixed(3) : null;
+      return {
+        musicN: musicRows.length,
+        relaxMean: mean(musicRows,'relax'),
+        likeMean: mean(musicRows,'liking'),
+        replayRate: rate(musicRows,'replay'),
+        movedRate: rate(musicRows,'moved'),
+        cnN: cn.length, westN: ws.length,
+        cnRelaxMean: mean(cn,'relax'),   westRelaxMean: mean(ws,'relax'),
+        cnLikeMean: mean(cn,'liking'),   westLikeMean: mean(ws,'liking'),
+        cnReplayRate: rate(cn,'replay'), westReplayRate: rate(ws,'replay'),
+        cnMovedRate: rate(cn,'moved'),   westMovedRate: rate(ws,'moved'),
+        restRelax: restRow? restRow.relax : null
+      };
+    })()
+  };
+  const all=storeAll(); all.push(rec); storeSave(all);
+  flushPending();
+}
+
+// ================== 初始化 ==================
+(function(){
+  document.getElementById('viz').innerHTML=Array.from({length:10},()=>'<div class="bar"></div>').join('');
+})();
+window.addEventListener('pagehide', stopAudio);   // 离开页面时别让声音继续播
+flushPending();
+</script>
+</body>
+</html>
