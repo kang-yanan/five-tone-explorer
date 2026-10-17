@@ -258,10 +258,26 @@ function postOne(rec){
   return fetch(COLLECT_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(rec)})
     .then(r=>r.ok).catch(()=>false);
 }
+// 旧版页面存在手机里的记录，summary 是对象；补传前转成服务器要的数组格式
+function normalizeRecord(rec){
+  if(rec && rec.summary && !Array.isArray(rec.summary)){
+    rec.aggregates = Object.assign({}, rec.aggregates || {}, rec.summary);
+    rec.summary = (rec.rows || [])
+      .filter(r => r && r.type === 'music')
+      .map(r => ({ track: r.track, group: r.group, relax: r.relax,
+                   liking: r.liking, replay: r.replay, moved: r.moved }));
+  }
+  return rec;
+}
+
 async function flushPending(){
-  const all=storeAll(); let n=0;
-  for(const rec of all){ if(rec._up) continue; if(await postOne(rec)){ rec._up=true; n++; } else break; }
-  if(n) storeSave(all);
+  const all=storeAll(); let n=0, changed=false;
+  for(const rec of all){
+    if(rec._up) continue;
+    normalizeRecord(rec); changed=true;
+    if(await postOne(rec)){ rec._up=true; n++; } else break;
+  }
+  if(n || changed) storeSave(all);
   return n;
 }
 
