@@ -471,17 +471,18 @@ function finish(){
     selectedTracks: Object.fromEntries(MUSIC.map(m=>[m.id,m.file])),
     restBaseline: restRow? {relax:restRow.relax} : null,
     motionPerRound: motionPerRound.filter(Boolean),
-    summary: (()=>{
+    // 服务器要求 summary 是**数组**（非空），这里放每段的明细
+    summary: musicRows.map(r=>({
+      track:r.track, group:r.group, relax:r.relax,
+      liking:r.liking, replay:r.replay, moved:r.moved
+    })),
+    // 汇总指标单独放，不影响服务器校验
+    aggregates: (()=>{
       const cn = musicRows.filter(r=>r.group==='cn');
       const ws = musicRows.filter(r=>r.group==='west');
       const mean=(a,k)=> a.length? +(a.reduce((s,r)=>s+(r[k]||0),0)/a.length).toFixed(3) : null;
       const rate=(a,k)=> a.length? +(a.filter(r=>r[k]==='yes').length/a.length).toFixed(3) : null;
       return {
-        musicN: musicRows.length,
-        relaxMean: mean(musicRows,'relax'),
-        likeMean: mean(musicRows,'liking'),
-        replayRate: rate(musicRows,'replay'),
-        movedRate: rate(musicRows,'moved'),
         cnN: cn.length, westN: ws.length,
         cnRelaxMean: mean(cn,'relax'),   westRelaxMean: mean(ws,'relax'),
         cnLikeMean: mean(cn,'liking'),   westLikeMean: mean(ws,'liking'),
