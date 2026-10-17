@@ -200,6 +200,11 @@ const MUSIC = [
 // ================== 状态 ==================
 let order=[], round=0, rows=[], participantInfo={};
 let blockOrder='';   // 'cn-first' / 'west-first'，记录顺序分配
+let listenTaps=0;    // 本段聆听期间的触屏次数（参与度）
+let rateShownAt=0;   // 评分页出现的时刻
+let rt={};           // 各题首次点选用时（毫秒）
+let predShownAt=0;   // 信息页出现的时刻
+let predRt=null;     // 预测题的用时
 let motionSamples=[], motionPerRound=[], motionWatchId=null;
 let relaxPicked=null, likePicked=null, replayPicked=null, movedPicked=null;
 let ctx=null, src=null, ana=null, rid=null;
@@ -234,14 +239,17 @@ function pick(el,type){
   el.classList.add('picked');
   if(type==='gender') window._gender=el.dataset.v;
   if(type==='music') window._music=el.dataset.v;
-  if(type==='pred') window._pred=el.dataset.v;
+  if(type==='pred'){
+    window._pred=el.dataset.v;
+    if(predRt===null) predRt=Math.round(performance.now()-predShownAt);
+  }
   checkInfoReady();
 }
 function checkInfoReady(){
   document.getElementById('infoNext').disabled = !(document.getElementById('age').value && window._gender && window._music && window._pred);
 }
 function confirmInfo(){
-  participantInfo={ age:parseInt(document.getElementById('age').value), gender:window._gender, musicTraining:window._music, prediction:window._pred };
+  participantInfo={ age:parseInt(document.getElementById('age').value), gender:window._gender, musicTraining:window._music, prediction:window._pred, predRt:predRt };
   resetMotionTracking();
   show('listen'); playRound();
 }
@@ -267,6 +275,7 @@ function go(){
   order = seq;
   round=0; rows=[]; resetMotionTracking();
   show('info');
+  predShownAt=performance.now();
 }
 
 function currentMusic(){ return MUSIC[parseInt(order[round].slice(1),10)]; }
@@ -277,6 +286,7 @@ function playRound(){
   stopAudio();
   startMotionTracking();
   show('listen');
+  listenTaps=0;
   const isRest = order[round]==='rest';
   document.getElementById('nowLabel').textContent =
     isRest ? '安静 ' + (round+1) + ' / ' + order.length + ' · 什么都不听' : '第 ' + (round+1) + ' / ' + order.length + ' 段';
@@ -321,6 +331,7 @@ function stopAudio(){ playToken++; stopViz(); if(src){try{src.stop();}catch(e){}
 // ================== 评分 ==================
 function showRate(){
   show('rate'); progBars('rprog');
+  rateShownAt=performance.now(); rt={};
   const isRest = order[round]==='rest';
   relaxPicked=likePicked=replayPicked=movedPicked=null;
   document.getElementById('next').disabled=true;
@@ -340,6 +351,7 @@ function bindGroup(id,field){
       el.querySelectorAll('.opt').forEach(x=>x.classList.remove('picked'));
       this.classList.add('picked');
       const v=this.dataset.v;
+      if(rt[field]===undefined) rt[field]=Math.round(performance.now()-rateShownAt);
       if(field==='relax') relaxPicked=parseInt(v);
       if(field==='like') likePicked=parseInt(v);
       if(field==='replay') replayPicked=v;
@@ -359,7 +371,9 @@ function confirmRating(){
     relax: relaxPicked,
     liking: isRest? null : likePicked,
     replay: isRest? null : replayPicked,
-    moved: isRest? null : movedPicked
+    moved: isRest? null : movedPicked,
+    rt: {...rt},          // {relax, liking, replay, moved} 首次点选用时（ms）
+    taps: listenTaps      // 本段聆听期间触屏次数
   });
   round++;
   if(round>=order.length){ finish(); return; }
@@ -438,6 +452,7 @@ function finish(){
 (function(){
   document.getElementById('viz').innerHTML=Array.from({length:10},()=>'<div class="bar"></div>').join('');
 })();
+document.getElementById('listen').addEventListener('pointerdown', ()=>{ listenTaps++; });
 window.addEventListener('pagehide', stopAudio);   // 离开页面时别让声音继续播
 flushPending();
 </script>
