@@ -238,6 +238,9 @@ let motionSamples=[], motionPerRound=[], motionWatchId=null;
 let relaxPicked=null, likePicked=null, replayPicked=null, movedPicked=null;
 let ctx=null, src=null, ana=null, rid=null;
 let playToken=0;   // 每停一次 +1；异步加载回来发现令牌变了就丢弃，防止两段叠放
+let audioEl=null;      // <audio> 兜底播放器（微信里 decodeAudioData 可能失败）
+let fallbackTimer=null;
+let watchdogTimer=null;
 let restTimer=null; // 安静段的 30 秒计时器，切轮时清掉
 
 // ================== 存储 & 上传 ==================
@@ -339,26 +342,64 @@ function playRound(){
   document.getElementById('hint').textContent = isRest?'保持安静，什么都不听，30 秒':'闭上眼睛，放松聆听';
   document.querySelectorAll('#viz .bar').forEach(b=>{b.style.height='10px';b.style.background='#d5cfc4';});
   if(isRest){ restTimer = setTimeout(()=>{ restTimer=null; stopMotionTracking(); showRate(); },30000); }
-  else { loadAndPlay(currentMusic().file); }
+  else { startWatchdog(); loadAndPlay(currentMusic().file); }
 }
 
 async function loadAndPlay(url){
   stopAudio();                                   // 先停掉上一段（并让在途加载作废）
-  const my = playToken;                          // 本次播放的令牌
-  if(!ctx){ ctx=new (window.AudioContext||window.webkitAudioContext)(); }
-  if(ctx.state==='suspended') await ctx.resume();
-  const resp=await fetch(url);
-  const buf=await resp.arrayBuffer();
-  const audioBuf=await ctx.decodeAudioData(buf);
-  if(my !== playToken) return;                   // 等加载的这段时间已经切到下一轮了 → 丢弃
-  stopAudio();
-  const source=ctx.createBufferSource(); source.buffer=audioBuf;
-  const analyser=ctx.createAnalyser(); analyser.fftSize=256; analyser.smoothingTimeConstant=.5;
-  source.connect(analyser); analyser.connect(ctx.destination);
-  src=source; ana=analyser;
-  source.onended=()=>{ if(src!==source) return; stopViz(); stopMotionTracking(); showRate(); };
-  source.start(0, 0, PLAY_SECONDS); animateBars();
+  const my = playToken;
+  try{
+    if(!ctx){ ctx=new (window.AudioContext||window.webkitAudioContext)(); }
+    if(ctx.state==='suspended') await ctx.resume();
+    const resp=await fetch(url);
+    if(!resp.ok) throw new Error('audio HTTP '+resp.status);
+    const buf=await resp.arrayBuffer();
+    const audioBuf=await ctx.decodeAudioData(buf);
+    if(my !== playToken) return;
+    stopAudio();
+    const source=ctx.createBufferSource(); source.buffer=audioBuf;
+    const analyser=ctx.createAnalyser(); analyser.fftSize=256; analyser.smoothingTimeConstant=.5;
+    source.connect(analyser); analyser.connect(ctx.destination);
+    src=source; ana=analyser;
+    source.onended=()=>{ if(src!==source) return; stopViz(); stopMotionTracking(); showRate(); };
+    source.start(0, 0, PLAY_SECONDS);
+    animateBars();
+  }catch(e){
+    console.warn('WebAudio 播放失败，改用 <audio>：', e && e.message);
+    if(my !== playToken) return;
+    playFallback(url, my);
+  }
 }
+
+// 兜底：用 <audio> 元素播，播够 PLAY_SECONDS 就进评分页
+function playFallback(url, my){
+  try{
+    if(!audioEl){ audioEl=new Audio(); audioEl.preload='auto'; }
+    else { try{ audioEl.pause(); }catch(e){} }
+    audioEl.src=url; audioEl.currentTime=0;
+    const p=audioEl.play();
+    if(p && p.catch) p.catch(()=>{});
+  }catch(e){ console.warn('fallback 播放也失败', e); }
+  if(fallbackTimer) clearTimeout(fallbackTimer);
+  fallbackTimer=setTimeout(()=>{
+    if(my!==playToken) return;
+    fallbackTimer=null; stopMotionTracking(); showRate();
+  }, PLAY_SECONDS*1000);
+}
+
+// 看门狗：进入聆听后 PLAY_SECONDS+10 秒还停在聆听页，就强制进评分（防止任何原因卡死）
+function startWatchdog(){
+  stopWatchdog();
+  watchdogTimer=setTimeout(()=>{
+    const a=document.querySelector('.screen.active');
+    if(a && a.id==='listen' && order[round]!=='rest'){
+      console.warn('看门狗触发：强制进评分页');
+      stopAudio(); stopMotionTracking(); showRate();
+    }
+  }, (PLAY_SECONDS+10)*1000);
+}
+function stopWatchdog(){ if(watchdogTimer){ clearTimeout(watchdogTimer); watchdogTimer=null; } }
+
 function animateBars(){
   if(!ana||!src) return;
   const fd=new Uint8Array(ana.frequencyBinCount); ana.getByteFrequencyData(fd);
@@ -370,10 +411,16 @@ function animateBars(){
   rid=requestAnimationFrame(animateBars);
 }
 function stopViz(){ if(rid){cancelAnimationFrame(rid);rid=null;} }
-function stopAudio(){ playToken++; stopViz(); if(src){try{src.stop();}catch(e){} src=null; ana=null;} }
+function stopAudio(){
+  playToken++; stopViz();
+  if(src){ try{src.stop();}catch(e){} src=null; ana=null; }
+  if(fallbackTimer){ clearTimeout(fallbackTimer); fallbackTimer=null; }
+  if(audioEl){ try{ audioEl.pause(); }catch(e){} }
+}
 
 // ================== 评分 ==================
 function showRate(){
+  stopWatchdog();
   show('rate'); progBars('rprog');
   rateShownAt=performance.now(); rt={};
   const isRest = order[round]==='rest';
