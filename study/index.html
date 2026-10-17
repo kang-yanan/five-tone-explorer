@@ -73,7 +73,7 @@
       <button class="btn btn-primary" onclick="go()">开始</button>
       <div class="note">🎧 最好戴上耳机，找个安静的地方<br>
         💡 测试期间请保持屏幕亮着（约 5 分钟）<br>
-        🔒 匿名，不收集姓名 · 未满 18 岁请在家长知情下参与</div>
+        🔒 匿名，不收集姓名 · 记录大致地区用于样本分布 · 未满 18 岁请在家长知情下参与</div>
     </div>
   </div>
 
@@ -95,6 +95,18 @@
         <button class="opt" data-v="no" onclick="pick(this,'music')">没学过</button>
         <button class="opt" data-v="amateur" onclick="pick(this,'music')">业余学过</button>
         <button class="opt" data-v="trained" onclick="pick(this,'music')">系统训练过</button>
+      </div>
+      <div class="q">平时听中国传统音乐吗？</div>
+      <div class="options row" id="famCnOpts">
+        <button class="opt" data-v="1" onclick="pick(this,'famcn')">很少</button>
+        <button class="opt" data-v="2" onclick="pick(this,'famcn')">有时</button>
+        <button class="opt" data-v="3" onclick="pick(this,'famcn')">经常</button>
+      </div>
+      <div class="q">平时听西方古典音乐吗？</div>
+      <div class="options row" id="famWestOpts">
+        <button class="opt" data-v="1" onclick="pick(this,'famwest')">很少</button>
+        <button class="opt" data-v="2" onclick="pick(this,'famwest')">有时</button>
+        <button class="opt" data-v="3" onclick="pick(this,'famwest')">经常</button>
       </div>
       <div class="q">开始前，先猜一下</div>
       <div style="font-size:0.8em;color:var(--text2);text-align:center;margin:-4px 0 8px;">下面两类音乐，哪一种会让您更放松？</div>
@@ -171,7 +183,7 @@
       <div class="thanks">
         <p>这个测试想弄清楚一件事：</p>
         <p><b>听中国民乐和西方古典，哪一种更让人放松？</b></p>
-        <p><b>"我们的音乐"这件事，到底值多少？</b></p>
+        <p><b>喜欢它，是因为好听，还是因为"这是我们的"？</b></p>
         <p>等结果出来，可以把答案告诉您。谢谢您帮忙 🙏</p>
       </div>
       <div class="fine">本测试匿名 · 不收集姓名 · 未满 18 岁请在家长知情下参与</div>
@@ -191,12 +203,12 @@ const STORE_KEY = 'musicfeel_v1';
 // 固定 6 首（所有人听到的完全相同）
 // 中式 3 首与西方 3 首已按 速度/频谱质心/过零率/频谱带宽 做组均值匹配（2026-10-17）
 const MUSIC = [
-  { id:'jue_01',   file:'../audio/embed25/jue_01.mp3',   group:'cn'   },  // 列子御风
-  { id:'shang_05', file:'../audio/embed25/shang_05.mp3', group:'cn'   },  // 阳关三叠
-  { id:'yu_01',    file:'../audio/embed25/yu_01.mp3',    group:'cn'   },  // 乌夜啼
-  { id:'west_01',  file:'audio/west_01.mp3',             group:'west' },  // 肖邦 圆舞曲 Op.64-1
-  { id:'west_02',  file:'audio/west_02.mp3',             group:'west' },  // 肖邦 玛祖卡 Op.24-4
-  { id:'west_03',  file:'audio/west_03.mp3',             group:'west' },  // 肖邦 玛祖卡 Op.50-1
+  { id:'gong_02', file:'../audio/embed25/gong_02.mp3', group:'cn'   },  // 浏阳河
+  { id:'gong_05', file:'../audio/embed25/gong_05.mp3', group:'cn'   },  // 踏雪寻梅
+  { id:'jue_01',  file:'../audio/embed25/jue_01.mp3',  group:'cn'   },  // 列子御风
+  { id:'west_01', file:'audio/west_01.mp3',            group:'west' },  // 肖邦 夜曲 Op.15-1
+  { id:'west_02', file:'audio/west_02.mp3',            group:'west' },  // 肖邦 圆舞曲 Op.69-1
+  { id:'west_03', file:'audio/west_03.mp3',            group:'west' },  // 肖邦 玛祖卡 Op.50-1
 ];
 
 // ================== 状态 ==================
@@ -256,6 +268,8 @@ function pick(el,type){
   el.classList.add('picked');
   if(type==='gender') window._gender=el.dataset.v;
   if(type==='music') window._music=el.dataset.v;
+  if(type==='famcn') window._famcn=el.dataset.v;
+  if(type==='famwest') window._famwest=el.dataset.v;
   if(type==='pred'){
     window._pred=el.dataset.v;
     if(predRt===null) predRt=Math.round(performance.now()-predShownAt);
@@ -263,11 +277,13 @@ function pick(el,type){
   checkInfoReady();
 }
 function checkInfoReady(){
-  document.getElementById('infoNext').disabled = !(document.getElementById('age').value && window._gender && window._music && window._pred);
+  document.getElementById('infoNext').disabled = !(document.getElementById('age').value && window._gender && window._music && window._famcn && window._famwest && window._pred);
 }
 function confirmInfo(){
   requestWakeLock();
-  participantInfo={ age:parseInt(document.getElementById('age').value), gender:window._gender, musicTraining:window._music, prediction:window._pred, predRt:predRt };
+  participantInfo={ age:parseInt(document.getElementById('age').value), gender:window._gender, musicTraining:window._music,
+                familiarityCN:parseInt(window._famcn), familiarityWest:parseInt(window._famwest),
+                prediction:window._pred, predRt:predRt };
   resetMotionTracking();
   show('listen'); playRound();
 }
