@@ -67,7 +67,7 @@
     <div class="welcome">
       <div class="icon">🎧</div>
       <h1>听听音乐，说说感受</h1>
-      <p>一共 7 段：6 段音乐 + 1 段安静，大约 8 分钟。<br>
+      <p>一共 7 段：6 段音乐 + 1 段安静，大约 5 分钟。<br>
          每段结束后回答几个简单的问题。<br>
          <b>没有对错</b>，按您真实的感受选就好。</p>
       <button class="btn btn-primary" onclick="go()">开始</button>
@@ -184,6 +184,7 @@
 // 页面位置：https://kang-yanan.github.io/five-tone-explorer/study/
 // 音频沿用仓库里已有的 ../audio/embed25/
 const COLLECT_URL = 'https://j-streamlab.com/fivetone/collect';
+const PLAY_SECONDS = 30;   // 每段播放 30 秒（Chilvers 2024 用 10s，Scarratt 2026 用 28s）
 const STORE_KEY = 'musicfeel_v1';
 
 // 固定 6 首（所有人听到的完全相同）
@@ -313,7 +314,7 @@ async function loadAndPlay(url){
   source.connect(analyser); analyser.connect(ctx.destination);
   src=source; ana=analyser;
   source.onended=()=>{ if(src!==source) return; stopViz(); stopMotionTracking(); showRate(); };
-  source.start(0); animateBars();
+  source.start(0, 0, PLAY_SECONDS); animateBars();
 }
 function animateBars(){
   if(!ana||!src) return;
