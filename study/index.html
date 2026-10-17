@@ -207,6 +207,7 @@
 // 页面位置：https://kang-yanan.github.io/five-tone-explorer/study/
 // 音频沿用仓库里已有的 ../audio/embed25/
 const COLLECT_URL = 'https://j-streamlab.com/fivetone/collect';
+const STIM_VER = 'v2026-10-17b';   // 刺激版本：换曲目/换时长必须改这个
 const PLAY_SECONDS = 30;   // 每段播放 30 秒（Chilvers 2024 用 10s，Scarratt 2026 用 28s）
 const STORE_KEY = 'musicfeel_v1';
 
@@ -298,7 +299,7 @@ function pick(el,type){
   if(type==='gender') window._gender=el.dataset.v;
   if(type==='music') window._music=el.dataset.v;
   if(type==='famcn') window._famcn=el.dataset.v;
-  if(type==='famwest') window._famwest=el.dataset.v;
+  if(type==='famwest'){ window._famwest=el.dataset.v; predShownAt=performance.now(); }
   if(type==='pred'){
     window._pred=el.dataset.v;
     if(predRt===null) predRt=Math.round(performance.now()-predShownAt);
@@ -527,6 +528,7 @@ function finish(){
   const restRow = rows.find(r=>r.type==='rest');
   const rec={
     recId: deviceId()+'-'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),
+    stimVer: STIM_VER,
     ts: new Date().toISOString(),
     participant: participantInfo,
     blockOrder,
