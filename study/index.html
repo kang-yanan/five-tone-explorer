@@ -72,6 +72,7 @@
          <b>没有对错</b>，按您真实的感受选就好。</p>
       <button class="btn btn-primary" onclick="go()">开始</button>
       <div class="note">🎧 最好戴上耳机，找个安静的地方<br>
+        💡 测试期间请保持屏幕亮着（约 5 分钟）<br>
         🔒 匿名，不收集姓名 · 未满 18 岁请在家长知情下参与</div>
     </div>
   </div>
@@ -209,6 +210,8 @@ let predRt=null;     // 预测题的用时
 let hiddenMs=0;      // 本段页面被切走/锁屏的累计毫秒
 let hiddenStart=null;
 let hiddenCount=0;   // 本段被切走的次数
+let interrupted=false; // 本段是否因切屏被中断重放
+let wakeLock=null;
 let motionSamples=[], motionPerRound=[], motionWatchId=null;
 let relaxPicked=null, likePicked=null, replayPicked=null, movedPicked=null;
 let ctx=null, src=null, ana=null, rid=null;
@@ -237,6 +240,16 @@ async function flushPending(){
   return n;
 }
 
+// ================== 屏幕常亮 ==================
+async function requestWakeLock(){
+  try{
+    if('wakeLock' in navigator){
+      wakeLock = await navigator.wakeLock.request('screen');
+      wakeLock.addEventListener('release', ()=>{ /* 被系统释放，下次可见时再申请 */ });
+    }
+  }catch(e){ /* 不支持或被拒，忽略 */ }
+}
+
 // ================== 信息页 ==================
 function pick(el,type){
   el.parentElement.querySelectorAll('.opt').forEach(o=>o.classList.remove('picked'));
@@ -253,6 +266,7 @@ function checkInfoReady(){
   document.getElementById('infoNext').disabled = !(document.getElementById('age').value && window._gender && window._music && window._pred);
 }
 function confirmInfo(){
+  requestWakeLock();
   participantInfo={ age:parseInt(document.getElementById('age').value), gender:window._gender, musicTraining:window._music, prediction:window._pred, predRt:predRt };
   resetMotionTracking();
   show('listen'); playRound();
@@ -290,7 +304,7 @@ function playRound(){
   stopAudio();
   startMotionTracking();
   show('listen');
-  listenTaps=0; hiddenMs=0; hiddenStart=null; hiddenCount=0;
+  listenTaps=0; hiddenMs=0; hiddenStart=null; hiddenCount=0; interrupted=false;
   const isRest = order[round]==='rest';
   document.getElementById('nowLabel').textContent =
     isRest ? '安静 ' + (round+1) + ' / ' + order.length + ' · 什么都不听' : '第 ' + (round+1) + ' / ' + order.length + ' 段';
@@ -379,7 +393,8 @@ function confirmRating(){
     rt: {...rt},          // {relax, liking, replay, moved} 首次点选用时（ms）
     taps: listenTaps,     // 本段聆听期间触屏次数
     hiddenMs: hiddenMs + (hiddenStart!==null ? Math.round(performance.now()-hiddenStart) : 0),
-    hiddenCount: hiddenCount
+    hiddenCount: hiddenCount,
+    interrupted: interrupted
   });
   round++;
   if(round>=order.length){ finish(); return; }
@@ -462,7 +477,22 @@ document.getElementById('listen').addEventListener('pointerdown', ()=>{ listenTa
 // 切屏/锁屏：记录每次被藏起来的时长（比触屏更能说明"人不在"）
 document.addEventListener('visibilitychange', ()=>{
   if(document.hidden){ hiddenStart=performance.now(); hiddenCount++; }
-  else if(hiddenStart!==null){ hiddenMs += performance.now()-hiddenStart; hiddenStart=null; }
+  else if(hiddenStart!==null){
+    const dur=performance.now()-hiddenStart;
+    hiddenMs += dur; hiddenStart=null;
+    const onListen = document.querySelector('.screen.active') && document.querySelector('.screen.active').id==='listen';
+    if(onListen && dur>1000 && !interrupted){
+      interrupted=true;
+      // 黑屏后音频可能已停，重放本段，避免卡死
+      if(order[round]==='rest'){
+        if(restTimer) clearTimeout(restTimer);
+        restTimer=setTimeout(()=>{restTimer=null;stopMotionTracking();showRate();},30000);
+      }else{
+        loadAndPlay(currentMusic().file);
+      }
+    }
+    requestWakeLock();
+  }
 });
 window.addEventListener('pagehide', stopAudio);   // 离开页面时别让声音继续播
 flushPending();
